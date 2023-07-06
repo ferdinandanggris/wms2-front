@@ -1,0 +1,8 @@
+:root {
+  --primary-color: #2cacdb;
+  --dark-color: #3c3c3c;
+  --light-color: #ffffff;
+  --grey-color: #cccccc;
+  --danger-color: #ff4d68;
+  font-size: 14px;
+}

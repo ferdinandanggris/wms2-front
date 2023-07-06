@@ -1,0 +1,112 @@
+@media only screen and (max-width: 500px) {
+  .notfound .notfound-404 h1 {
+    font-size: 156px;
+    top: 10%;
+  }
+  .notfound h2 {
+    font-size: 30px;
+  }
+  .notfound p {
+    font-size: 12px;
+  }
+  .notfound a {
+    font-size: 10px;
+    padding: 10px 38px;
+  }
+
+  .navbar {
+    height: 60px !important;
+  }
+
+  .navbar-left,
+  .navbar-brand {
+    width: 100% !important;
+    text-align: center;
+  }
+
+  .navbar-brand img {
+    height: 45px !important;
+  }
+
+  .sidemenu-opener,
+  .navbar-right,
+  .sidebar {
+    display: none !important;
+  }
+  .sidebar-icon {
+    margin-right: 0px !important;
+  }
+
+  .login-card {
+    box-shadow: none;
+    width: 100%;
+  }
+
+  .wide-screen {
+    display: none !important;
+  }
+  .narrow-screen {
+    display: flex !important;
+    width: 100%;
+    flex-flow: row;
+  }
+
+  .content {
+    padding: 20px 20px 80px 20px;
+  }
+
+  .btn-module {
+    border-radius: 5px;
+    min-height: 38px;
+    padding: 0.2rem 1rem;
+  }
+
+  .bottom-nav {
+    display: flex;
+  }
+
+  .app-content {
+    height: calc(100vh - 100px);
+  }
+
+  .order-status-item {
+    margin-right: 15px;
+    border: 0px;
+  }
+  .order-status-text {
+    display: none !important;
+  }
+
+  .achievement-content-left {
+    padding: 10px 10px;
+  }
+  .achievement-content-left .mc-fa,
+  .achievement-content-right .mc-fa {
+    display: none;
+  }
+  .achievement-content-right div {
+    margin-right: 20px;
+  }
+
+  .fleet-order-content-item div {
+    padding: 5px 15px;
+  }
+  .fleet-order-content-item div .mc-fa {
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    padding: 6px;
+    border-radius: 100%;
+    text-align: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .order-content-item div {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+  }
+  .order-content-total div {
+    margin-top: 0px;
+  }
+}
