@@ -18,6 +18,7 @@ export const refreshData = ({ url, page = 0, limit = 10, search = "", sort = "",
       date = date.replaceAll("&", "|");
       date = date.replaceAll("=", ":");
     }
+    // console.log(axios.defaults.baseURL);
     // console.log(`/${url}?page=${page}&limit=${limit}&search=${search}&sort=${sort}&filter=${filter}&date=${date}`);
     const res = await axios.get(`/${url}?page=${page}&limit=${limit}&search=${search}&sort=${sort}&filter=${filter}&date=${date}`);
     dispatch({
