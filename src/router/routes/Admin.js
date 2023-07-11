@@ -3,7 +3,7 @@ import { lazy } from "react";
 
 
 
-const Admin = lazy(() => import("../../views/Home2"));
+const Admin = lazy(() => import("../../views/Home3"));
 
 // MASTER
 const ItemList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
