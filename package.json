@@ -1,5 +1,5 @@
 {
-  "name": "myfleet-front",
+  "name": "wms-front",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -34,10 +34,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "sh -ac '. ./.env.${REACT_APP_ENV}; react-scripts build'",
-    "build:myfleet": "REACT_APP_ENV=myfleet npm run build",
-    "build:ice": "REACT_APP_ENV=ice npm run build",
-    "build:jme": "REACT_APP_ENV=jme npm run build",
+    "build": "react-scripts build'",
+    "build:wms": "REACT_APP_ENV=wms npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
