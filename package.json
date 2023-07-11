@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build'",
+    "build": "react-scripts build",
     "build:wms": "REACT_APP_ENV=wms npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
