@@ -400,40 +400,13 @@ const ListWrapper = (props) => {
       return value === undefined || value === null ? "" : moment(value).format("DD MMM YYYY");
     } else if (col.type === "datetime") {
       return value === undefined || value === null ? "" : moment(value).format("DD-MMM-YYYY HH:mm");
-    } else if (col.type === "fleetCategory") {
-      return item.fleetCategory !== undefined && item.fleetCategory !== null ? item.fleetCategory.description : "";
-    } else if (col.type === "fleetType") {
-      return item.fleetType !== undefined && item.fleetType !== null ? item.fleetType.description : "";
-    } else if (col.type === "fleet") {
-      return item.fleet !== undefined && item.fleet !== null ? item.fleet.policeNo : "";
-    } else if (col.type === "driver") {
-      return item.driver !== undefined && item.driver !== null ? item.driver.name : "";
-    } else if (col.type === "loanType") {
-      return item.loanType !== undefined && item.loanType !== null ? item.loanType.name : "";
-    } else if (col.type === "account") {
-      return item.account !== undefined && item.account !== null ? item.account.name : "";
-    } else if (col.type === "category") {
-      return item.category !== undefined && item.category !== null ? item.category.description : "";
-    } else if (col.type === "industry") {
-      return item.industry !== undefined && item.industry !== null ? item.industry.description : "";
-    } else if (col.type === "customer") {
-      return item.customer !== undefined && item.customer !== null ? item.customer.name : "";
-    } else if (col.type === "sector") {
-      return item.sector !== undefined && item.sector !== null ? item.sector.name : "";
-    } else if (col.type === "origin") {
-      return item.origin !== undefined && item.origin !== null ? item.origin.name : "";
-    } else if (col.type === "itemType") {
-      return item.itemType !== undefined && item.itemType !== null ? item.itemType.name : "";
-    } else if (col.type === "route") {
-      return item.route !== undefined && item.route !== null ? item.route.name : "";
-    } else if (col.type === "destination") {
-      return item.destination !== undefined && item.destination !== null ? item.destination.name : "";
-    } else if (col.type === "order") {
-      return item.order !== undefined && item.order !== null ? item.order.voucherNo : "";
     } else if (col.type === "number") {
       if (col.decimals !== undefined) return value.toLocaleString(undefined, { maximumFractionDigits: col.decimals });
       else return value.toLocaleString();
-    } else if (col.type === "print") {
+    } else if (col.key == "warehouseId") {
+      return item.warehouse.name;
+    }
+    else if (col.type === "print") {
       if (item.status === "CANCELED" || item.status === "DRAFT") return null;
       return (
         <a href={`${baseURL}/${url}/${col.url}${value}`} className="download-link">

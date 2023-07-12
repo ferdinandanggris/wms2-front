@@ -21,6 +21,8 @@ const WarehouseList = lazy(() => import("../../views/master/warehouse/WarehouseL
 const WarehouseForm = lazy(() => import("../../views/master/warehouse/WarehouseForm"));
 const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
 const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
+const GroupList = lazy(() => import("../../views/master/group/GroupList"));
+const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
@@ -130,8 +132,8 @@ const AdminRoutes = [
   { path: "/master/category/:id?/:type", element: <CategoryForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/packing", element: <PackingList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/packing/:id?/:type", element: <PackingForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/group", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/group/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/group", element: <GroupList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/group/:id?/:type", element: <GroupForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/pallet", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/pallet/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/location", element: <ItemList />, meta: { layout: "full", publicRoute: false } },

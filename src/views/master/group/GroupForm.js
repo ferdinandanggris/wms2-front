@@ -6,34 +6,54 @@ import { FaLayerGroup } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+
+import { loadWarehouse } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import Select2 from "../../../components/Select2";
 
-const CategoryForm = ({ user, data, loadData, addData, editData }) => {
-  let { id } = useParams();
+const GroupForm = ({ user, data, loadData, addData, editData, master, loadWarehouse }) => {
+  let { type, id } = useParams();
 
   const navigate = useNavigate();
 
-  const title = "Category";
+  const title = "Group";
   const img = <FaLayerGroup className="module-img" />;
-  const path = "/master/category";
-  const url = "Category";
-  const role = "Master - Category";
+  const path = "/master/group";
+  const url = "group";
+  const role = "Master - Group";
 
   const [formData, setFormData] = useState({
     id: 0,
     code: "",
     name: "",
-    type: "finish goods",
-    isactive: 1
-
+    warehouse: ""
   });
 
-  const { code, name, type, isactive } = formData;
+  const [warehouseList, setWarehouse] = useState([]);
+  const { code, name, warehouseId } = formData;
 
   useEffect(() => {
+    loadWarehouse();
     if (user !== null && id !== undefined) loadData({ url, id });
-  }, [id, user, loadData]);
+  }, [id, user, loadData, loadWarehouse]);
+
+  useEffect(() => {
+    if (master.warehouse !== undefined && master.warehouse !== null) {
+      let list = [...master.warehouse];
+      const obj = list.find((obj) => obj.id === 0);
+      if (obj === undefined || obj === null) {
+        list.push({
+          name: "No Warehouse",
+          id: 0,
+        });
+        list.sort((a, b) => (a.id > b.id ? 1 : -1));
+      }
+      setWarehouse(list);
+    }
+
+
+  }, [master]);
 
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
@@ -43,8 +63,7 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
           id: id === undefined ? 0 : parseInt(id),
           code: data.data.code,
           name: data.data.name,
-          type: data.data.type,
-          isactive: data.data.isActive,
+          warehouseId: data.data.warehouseId,
         });
       }
     }
@@ -55,7 +74,9 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
+  const onSelectChange = (e, name) => {
+    setFormData({ ...formData, [name]: e.id });
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -71,11 +92,11 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
     }
   };
 
-
   const element = () => {
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
+
         <div className="row">
           <div className="form-group col-sm-12">
             <label>Code</label>
@@ -92,37 +113,12 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
         </div>
 
         <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Type</label>
+          <div className="form-group col-lg-6">
+            <label>Warehouse</label>
             <span className="required-star">*</span>
-            <select class="form-control" name="type" onChange={(e) => onChange(e)} value={type}>
-              <option value="finish goods">Finish Goods</option>
-              <option value="raw material">Raw Material</option>
-            </select>
+            <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
           </div>
         </div>
-
-        <div className="row">
-          <div className="form-inline col-sm-12">
-            <label className="mr-5">Status</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="isactive" value={0} checked={isactive == 0} onChange={(e) => onChange(e)} />
-              <label class="form-check-label mr-5" >
-                In Active
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="isactive" value={1} checked={isactive == 1} onChange={(e) => onChange(e)} />
-              <label class="form-check-label">
-                Active
-              </label>
-            </div>
-
-          </div>
-
-        </div>
-
-
       </div >
     );
   };
@@ -134,17 +130,19 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
   );
 };
 
-CategoryForm.propTypes = {
+GroupForm.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
   loadData: PropTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
+  master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   data: state.data,
+  master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData })(CategoryForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse })(GroupForm);

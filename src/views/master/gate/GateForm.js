@@ -26,7 +26,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
     name: "",
   });
 
-  const { gate, name } = formData;
+  const { code, name } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
@@ -76,7 +76,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
           <div className="form-group col-sm-12">
             <label>Gate</label>
             <span className="required-star">*</span>
-            <input className="form-control" type="text" name="gate" value={gate} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
+            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
           </div>
         </div>
         <div className="row">

@@ -7,21 +7,20 @@ import PropTypes from "prop-types";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 
-const CategoryList = ({ user, data, refreshData, deleteData, exportData }) => {
-  const title = "Category";
+const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
+  const title = "Group";
   const img = <FaLayerGroup className="module-img" />;
-  const path = "/master/category";
-  const url = "category";
-  const role = "Master - Category";
+  const path = "/master/group";
+  const url = "group";
+  const role = "Master - Group";
 
   const columns = [
     { label: "Code", key: "code", width: 100, cardTitle: true },
     { label: "Name", key: "name", width: 100, cardTitle: true },
-    { label: "Type", key: "type", width: 100, cardTitle: true },
-    { label: "Is Active", key: "isActive", width: 10, cardTitle: true },
+    { label: "Warehouse", key: "warehouseId", width: 100, cardTitle: true },
   ];
 
-  const exportFilename = "category.csv";
+  const exportFilename = "Group.csv";
 
   useEffect(() => {
     if (user !== null) {
@@ -32,7 +31,7 @@ const CategoryList = ({ user, data, refreshData, deleteData, exportData }) => {
   return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} />;
 };
 
-CategoryList.propTypes = {
+GroupList.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
   refreshData: PropTypes.func,
@@ -45,4 +44,4 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData })(CategoryList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData })(GroupList);
