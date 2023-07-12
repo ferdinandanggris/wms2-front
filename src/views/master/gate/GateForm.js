@@ -18,11 +18,11 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/Gate";
   const url = "Gate";
-  const role = "Master - UOM";
+  const role = "Master - Gate";
 
   const [formData, setFormData] = useState({
     id: 0,
-    Gate: "",
+    code: "",
     name: "",
   });
 
@@ -38,7 +38,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
       if (data.data !== undefined && data.data !== null) {
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
-          gate: data.data.gate,
+          code: data.data.code,
           name: data.data.name,
         });
       }

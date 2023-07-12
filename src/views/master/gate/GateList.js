@@ -15,7 +15,7 @@ const GateList = ({ user, data, refreshData, deleteData, exportData }) => {
   const role = "Master - Gate";
 
   const columns = [
-    { label: "Gate", key: "gate", width: 100, cardTitle: true },
+    { label: "Gate", key: "code", width: 100, cardTitle: true },
     { label: "Name", key: "name", width: 100, cardTitle: true },
   ];
 
