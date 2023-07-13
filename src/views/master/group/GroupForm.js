@@ -113,7 +113,7 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
         </div>
 
         <div className="row">
-          <div className="form-group col-lg-6">
+          <div className="form-group col-sm-12">
             <label>Warehouse</label>
             <span className="required-star">*</span>
             <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
