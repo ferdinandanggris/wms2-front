@@ -12,7 +12,7 @@ const FormWrapper = (props) => {
   // const pdf = useRef(null);
 
   const [searchParams] = useSearchParams();
-  const { id, img, title, path, type, children, handleSave, role, roles, allowAdd, allowUpdate } = props;
+  const { id, img, title, path, type, children, role, roles, allowAdd, allowUpdate } = props;
 
   const [isCreate, setIsCreate] = useState(true);
   const [isUpdate, setIsUpdate] = useState(true);
@@ -34,47 +34,56 @@ const FormWrapper = (props) => {
       }
     }
   }, [role, roles]);
+ const handleSave = (e) => {
+    e.preventDefault();
+    console.log('Data saved');
+    setSaving(true);
+    setSaving(false);
+  };
+
+  const handleSaveAndAddMore = (e) => {
+    e.preventDefault();
+    console.log('Data saved & add more');
+  };
 
   const renderModule = () => {
     return (
-      <div className="module d-flex justify-content-between">
-        <div className="module-title d-flex align-items-center">
-          {img}{" "}
-          <span className="mr-2" style={{ marginTop: "4px" }}>
-            {title}
-          </span>{" "}
-          <span style={{ fontWeight: "normal", marginTop: "4px" }}>{id === undefined ? "Create" : "View"}</span>
-        </div>
-        <div className="d-flex">
-          {(allowAdd === undefined || allowAdd) &&
-            isCreate &&
-            id === undefined &&
-            (saving ? (
-              <div className="text-center">Saving...</div>
-            ) : (
-              <button type="submit" className="btn btn-save ml-2 d-flex align-items-center justify-content-center">
-                <FaSave className="pt-0 mr-2" />
-                <span>Save</span>
-              </button>
-            ))}
-          {(allowUpdate === undefined || allowUpdate) &&
-            isUpdate &&
-            id !== undefined &&
-            (saving ? (
-              <div className="text-center">Saving...</div>
-            ) : (
-              <button type="submit" className="btn btn-save ml-2 d-flex align-items-center justify-content-center">
-                <FaSave className="pt-0 mr-2" />
-                <span>Update</span>
-              </button>
-            ))}
-          {returnUrl !== undefined && returnUrl !== null && (
-            <Link to={`${returnUrl}`} className="btn btn-back ml-2 d-flex align-items-center justify-content-center">
-              <FaTimes className="pt-0 mr-2" />
-              {id === undefined ? "Cancel" : "Back"}
-            </Link>
-          )}
-        </div>
+      <div className="d-flex">
+        <Link
+          to={`${returnUrl}`}
+          className="btn btn-back ml-2 d-flex align-items-center justify-content-center"
+          style={{
+            backgroundColor: '#808080',
+            borderRadius: '4px',
+            marginRight: '8px',
+          }}
+        >
+          {id === undefined ? 'Back' : 'Back'}
+        </Link>
+        <button
+          type="submit"
+          className="btn btn-save ml-2 d-flex align-items-center justify-content-center"
+          style={{
+            backgroundColor: '#008000',
+            borderRadius: '4px',
+          }}
+          onClick={handleSaveAndAddMore}
+          disabled={saving}
+        >
+          <span>Save & Add More</span>
+        </button>
+        <button
+          type="submit"
+          className="btn btn-save ml-2 d-flex align-items-center justify-content-center"
+          style={{
+            backgroundColor: '#0000FF',
+            borderRadius: '4px',
+          }}
+          onClick={handleSave}
+          disabled={saving}
+        >
+          <span>Save</span>
+        </button>
       </div>
     );
   };
@@ -83,10 +92,11 @@ const FormWrapper = (props) => {
 
   return (
     <form method="post" onSubmit={(e) => handleSave(e)}>
-      {title !== undefined && renderModule()}
+      {title !== undefined }
       <div className="content">
         <Alert />
         {children()}
+       {renderModule()}
       </div>
     </form>
   );

@@ -18,6 +18,7 @@ const WarehouseList = ({ user, data, refreshData, deleteData, exportData }) => {
     { label: "Code", key: "code", width: 100, cardTitle: true },
     { label: "Name", key: "name", width: 100, cardTitle: true },
     { label: "Occupancy", key: "occupancy", width: 100, cardTitle: true },
+    { label: "Percentage", key: "", width: 100, cardTitle: true },
   ];
 
   const exportFilename = "Warehouse.csv";
