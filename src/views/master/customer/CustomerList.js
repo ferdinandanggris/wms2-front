@@ -15,11 +15,10 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
     const role = "Master - Customer";
 
     const columns = [
-        { label: "CODE", key: "voucherNo", width: 200 },
-        { label: "NAME", key: "projectID", width: 200 },
-        { label: "STATUS", key: "customerID", width: 200 },
-        { label: "ACTION#", key: "status", width: 200 },
-    ];
+        { label: "CODE", key: "code", width: 40, cardTitle: true },
+        { label: "NAME", key: "name", width: 80, type: "number", align: "right", cardSubTitle: true },
+        { label: "STATUS", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
+      ];
 
     const exportFilename = "item-type.csv";
 
