@@ -72,22 +72,21 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
       <div className="detail">
         <div className="subTitle">Detail Information</div>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Gate</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
+        <div className="col-sm-12">
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Gate <span className="required-star">*</span></label>
+            <div className="col-sm-10">
+              <input className="form-control " type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
+            </div>
+
+          </div>
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
-          </div>
-        </div>
-
-
       </div >
     );
   };

@@ -44,7 +44,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
         seller: "",
         isActive: "",
 
-        
+
         billingAddress: "",
         billingPostalCode: "",
         billingPhone: "",
@@ -53,7 +53,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
         billingCity: "",
         billingDistrict: "",
 
-        
+
         deliveryAddress: "",
         deliveryPostalCode: "",
         deliveryPhone: "",
@@ -61,16 +61,16 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
         deliveryProvince: "",
         deliveryCity: "",
         deliveryDistrict: "",
-        
+
         billingTitleName: "",
         billingName: "",
         billingEmail: "",
         billingStreet: "",
-  
+
         businessEntity: "",
         category: "",
         tempo: 0,
-        
+
         deliveryName: "",
         deliveryEmail: "",
         deliveryStreet: "",

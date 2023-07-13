@@ -76,52 +76,53 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Code</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
-          </div>
-        </div>
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
-          </div>
-        </div>
+        <div className="col-sm-12">
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Code <span className="required-star">*</span></label>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Type</label>
-            <span className="required-star">*</span>
-            <select class="form-control" name="type" onChange={(e) => onChange(e)} value={type}>
-              <option value="finish goods">Finish Goods</option>
-              <option value="raw material">Raw Material</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="form-inline col-sm-12">
-            <label className="mr-5">Status</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="isactive" value={0} checked={isactive == 0} onChange={(e) => onChange(e)} />
-              <label class="form-check-label mr-5" >
-                In Active
-              </label>
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="isactive" value={1} checked={isactive == 1} onChange={(e) => onChange(e)} />
-              <label class="form-check-label">
-                Active
-              </label>
+          </div>
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
+
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
+          </div>
+
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Type <span className="required-star">*</span></label>
+
+            <div className="col-sm-10">
+              <select class="form-control" name="type" onChange={(e) => onChange(e)} value={type}>
+                <option value="finish goods">Finish Goods</option>
+                <option value="raw material">Raw Material</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Status</label>
+            <div className="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isactive" value={0} checked={isactive == 0} onChange={(e) => onChange(e)} />
+                <label class="form-check-label mr-5" >
+                  In Active
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isactive" value={1} checked={isactive == 1} onChange={(e) => onChange(e)} />
+                <label class="form-check-label">
+                  Active
+                </label>
+              </div>
+
             </div>
 
           </div>
-
         </div>
-
 
       </div >
     );

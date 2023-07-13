@@ -77,24 +77,20 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
+        <div className="col-sm-12">
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Action</label>
-            <Select2 options={actionList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Action"} value={actionList === null ? null : actionList.filter((option) => option.id === action)} handleChange={(e) => onSelectChange(e, 'action')} isDisabled={false} />
-            {/* <span className="required-star">*</span>
-            <select class="form-control" name="action" onChange={(e) => onChange(e)} value={action}>
-              <option value="Kali">Kali</option>
-              <option value="Bagi">Bagi</option>
-            </select> */}
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Action</label>
+            <div className="col-sm-10">
+              <Select2 options={actionList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Action"} value={actionList === null ? null : actionList.filter((option) => option.id === action)} handleChange={(e) => onSelectChange(e, 'action')} isDisabled={false} />
+            </div>
           </div>
         </div>
       </div >

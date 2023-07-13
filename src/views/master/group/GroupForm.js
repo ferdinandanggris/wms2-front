@@ -96,27 +96,28 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
+        <div className="col-sm-12">
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Code <span className="required-star">*</span></label>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Code</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
-          </div>
-        </div>
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Warehouse</label>
-            <span className="required-star">*</span>
-            <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
+          </div>
+
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Warehouse <span className="required-star">*</span></label>
+
+            <div className="col-sm-10">
+              <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
+            </div>
           </div>
         </div>
       </div >

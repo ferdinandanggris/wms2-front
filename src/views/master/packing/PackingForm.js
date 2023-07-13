@@ -71,20 +71,20 @@ const PackingForm = ({ user, data, loadData, addData, editData }) => {
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
-
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+        <div className="col-sm-12">
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
+            <div className="col-sm-10">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
           </div>
-        </div>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Remark</label>
-            <span className="required-star">*</span>
-            <NumericFormat className="form-control text-right" name="remark" value={remark} onChange={(e) => onChange(e)} thousandSeparator="," decimalScale={2} required />
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Remark</label>
+
+            <div className="col-sm-10">
+              <NumericFormat className="form-control text-right" name="remark" value={remark} onChange={(e) => onChange(e)} thousandSeparator="," decimalScale={2} required />
+            </div>
           </div>
         </div>
       </div >
