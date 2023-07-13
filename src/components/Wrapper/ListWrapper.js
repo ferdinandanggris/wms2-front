@@ -411,7 +411,10 @@ const ListWrapper = (props) => {
       return value === undefined || value === null ? "" : moment(value).format("DD-MMM-YYYY HH:mm");
     } else if (col.type === "number") {
       if (col.decimals !== undefined) return value.toLocaleString(undefined, { maximumFractionDigits: col.decimals });
-      else return value.toLocaleString();
+      else {
+        if (value == null) value = 0;
+        return value.toLocaleString();
+      }
     } else if (col.key == "warehouseId") {
       return item.warehouse.name;
     }
