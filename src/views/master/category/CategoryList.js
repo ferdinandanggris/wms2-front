@@ -18,7 +18,7 @@ const CategoryList = ({ user, data, refreshData, deleteData, exportData }) => {
     { label: "Code", key: "code", width: 100, cardTitle: true },
     { label: "Name", key: "name", width: 100, cardTitle: true },
     { label: "Type", key: "type", width: 100, cardTitle: true },
-    { label: "Is Active", key: "is_active", width: 100, cardTitle: true },
+    { label: "Is Active", key: "isActive", width: 10, cardTitle: true },
   ];
 
   const exportFilename = "category.csv";

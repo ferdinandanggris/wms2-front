@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -40,6 +40,22 @@ export const loadModule = () => async (dispatch) => {
     const res = await axios.get(`/module?sort=description`);
     dispatch({
       type: LOAD_MODULE,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+// Load Customer
+export const loadWarehouse = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/warehouse?sort=name`);
+    dispatch({
+      type: LOAD_WAREHOUSE,
       payload: res.data,
     });
   } catch (err) {

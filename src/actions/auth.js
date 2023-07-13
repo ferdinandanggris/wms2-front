@@ -6,7 +6,7 @@ import { USER_LOADED, LOGIN_SUCCESS, LOGOUT, AUTH_ERROR, FORGET_PASSWORD, RECOVE
 export const loadUser = () => async dispatch => {
   try {
 
-    const res = await axios.get('https://ws-api.mixtra.co.id/auth/current-user');
+    const res = await axios.get('/auth/current-user');
     dispatch({
       type: USER_LOADED,
       payload: res.data,

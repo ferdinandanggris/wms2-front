@@ -18,15 +18,15 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/Gate";
   const url = "Gate";
-  const role = "Master - UOM";
+  const role = "Master - Gate";
 
   const [formData, setFormData] = useState({
     id: 0,
-    Gate: "",
+    code: "",
     name: "",
   });
 
-  const { gate, name } = formData;
+  const { code, name } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
@@ -38,7 +38,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
       if (data.data !== undefined && data.data !== null) {
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
-          gate: data.data.gate,
+          code: data.data.code,
           name: data.data.name,
         });
       }
@@ -76,7 +76,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
           <div className="form-group col-sm-12">
             <label>Gate</label>
             <span className="required-star">*</span>
-            <input className="form-control" type="text" name="gate" value={gate} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
+            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Gate" required />
           </div>
         </div>
         <div className="row">
