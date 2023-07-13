@@ -2,7 +2,9 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CSVLink } from "react-csv";
-import { FaBolt, FaCalendar, FaCaretDown, FaDownload, FaEye, FaFilter, FaMinus, FaPlus, FaPrint, FaTrash } from "react-icons/fa";
+import { FaBolt, FaCalendar, FaCaretDown, FaPen, FaDownload, FaEye, FaFilter, FaMinus, FaPlus, FaPrint, FaTrash } from "react-icons/fa";
+
+import { BsThreeDotsVertical, BsFileEarmarkDiff } from "react-icons/bs"
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -23,7 +25,7 @@ const ListWrapper = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { img, title, path, url, exportFilename, allowAdd, allowDelete, allowExport, allowFilter, allowSearch, bulkAction, handleBulkAction, filterDate, columns, data, refreshData, exportData, deleteData, role, roles, condition } = props;
+  const { img, title, path, url, exportFilename, allowAdd, allowDelete, allowView, allowEdit, allowExport, allowFilter, allowSearch, bulkAction, handleBulkAction, filterDate, columns, data, refreshData, exportData, deleteData, role, roles, condition } = props;
 
   const { list, module, page, total, loading } = data;
 
@@ -48,8 +50,11 @@ const ListWrapper = (props) => {
   const [checkedItem, setCheckedItem] = useState([]);
 
   // Role
+  const [isRead, setIsRead] = useState(true);
+  const [isPrint, setIsPrint] = useState(true);
   const [isCreate, setIsCreate] = useState(true);
   const [isDelete, setIsDelete] = useState(true);
+  const [isUpdate, setIsUpdate] = useState(true);
 
   // Filter Range
   const [showRange, setShowRange] = useState(false);
@@ -64,6 +69,8 @@ const ListWrapper = (props) => {
 
   // Card Show
   const [showCard, setShowCard] = useState(0);
+
+  const { handleDeleteItem, handleRefresh } = props;
 
   // useEffect(() => {
   //   if (exportedData !== null) {
@@ -88,8 +95,10 @@ const ListWrapper = (props) => {
     if (role !== undefined && role !== null && roles !== undefined && roles !== null) {
       const roleData = roles.find((obj) => obj.description === role);
       if (roleData !== undefined && roleData !== null) {
+        setIsRead(roleData.isRead);
         setIsCreate(roleData.isCreate);
         setIsDelete(roleData.isDelete);
+        setIsUpdate(roleData.isUpdate);
       }
     }
   }, [role, roles]);
@@ -416,6 +425,52 @@ const ListWrapper = (props) => {
     } else return value;
   };
 
+  const handleDelete = (e, id) => {
+    e.preventDefault();
+
+    swal({
+      title: "Are you sure you want to delete these selected items ?",
+      text: "Click OK to confirm",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((succeed) => {
+      if (succeed) {
+        handleDeleteItem(e, id);
+      }
+    });
+  }
+
+  const renderAction = (item, path) => {
+    return (
+      <div className="dropdown action">
+        <a className=" d-flex justify-content-center" href="/#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <BsThreeDotsVertical style={{ color: "#000000" }} />
+        </a>
+        <div className="dropdown-menu" aria-labelledby="action">
+          {(allowView === undefined || allowView) && isRead && (
+            <Link to={`${path}/${item.id}/view`} className="dropdown-item d-flex align-items-center">
+              <FaEye className="dropdown-icon" />
+              <span className="dropdown-text">Detail Data</span>
+            </Link>
+          )}
+          {(allowEdit === undefined || allowEdit) && isUpdate && (
+            <Link to={`${path}/${item.id}/edit`} className="dropdown-item d-flex align-items-center">
+              <FaPen className="dropdown-icon" />
+              <span className="dropdown-text">Edit Data</span>
+            </Link>
+          )}
+          {(allowDelete === undefined || allowDelete) && isDelete && (
+            <button className="dropdown-item dropdown-item-delete d-flex align-items-center" onClick={(e) => handleDelete(e, item.id)}>
+              <FaTrash className="dropdown-icon" />
+              <span className="dropdown-text">Delete Data</span>
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderData =
     list === undefined || list === null || module !== url
       ? null
@@ -436,6 +491,10 @@ const ListWrapper = (props) => {
               </td>
             );
           })}
+
+          {(allowView === undefined || allowEdit === undefined || allowDelete === undefined || allowView || allowEdit || allowDelete) && (
+            <td className="align-middle">{renderAction(item, path)}</td>
+          )}
         </tr>
       ));
 
@@ -557,17 +616,28 @@ const ListWrapper = (props) => {
     return (
       <Table className="table-list" striped responsive hover>
         <thead>
+
           <tr>
             {(allowDelete === undefined || allowDelete || bulkAction !== undefined) && (
               <th style={{ width: 40 }} className="text-center">
                 <input type="checkbox" checked={checkedAll} onChange={handleCheckedAll} />
               </th>
             )}
+
             <th style={{ width: 40 }} className="text-center">
               No
             </th>
+
             {renderHeader}
+
+            {(allowView === undefined || allowEdit === undefined || allowDelete === undefined || allowView || allowEdit || allowDelete) && (
+              <th style={{ width: 100 }} className="text-center">
+                Action
+              </th>
+            )}
+
           </tr>
+
           {filter && (
             <tr>
               {(allowDelete === undefined || allowDelete || bulkAction !== undefined) && (

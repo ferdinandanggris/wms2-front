@@ -9,6 +9,9 @@ const Admin = lazy(() => import("../../views/Home3"));
 const ItemList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 const ItemForm = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 
+const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
+const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
+
 const CategoryList = lazy(() => import("../../views/master/category/CategoryList"));
 const CategoryForm = lazy(() => import("../../views/master/category/CategoryForm"));
 const UomList = lazy(() => import("../../views/master/uom/UomList"));
@@ -140,8 +143,8 @@ const AdminRoutes = [
   { path: "/master/location/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/warehouse", element: <WarehouseList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/warehouse/:id?/:type", element: <WarehouseForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/customer", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/customer/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/customer", element: <CustomerList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/customer/:id?/:type", element: <CustomerForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/vendor", element: <VendorList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/vendor/:id?/:type", element: <VendorForm />, meta: { layout: "full", publicRoute: false } },
 

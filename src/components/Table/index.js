@@ -11,9 +11,7 @@ const Table = (props) => {
 
   return (
     <Fragment>
-      asdfd
-
-
+      TEST
     </Fragment>
   )
 }
