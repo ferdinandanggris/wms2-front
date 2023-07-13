@@ -6,8 +6,8 @@ import { lazy } from "react";
 const Admin = lazy(() => import("../../views/Home3"));
 
 // MASTER
-const ItemList = lazy(() => import("../../views/master/item/ItemList"));
-const ItemForm = lazy(() => import("../../views/master/item/ItemForm"));
+const ItemList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
+const ItemForm = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 
 const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
 const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
