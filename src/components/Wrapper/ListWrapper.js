@@ -488,12 +488,20 @@ const ListWrapper = (props) => {
             {page * limit + index + 1}
           </td>
           {columns.map((col, key) => {
+            console.log(col.key)
             return (
               <td key={key} className={"align-middle data-item " + (item["status"] !== undefined && item["status"] !== null ? item["status"] : "") + " " + (col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left")} onClick={(e) => (col.link === undefined ? handleView(e, item.id) : null)}>
-                {renderValue(col, item[col.key], item)}
+                {col.label === "Percentage" ? (
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style={{ width: "75%" }} aria-valuenow={renderValue(col, item[col.key], item)} aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                ) : (
+                  renderValue(col, item[col.key], item)
+                )}
               </td>
-            );
+            )
           })}
+
 
           {(allowView === undefined || allowEdit === undefined || allowDelete === undefined || allowView || allowEdit || allowDelete) && (
             <td className="align-middle">{renderAction(item, path)}</td>

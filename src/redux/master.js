@@ -1,4 +1,4 @@
-import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE } from "../actions/types";
+import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE, LOAD_ITEM } from "../actions/types";
 
 const initialState = {
   user: null,
@@ -25,7 +25,7 @@ const initialState = {
   shipment: null,
   unpaid: null,
   sync: null,
-
+  item: null,
   order: null,
   warehouse: null,
 };
@@ -85,6 +85,8 @@ export default function master(state = initialState, action) {
       return { ...state, unpaid: payload };
     case LOAD_OUTSTANDING_SHIPMENT:
       return { ...state, shipment: payload };
+    case LOAD_ITEM:
+      return { ...state, item: payload };
     case SYNC_DATE:
       return { ...state, sync: payload.data.length > 0 ? payload.data[0] : null };
 

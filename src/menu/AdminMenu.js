@@ -1,4 +1,4 @@
-import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends, FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt } from "react-icons/fa";
+import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends, FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt, FaCubes } from "react-icons/fa";
 
 const AdminMenu = [
   {
@@ -14,7 +14,7 @@ const AdminMenu = [
     subMenus: [
       {
         path: "/master/item",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaBoxes className="sidebar-icon" />,
         title: "Item",
       },
       {
@@ -29,7 +29,7 @@ const AdminMenu = [
       },
       {
         path: "/master/raw-material",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaCubes className="sidebar-icon" />,
         title: "Raw Material",
       },
       {

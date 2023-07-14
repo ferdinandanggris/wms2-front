@@ -25,6 +25,7 @@ export const CRUD_FAIL = "CRUD_FAIL";
 export const LOAD_USER = "LOAD_USER";
 export const LOAD_ROLE = "LOAD_ROLE";
 export const LOAD_MODULE = "LOAD_MODULE";
+export const LOAD_ITEM ="LOAD_ITEM";
 
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
