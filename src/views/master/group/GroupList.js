@@ -15,9 +15,9 @@ const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
   const role = "Master - Group";
 
   const columns = [
-    { label: "Code", key: "code", width: 100, cardTitle: true },
-    { label: "Name", key: "name", width: 100, cardTitle: true },
-    { label: "Warehouse", key: "warehouseId", width: 100, cardTitle: true },
+    { label: "Code", key: "code", width: 100, align: "right", cardTitle: true },
+    { label: "Name", key: "name", width: 100, align: "right", cardTitle: true },
+    { label: "Warehouse", key: "warehouseId", align: "right", width: 100, cardTitle: true },
   ];
 
   const exportFilename = "Group.csv";
