@@ -12,6 +12,12 @@ const ItemForm = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
 const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
 
+const LocationList = lazy(() => import("../../views/master/location/LocationList"));
+const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
+
+const PalletList = lazy(() => import("../../views/master/pallet/PalletList"));
+const PalletForm = lazy(() => import("../../views/master/pallet/PalletForm"));
+
 const CategoryList = lazy(() => import("../../views/master/category/CategoryList"));
 const CategoryForm = lazy(() => import("../../views/master/category/CategoryForm"));
 const UomList = lazy(() => import("../../views/master/uom/UomList"));
@@ -26,6 +32,7 @@ const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
 const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
 const GroupList = lazy(() => import("../../views/master/group/GroupList"));
 const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
+
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
@@ -137,10 +144,13 @@ const AdminRoutes = [
   { path: "/master/packing/:id?/:type", element: <PackingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/group", element: <GroupList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/group/:id?/:type", element: <GroupForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/pallet", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/pallet/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/location", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/location/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+
+  { path: "/master/pallet", element: <PalletList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/pallet/:id?/:type", element: <PalletForm />, meta: { layout: "full", publicRoute: false } },
+
+  { path: "/master/location", element: <LocationList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/location/:id?/:type", element: <LocationForm />, meta: { layout: "full", publicRoute: false } },
+
   { path: "/master/warehouse", element: <WarehouseList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/warehouse/:id?/:type", element: <WarehouseForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/customer", element: <CustomerList />, meta: { layout: "full", publicRoute: false } },

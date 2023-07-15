@@ -241,7 +241,8 @@ const ListWrapper = (props) => {
     return (
       <div className="module d-flex justify-content-between">
         <div className="module-title d-flex align-items-center">
-          {img} <span className="mr-2">{title}</span> <span style={{ fontWeight: "normal" }}>Table</span>
+          {img} <span className="mr-2">{title}</span>
+          {/* <span style={{ fontWeight: "normal" }}>Table</span> */}
         </div>
       </div>
     );
