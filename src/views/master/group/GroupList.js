@@ -15,9 +15,9 @@ const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
   const role = "Master - Group";
 
   const columns = [
-    { label: "Code", key: "code", width: 100, align: "right", cardTitle: true },
-    { label: "Name", key: "name", width: 100, align: "right", cardTitle: true },
-    { label: "Warehouse", key: "warehouseId", align: "right", width: 100, cardTitle: true },
+    { label: "Code", key: "code", width: 100, align: "left", cardTitle: true },
+    { label: "Name", key: "name", width: 100, align: "left", cardTitle: true },
+    { label: "Warehouse", key: "warehouseId", align: "left", width: 100, cardTitle: true },
   ];
 
   const exportFilename = "Group.csv";
@@ -28,7 +28,14 @@ const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
     }
   }, [user, refreshData]);
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} />;
+  const customRenderValue = (col, value, item) => {
+    if (col.key == "warehouseId") {
+      return item.warehouse.name;
+    }
+  };
+
+
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
 };
 
 GroupList.propTypes = {

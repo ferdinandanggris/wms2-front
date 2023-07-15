@@ -43,7 +43,7 @@ const FormWrapper = (props) => {
           <span className="mr-2" style={{ marginTop: "4px" }}>
             {title}
           </span>{" "}
-          {/* <span style={{ fontWeight: "normal", marginTop: "4px" }}>{id === undefined ? "Create" : "View"}</span> */}
+          <span style={{ fontWeight: "normal", marginTop: "4px" }}>{id === undefined ? "Create" : "View"}</span>
         </div>
         <div className="d-flex">
           {(allowAdd === undefined || allowAdd) &&
