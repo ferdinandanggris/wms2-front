@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import ListTransaction from "../customComponent/listTransaction";
 
 const PalletForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
@@ -25,6 +26,10 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
         type: "",
         tare: "",
         capacity: 0,
+        initial: 0,
+        incoming: 0,
+        outgoing: 0,
+        balance: 0,
     });
 
     const { name, type, code, capacity, warehouseId, tare } = formData;
@@ -164,6 +169,9 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                             />
                         </div>
                     </div>
+                </div>
+                <div>
+                    <ListTransaction id={id} listType="pallet" formData={formData} />
                 </div>
             </div>
         );
