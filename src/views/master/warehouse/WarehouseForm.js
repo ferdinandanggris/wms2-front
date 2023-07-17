@@ -6,10 +6,11 @@ import { FaLayerGroup } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
-
-const UomForm = ({ user, data, loadData, addData, editData }) => {
+import ListTransaction from "../customComponent/listTransaction";
+const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
   let { type, id } = useParams();
 
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
   const title = "Warehouse";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/warehouse";
-  const url = "warehouse";
+  const url = "Warehouse";
   const role = "Master - Warehouse";
 
   const [formData, setFormData] = useState({
@@ -96,19 +97,22 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
             <input className="form-control" type="text" name="occupancy" value={occupancy} onChange={(e) => onChange(e)} placeholder="Enter Occupancy" required />
           </div>
         </div>
-
+        <div>
+        <ListTransaction id={id} listType="WareHouse" formData={formData} />
+      </div>
       </div >
+      
     );
   };
 
   return (
     <FormWrapper img={img} title={title} path={path} type={type} role={role} id={id} handleSave={handleSave}>
-      {element}
-    </FormWrapper>
+    {element}
+</FormWrapper>
   );
 };
 
-UomForm.propTypes = {
+WarehouseForm.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
   loadData: PropTypes.func,
@@ -121,4 +125,4 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData })(UomForm);
+export default connect(mapStateToProps, { loadData, addData, editData })(WarehouseForm);

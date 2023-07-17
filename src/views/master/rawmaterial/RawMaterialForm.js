@@ -24,6 +24,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData }) => {
   const role = "Master - RawMaterial";
 
   const [formData, setFormData] = useState({
+    id: 0,
     name: "",
     code: "",
     uomId: 1,

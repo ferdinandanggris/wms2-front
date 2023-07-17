@@ -25,6 +25,7 @@ const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) =
   const role = "Master - Item";
 
   const [formData, setFormData] = useState({
+    id: 0,
     name: "",
     code: "",
     uomId: 1,
