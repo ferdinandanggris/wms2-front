@@ -8,13 +8,16 @@ const ItemForm = lazy(() => import("../../views/master/item/ItemForm"));
 const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
 const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
 
+const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
+const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
+
+
 const LocationList = lazy(() => import("../../views/master/location/LocationList"));
 const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
 
 const PalletList = lazy(() => import("../../views/master/pallet/PalletList"));
 const PalletForm = lazy(() => import("../../views/master/pallet/PalletForm"));
-const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
-const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
+
 const CategoryList = lazy(() => import("../../views/master/category/CategoryList"));
 const CategoryForm = lazy(() => import("../../views/master/category/CategoryForm"));
 const UomList = lazy(() => import("../../views/master/uom/UomList"));
