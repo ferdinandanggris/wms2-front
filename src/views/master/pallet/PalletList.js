@@ -7,18 +7,20 @@ import PropTypes from "prop-types";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 
-const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
-    const title = "Customer";
+const PalletList = ({ user, data, refreshData, deleteData, exportData }) => {
+    const title = "Pallet";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/customer";
-    const url = "customer";
-    const role = "Master - Customer";
+    const path = "/master/pallet";
+    const url = "pallet";
+    const role = "Master - Pallet";
 
     const columns = [
-        { label: "CODE", key: "code", width: 100,  type: "number", align: "right", cardTitle: true },
+        { label: "CODE", key: "code", width: 40,  type: "number", align: "left", cardTitle: true },
         { label: "NAME", key: "name", width: 40, type: "number", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 100, type: "number", align: "right", cardSubTitle: true },
-      ];
+        { label: "TYPE", key: "type", width: 40, type: "number", align: "right", cardSubTitle: true },
+        { label: "CAPACITY", key: "capacity", width: 40, type: "number", align: "right", cardSubTitle: true },
+        { label: "TARE", key: "tare", width: 40, type: "number", align: "right", cardSubTitle: true },
+    ];
 
     const exportFilename = "item-type.csv";
 
@@ -36,7 +38,7 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
     )
 };
 
-CustomerList.propTypes = {
+PalletList.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     refreshData: PropTypes.func,
@@ -49,4 +51,4 @@ const mapStateToProps = (state) => ({
     data: state.data,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData })(CustomerList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData })(PalletList);

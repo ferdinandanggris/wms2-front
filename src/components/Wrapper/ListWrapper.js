@@ -25,7 +25,7 @@ const ListWrapper = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { img, title, path, url, exportFilename, allowAdd, allowDelete, allowView, allowEdit, allowExport, allowFilter, allowSearch, bulkAction, handleBulkAction, filterDate, columns, data, refreshData, exportData, deleteData, role, roles, condition } = props;
+  const { img, title, path, url, exportFilename, allowAdd, allowDelete, allowView, allowEdit, allowExport, allowFilter, allowSearch, bulkAction, handleBulkAction, filterDate, columns, data, refreshData, exportData, deleteData, role, roles, condition, customRenderValue } = props;
 
   const { list, module, page, total, loading } = data;
 
@@ -241,7 +241,8 @@ const ListWrapper = (props) => {
     return (
       <div className="module d-flex justify-content-between">
         <div className="module-title d-flex align-items-center">
-          {img} <span className="mr-2">{title}</span> <span style={{ fontWeight: "normal" }}>Table</span>
+          {img} <span className="mr-2">{title}</span>
+          {/* <span style={{ fontWeight: "normal" }}>Table</span> */}
         </div>
       </div>
     );
@@ -415,16 +416,19 @@ const ListWrapper = (props) => {
         if (value == null) value = 0;
         return value.toLocaleString();
       }
-    } else if (col.key == "warehouseId") {
-      return item.warehouse.name;
-    }
-    else if (col.type === "print") {
+    } else if (col.type === "print") {
       if (item.status === "CANCELED" || item.status === "DRAFT") return null;
       return (
         <a href={`${baseURL}/${url}/${col.url}${value}`} className="download-link">
           <FaPrint />
         </a>
       );
+    } else if (customRenderValue !== undefined) {
+      var returnValue = customRenderValue(col, value, item);
+      if (returnValue === undefined)
+        returnValue = value;
+
+      return returnValue;
     } else return value;
   };
 
