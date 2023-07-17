@@ -130,16 +130,16 @@ const ListTransaction = (props) => {
     };
 
     const renderTotal = () => {
-
+        // if (formData !== undefined && formData !== null)
         if (formData !== undefined)
             return (
                 <tr className="table-list">
                     <th colSpan={5} >TOTAL</th>
 
-                    <th className="text-right">{formData.initial.toLocaleString()}</th>
-                    <th className="text-right">{formData.incoming.toLocaleString()}</th>
-                    <th className="text-right">{formData.outgoing.toLocaleString()}</th>
-                    <th className="text-right">{formData.balance.toLocaleString()}</th>
+                    <th className="text-right">{formData.initial}</th>
+                    <th className="text-right">{formData.incoming}</th>
+                    <th className="text-right">{formData.outgoing}</th>
+                    <th className="text-right">{formData.balance}</th>
                 </tr>
             )
         else
@@ -159,7 +159,7 @@ const ListTransaction = (props) => {
             <thead>
                 <tr>
                     <th style={{ width: 30 }} className="text-center">No</th>
-                    <th style={{ width: 80 }} className="text-center">Transction No</th>
+                    <th style={{ width: 80 }} className="text-center">Transaction No</th>
                     <th style={{ width: 80 }} className="text-center">Code</th>
                     <th style={{ width: 130 }} className="text-center">Item</th>
                     <th style={{ width: 70 }} className="text-center">Date</th>
