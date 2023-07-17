@@ -9,9 +9,7 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 
-import { NumericFormat } from "react-number-format";
-
-const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
+const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
 
     const navigate = useNavigate();
@@ -293,7 +291,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     Title Name<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="titleNama" value={billingTitleName} type="text" placeholder="" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="titleNama" value={billingTitleName} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Name</label>
@@ -306,7 +304,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     Province<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingProvince" value={billingProvince} type="text" placeholder="" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="billingProvince" value={billingProvince} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Phone</label>
@@ -319,7 +317,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingCity" value={billingCity} type="text" placeholder="" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="billingCity" value={billingCity} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Postal Code</label>
@@ -332,7 +330,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingDistrict" value={billingDistrict} type="text" placeholder="" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="billingDistrict" value={billingDistrict} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Fax</label>
@@ -369,7 +367,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     Title Name<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryTitleName" onChange={(e) => onChange(e)}>
+                                    <select className="form-control" name="deliveryTitleName" onChange={(e) => onChange(e)} required>
                                         <option value="">Select Title</option>
                                         <option value="mr">Mr.</option>
                                         <option value="mrs">Mrs.</option>
@@ -409,7 +407,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryCity" onChange={(e) => onChange(e)}>
+                                    <select className="form-control" name="deliveryCity" onChange={(e) => onChange(e)} required>
                                         <option value="">Select City</option>
                                         <option value="city1">City 1</option>
                                         <option value="city2">City 2</option>
@@ -429,7 +427,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
                                     District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryDistrict" onChange={(e) => onChange(e)}>
+                                    <select className="form-control" name="deliveryDistrict" onChange={(e) => onChange(e)} required>
                                         <option value="">Select District</option>
                                         <option value="district1">District 1</option>
                                         <option value="district2">District 2</option>
@@ -544,7 +542,7 @@ const ItemTypeForm = ({ user, data, loadData, addData, editData }) => {
     );
 };
 
-ItemTypeForm.propTypes = {
+CustomerForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     loadData: PropTypes.func,
@@ -557,4 +555,4 @@ const mapStateToProps = (state) => ({
     data: state.data,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData })(ItemTypeForm);
+export default connect(mapStateToProps, { loadData, addData, editData })(CustomerForm);
