@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 
+import ListTransaction from "../customComponent/listTransaction";
+
 const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
 
@@ -230,8 +232,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </div>
                 </div>
-
-
                 <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                     <Tab eventKey="ContactDetail" title={<span><FaIdCard style={tabIconStyle} /> Contact Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
@@ -291,7 +291,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     Title Name<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="titleNama" value={billingTitleName} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
+                                    <input className="form-control text-left" name="titleNama" value={billingTitleName} type="text" placeholder="" onChange={(e) => onChange(e)} required />
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Name</label>
@@ -304,7 +304,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     Province<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingProvince" value={billingProvince} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
+                                    <input className="form-control text-left" name="billingProvince" value={billingProvince} type="text" placeholder="" onChange={(e) => onChange(e)} required />
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Phone</label>
@@ -317,7 +317,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingCity" value={billingCity} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
+                                    <input className="form-control text-left" name="billingCity" value={billingCity} type="text" placeholder="" onChange={(e) => onChange(e)} required />
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Postal Code</label>
@@ -330,7 +330,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="billingDistrict" value={billingDistrict} type="text" placeholder="" onChange={(e) => onChange(e)} required/>
+                                    <input className="form-control text-left" name="billingDistrict" value={billingDistrict} type="text" placeholder="" onChange={(e) => onChange(e)} required />
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Fax</label>
@@ -529,6 +529,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </Tab>
                 </Tabs>
+                <div>
+                    <ListTransaction id={id} listType="customer" formData={formData} />
+                </div>
             </div>
 
         );

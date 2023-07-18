@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+
 import ListTransaction from "../customComponent/listTransaction";
 
 const PalletForm = ({ user, data, loadData, addData, editData }) => {

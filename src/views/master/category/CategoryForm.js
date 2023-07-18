@@ -9,6 +9,8 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 
+import ListTransaction from "../customComponent/listTransaction";
+
 const CategoryForm = ({ user, data, loadData, addData, editData }) => {
   let { id } = useParams();
 
@@ -123,7 +125,9 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
 
           </div>
         </div>
-
+        <div>
+          <ListTransaction id={id} listType="category" formData={formData} />
+        </div>
       </div >
     );
   };

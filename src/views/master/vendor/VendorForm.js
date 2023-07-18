@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
+import ListTransaction from "../customComponent/listTransaction";
 
 const VendorForm = ({ user, data, loadData, addData, editData }) => {
   let { type, id } = useParams();
@@ -105,6 +106,9 @@ const VendorForm = ({ user, data, loadData, addData, editData }) => {
 
             </div>
           </div>
+        </div>
+        <div>
+          <ListTransaction id={id} listType="vendor" formData={formData} />
         </div>
       </div >
     );
