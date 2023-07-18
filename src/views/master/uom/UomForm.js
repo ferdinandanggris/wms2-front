@@ -10,8 +10,6 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 
-import ListTransaction from "../customComponent/listTransaction";
-
 const UomForm = ({ user, data, loadData, addData, editData }) => {
   let { type, id } = useParams();
 
@@ -79,7 +77,7 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
-        <div className="col-sm-12">
+        <div className="col-sm-12 mb-5">
           <div className="row form-group align-items-center">
             <label className="col-sm-2 col-form-label">Name <span className="required-star">*</span></label>
             <div className="col-sm-10">
@@ -92,9 +90,6 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
               <Select2 options={actionList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Action"} value={actionList === null ? null : actionList.filter((option) => option.id === action)} handleChange={(e) => onSelectChange(e, 'action')} isDisabled={false} />
             </div>
           </div>
-        </div>
-        <div>
-          <ListTransaction id={id} listType="uom" formData={formData} />
         </div>
       </div >
     );

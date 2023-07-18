@@ -171,7 +171,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="mt-5">
                     <ListTransaction id={id} listType="pallet" formData={formData} />
                 </div>
             </div>

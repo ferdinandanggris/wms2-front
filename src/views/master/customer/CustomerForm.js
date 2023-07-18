@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 
-import ListTransaction from "../customComponent/listTransaction";
+import "../master.css"
 
 const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
@@ -220,17 +220,18 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             <div className="mr-5">
                                 <label>
                                     <input type="radio" name="status" value="inactive" onChange={handleStatusChange} />
-                                    Inactive
+                                    <span class="radio-label">Inactive</span>
                                 </label>
                             </div>
                             <div>
                                 <label>
                                     <input type="radio" name="status" value="active" onChange={handleStatusChange} />
-                                    Active
+                                    <span class="radio-label">Active</span>
                                 </label>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                     <Tab eventKey="ContactDetail" title={<span><FaIdCard style={tabIconStyle} /> Contact Detail</span>}>
@@ -529,9 +530,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </Tab>
                 </Tabs>
-                <div>
-                    <ListTransaction id={id} listType="customer" formData={formData} />
-                </div>
             </div>
 
         );
