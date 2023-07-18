@@ -89,7 +89,7 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                 <div className="subTitle">
                     <FaSearchLocation style={tabIconStyle} />Add Locations
                 </div>
-                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
+                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2 ">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Code</label>
                         <div className="col-sm-4">
@@ -187,7 +187,8 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </div>
                 </div>
-                <div>
+
+                <div className="mt-5">
                     <ListTransaction id={id} listType="location" formData={formData} />
                 </div>
             </div>

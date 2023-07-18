@@ -12,6 +12,7 @@ import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 import { loadItem } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
+import "../master.css"
 
 const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) => {
   let { type, id } = useParams();
@@ -192,13 +193,13 @@ const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) =
               <div className="mr-5">
                 <label>
                   <input type="radio" name="status" value="inactive" onChange={handleStatusChange} required />
-                  Inactive
+                  <span class="radio-label">Inactive</span>
                 </label>
               </div>
               <div>
                 <label>
                   <input type="radio" name="status" value="active" onChange={handleStatusChange} required />
-                  Active
+                  <span class="radio-label">Active</span>
                 </label>
               </div>
             </div>

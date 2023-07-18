@@ -6,10 +6,11 @@ import { FaLayerGroup } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+
 import ListTransaction from "../customComponent/listTransaction";
+
 const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
   let { type, id } = useParams();
 
@@ -18,7 +19,7 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
   const title = "Warehouse";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/warehouse";
-  const url = "Warehouse";
+  const url = "warehouse";
   const role = "Master - Warehouse";
 
   const [formData, setFormData] = useState({
@@ -97,18 +98,17 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
             <input className="form-control" type="text" name="occupancy" value={occupancy} onChange={(e) => onChange(e)} placeholder="Enter Occupancy" required />
           </div>
         </div>
-        <div>
-        <ListTransaction id={id} listType="WareHouse" formData={formData} />
-      </div>
+        <div className="mt-5">
+          <ListTransaction id={id} listType="location" formData={formData} />
+        </div>
       </div >
-      
     );
   };
 
   return (
     <FormWrapper img={img} title={title} path={path} type={type} role={role} id={id} handleSave={handleSave}>
-    {element}
-</FormWrapper>
+      {element}
+    </FormWrapper>
   );
 };
 

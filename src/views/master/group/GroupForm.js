@@ -12,8 +12,6 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 
-import ListTransaction from "../customComponent/listTransaction";
-
 const GroupForm = ({ user, data, loadData, addData, editData, master, loadWarehouse }) => {
   let { type, id } = useParams();
 
@@ -98,7 +96,7 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
     return (
       <div className="detail">
         <div className="subTitle">Detail Information</div>
-        <div className="col-sm-12">
+        <div className="col-sm-12 mb-5">
           <div className="row form-group align-items-center">
             <label className="col-sm-2 col-form-label">Code <span className="required-star">*</span></label>
 
@@ -121,9 +119,6 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
               <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
             </div>
           </div>
-        </div>
-        <div>
-          <ListTransaction id={id} listType="group" formData={formData} />
         </div>
       </div >
     );
