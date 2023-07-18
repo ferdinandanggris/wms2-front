@@ -21,7 +21,7 @@ const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) =
   const title = "Item Type";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/item/:id?/:type";
-  const url = "itemform";
+  const url = "Item";
   const role = "Master - Item";
 
   const [formData, setFormData] = useState({
@@ -111,6 +111,7 @@ const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) =
 
   console.log(formData,'formdata')
   console.log(master,'master')
+  
   const element = () => {
     return (
       <div className="detail">
@@ -164,6 +165,7 @@ const ItemForm = ({ user, data, loadData, addData, editData,master,loadItem }) =
                 <option value="term2">Term 2</option>
                 <option value="term3">Term 3</option>
               </select>
+              
             </div>
           </div>
           <div className="row align-items-center mb-3">

@@ -20,7 +20,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData }) => {
   const title = "RawMaterialForm";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/master/raw-material/:id?/:type";
-  const url = "RawMaterialForm";
+  const url = "RawMaterial";
   const role = "Master - RawMaterial";
 
   const [formData, setFormData] = useState({

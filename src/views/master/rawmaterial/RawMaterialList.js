@@ -11,7 +11,7 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData }) =>
   const title = "Raw Material List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/master/raw-material";
-  const url = "rawMaterial";
+  const url = "RawMaterial";
   const role = "Master - rawMaterial";
 
   const columns = [

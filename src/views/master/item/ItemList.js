@@ -11,7 +11,7 @@ const ItemList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Item List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/master/item";
-  const url = "item";
+  const url = "Item";
   const role = "Master - Item";
 
   const columns = [
