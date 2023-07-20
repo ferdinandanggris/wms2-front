@@ -51,8 +51,6 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
       }
       setWarehouse(list);
     }
-
-
   }, [master]);
 
   useEffect(() => {

@@ -15,11 +15,10 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
 
     const navigate = useNavigate();
-    const [status, setStatus] = useState('');
-    const [activeLabel, setActiveLabel] = useState('');
     const title = "Add Customer";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/customer/:id?/:customer";
+    // const path = "/master/customer/:id?/:customer";
+    const path = "/master/customer";
     const url = "Customer";
     const role = "Master - Customer";
 
@@ -27,7 +26,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
         id: 0,
         code: "",
         name: "",
-        country: "",
+        country: 0,
         pic: "",
         mobile1: "",
         mobile2: "",
@@ -42,8 +41,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
         tax2: "",
         virtualAccount: "",
         seller: "",
-        isActive: "",
-
+        isActive: 1,
 
         billingAddress: "",
         billingPostalCode: "",
@@ -52,7 +50,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
         billingProvince: "",
         billingCity: "",
         billingDistrict: "",
-
 
         deliveryAddress: "",
         deliveryPostalCode: "",
@@ -84,7 +81,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
 
     });
 
-    const { name, type, isActive, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryProvince, deliveryPhone, deliveryCity, deliveryPostalCode, deliveryDistrict, deliveryFax, deliveryEmail, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
+    const { name, type, isActive, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -96,19 +93,40 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
-                    name: data.data.name,
-                    category: data.data.category,
                     code: data.data.code,
-                    uomId: data.data.uomId,
-                    packingId: data.data.packingId,
-                    initial: data.data.initial,
-                    incoming: data.data.incoming,
-                    outgoing: data.data.outgoing,
-                    balance: data.data.balance,
-                    exclusive: data.data.exclusive,
-                    category: data.data.category,
-                    type: data.data.type,
-                    qtyPerPacking: data.data.qtyPerPacking,
+                    name: data.data.name,
+                    seller: data.data.seller,
+                    country: data.data.country,
+                    deliveryAddress: data.data.deliveryAddress,
+                    deliveryPostalCode: data.data.deliveryPostalCode,
+                    deliveryPhone: data.data.deliveryPhone,
+                    deliveryFax: data.data.deliveryFax,
+                    billingAddress: data.data.billingAddress,
+                    billingPostalCode: data.data.billingPostalCode,
+                    billingPhone: data.data.billingPhone,
+                    billingFax: data.data.billingFax,
+                    pic: data.data.pic,
+                    mobile1: data.data.mobile1,
+                    mobile2: data.data.mobile2,
+                    email: data.data.email,
+                    web: data.data.web,
+                    paymentTerm: data.data.paymentTerm,
+                    currency: data.data.currency,
+                    customerType: data.data.customerType,
+                    nik: data.data.nik,
+                    npwp: data.data.npwp,
+                    taxType: data.data.taxType,
+                    tax1: data.data.tax1,
+                    tax2: data.data.tax2,
+                    virtualAccount: data.data.virtualAccount,
+                    seller: data.data.seller,
+                    deliveryProvince: data.data.deliveryProvince,
+                    deliveryCity: data.data.deliveryCity,
+                    deliveryDistrict: data.data.deliveryDistrict,
+                    deliveryProvince: data.data.deliveryProvince,
+                    billingProvince: data.data.billingProvince,
+                    billingCity: data.data.billingCity,
+                    billingDistrict: data.data.billingDistrict,
                     isActive: data.data.isActive,
                 });
             }
@@ -132,13 +150,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                 navigate(`${path}`);
             });
         }
-    };
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
-    };
-
-    const handleLabelClick = (label) => {
-        setActiveLabel(label);
     };
 
     const tabIconStyle = {
@@ -214,24 +225,24 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </select>
                         </div>
                     </div>
-                    <div className="row align-items-center mb-3">
+                    <div className="row form-group align-items-center">
                         <label className="col-sm-2 col-form-label">Status</label>
-                        <div className="d-flex">
-                            <div className="mr-5">
-                                <label>
-                                    <input type="radio" name="status" value="inactive" onChange={handleStatusChange} />
-                                    <span class="radio-label">Inactive</span>
+                        <div className="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="isActive" value={0} checked={isActive == 0} onChange={(e) => onChange(e)} />
+                                <label class="form-check-label mr-5" >
+                                    In Active
                                 </label>
                             </div>
-                            <div>
-                                <label>
-                                    <input type="radio" name="status" value="active" onChange={handleStatusChange} />
-                                    <span class="radio-label">Active</span>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="isActive" value={1} checked={isActive == 1} onChange={(e) => onChange(e)} />
+                                <label class="form-check-label">
+                                    Active
                                 </label>
                             </div>
+
                         </div>
                     </div>
-
                 </div>
                 <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                     <Tab eventKey="ContactDetail" title={<span><FaIdCard style={tabIconStyle} /> Contact Detail</span>}>
@@ -388,7 +399,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     Province<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryProvince" onChange={(e) => onChange(e)}>
+                                    <select className="form-control" value={deliveryProvince} name="deliveryProvince" onChange={(e) => onChange(e)}>
                                         <option value="">Select Province</option>
                                         <option value="province1">Province 1</option>
                                         <option value="province2">Province 2</option>
@@ -408,7 +419,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryCity" onChange={(e) => onChange(e)} required>
+                                    <select className="form-control" name="deliveryCity" value={deliveryCity} onChange={(e) => onChange(e)} required>
                                         <option value="">Select City</option>
                                         <option value="city1">City 1</option>
                                         <option value="city2">City 2</option>
@@ -428,7 +439,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="deliveryDistrict" onChange={(e) => onChange(e)} required>
+                                    <select className="form-control" name="deliveryDistrict" value={deliveryDistrict} onChange={(e) => onChange(e)} required>
                                         <option value="">Select District</option>
                                         <option value="district1">District 1</option>
                                         <option value="district2">District 2</option>

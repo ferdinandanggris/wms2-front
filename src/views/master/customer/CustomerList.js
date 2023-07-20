@@ -17,7 +17,7 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
     const columns = [
         { label: "CODE", key: "code", width: 100,  type: "number", align: "right", cardTitle: true },
         { label: "NAME", key: "name", width: 40, type: "number", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 100, type: "number", align: "right", cardSubTitle: true },
+        { label: "STATUS", key: "isActive", width: 100, type: "number", align: "right", cardSubTitle: true },
       ];
 
     const exportFilename = "item-type.csv";

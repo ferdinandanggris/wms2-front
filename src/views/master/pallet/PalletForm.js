@@ -16,7 +16,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
     const navigate = useNavigate();
     const title = "Add Pallet";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/pallet/:id?/:pallet";
+    const path = "/master/pallet";
     const url = "Pallet";
     const role = "Master - Pallet";
 
@@ -25,15 +25,11 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
         code: "",
         name: "",
         type: "",
-        tare: "",
         capacity: 0,
-        initial: 0,
-        incoming: 0,
-        outgoing: 0,
-        balance: 0,
+        tare: "",
     });
 
-    const { name, type, code, capacity, warehouseId, tare } = formData;
+    const { code, name, type, capacity, tare } = formData;
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -45,20 +41,11 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
-                    name: data.data.name,
-                    category: data.data.category,
                     code: data.data.code,
-                    uomId: data.data.uomId,
-                    packingId: data.data.packingId,
-                    initial: data.data.initial,
-                    incoming: data.data.incoming,
-                    outgoing: data.data.outgoing,
-                    balance: data.data.balance,
-                    exclusive: data.data.exclusive,
-                    category: data.data.category,
+                    name: data.data.name,
                     type: data.data.type,
-                    qtyPerPacking: data.data.qtyPerPacking,
-                    isActive: data.data.isActive,
+                    capacity: data.data.capacity,
+                    tare: data.data.tare,
                 });
             }
         }
@@ -87,12 +74,15 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
         marginRight: '5px',
     };
 
+    console.log("TYPE", type)
+
     const element = () => {
         return (
             <div className="detail">
                 <div className="subTitle">
                     <FaPallet style={tabIconStyle} />Add Pallets
                 </div>
+
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Code</label>
@@ -123,25 +113,24 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                             />
                         </div>
                     </div>
+
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Type<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Type <span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <select
                                 className="form-control"
                                 name="type"
-                                value={type}
                                 onChange={(e) => onChange(e)}
-                                required
+                                value={type}
                             >
-                                <option value="">Select Type</option>
-                                <option value="type1">Type 1</option>
-                                <option value="type2">Type 2</option>
-                                <option value="type3">Type 3</option>
+                                <option value="Glass">Glass</option>
+                                <option value="Plastic">Plastic</option>
                             </select>
                         </div>
                     </div>
+
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Capacity</label>
                         <div className="col-sm-4">
@@ -155,6 +144,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                             />
                         </div>
                     </div>
+
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">
                             Tare
@@ -171,6 +161,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                         </div>
                     </div>
                 </div>
+
                 <div className="mt-5">
                     <ListTransaction id={id} listType="pallet" formData={formData} />
                 </div>

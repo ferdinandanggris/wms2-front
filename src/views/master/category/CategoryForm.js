@@ -25,11 +25,10 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
     code: "",
     name: "",
     type: "finish goods",
-    isactive: 1
-
+    isActive: 1
   });
 
-  const { code, name, type, isactive } = formData;
+  const { code, name, type, isActive } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
@@ -44,7 +43,7 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
           code: data.data.code,
           name: data.data.name,
           type: data.data.type,
-          isactive: data.data.isActive,
+          isActive: data.data.isActive,
         });
       }
     }
@@ -54,8 +53,6 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -70,7 +67,6 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
       });
     }
   };
-
 
   const element = () => {
     return (
@@ -93,10 +89,16 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
           </div>
 
           <div className="row form-group align-items-center">
-            <label className="col-sm-2 col-form-label">Type <span className="required-star">*</span></label>
-
+            <label className="col-sm-2 col-form-label">
+              Type <span className="required-star">*</span>
+            </label>
             <div className="col-sm-10">
-              <select class="form-control" name="type" onChange={(e) => onChange(e)} value={type}>
+              <select
+                class="form-control"
+                name="type"
+                onChange={(e) => onChange(e)}
+                value={type}
+              >
                 <option value="finish goods">Finish Goods</option>
                 <option value="raw material">Raw Material</option>
               </select>
@@ -107,20 +109,18 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
             <label className="col-sm-2 col-form-label">Status</label>
             <div className="col-sm-10">
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="isactive" value={0} checked={isactive == 0} onChange={(e) => onChange(e)} />
+                <input class="form-check-input" type="radio" name="isActive" value={0} checked={isActive == 0} onChange={(e) => onChange(e)} />
                 <label class="form-check-label mr-5" >
                   In Active
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="isactive" value={1} checked={isactive == 1} onChange={(e) => onChange(e)} />
+                <input class="form-check-input" type="radio" name="isActive" value={1} checked={isActive == 1} onChange={(e) => onChange(e)} />
                 <label class="form-check-label">
                   Active
                 </label>
               </div>
-
             </div>
-
           </div>
         </div>
       </div >

@@ -5,11 +5,14 @@ import { FaLayerGroup, FaSearchLocation } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { loadWarehouse } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import ListTransaction from "../customComponent/listTransaction";
 
-const LocationForm = ({ user, data, loadData, addData, editData }) => {
+import Select2 from "../../../components/Select2";
+
+const LocationForm = ({ user, data, loadData, addData, editData, master, loadWarehouse }) => {
     let { id } = useParams();
 
     const navigate = useNavigate();
@@ -18,22 +21,39 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
     const path = "/master/location/:id?/:location";
     const url = "Location";
     const role = "Master - Location";
-
+    
     const [formData, setFormData] = useState({
         id: 0,
         code: "",
         name: "",
         remark: "",
         capacity: 0,
-        warehouseId: "",
+        warehouse: "",
         group: "",
     });
-
+    
+    const [warehouseList, setWarehouse] = useState([]);
     const { name, type, code, remark, capacity, warehouseId, group } = formData;
 
     useEffect(() => {
+        loadWarehouse();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData]);
+    }, [id, user, loadData, loadWarehouse]);
+
+    useEffect(() => {
+        if (master.warehouse !== undefined && master.warehouse !== null) {
+            let list = [...master.warehouse];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Warehouse",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setWarehouse(list);
+        }
+    }, [master]);
 
     useEffect(() => {
         if (data !== undefined && data !== null && id !== undefined) {
@@ -42,19 +62,10 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     name: data.data.name,
-                    category: data.data.category,
                     code: data.data.code,
-                    uomId: data.data.uomId,
-                    packingId: data.data.packingId,
-                    initial: data.data.initial,
-                    incoming: data.data.incoming,
-                    outgoing: data.data.outgoing,
-                    balance: data.data.balance,
-                    exclusive: data.data.exclusive,
-                    category: data.data.category,
-                    type: data.data.type,
-                    qtyPerPacking: data.data.qtyPerPacking,
-                    isActive: data.data.isActive,
+                    capacity: data.data.capacity,
+                    remark: data.data.remark,
+                    warehouseId: data.data.warehouseId,
                 });
             }
         }
@@ -63,6 +74,10 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const onSelectChange = (e, name) => {
+        setFormData({ ...formData, [name]: e.id });
     };
 
     const handleSave = (e) => {
@@ -89,6 +104,7 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                 <div className="subTitle">
                     <FaSearchLocation style={tabIconStyle} />Add Locations
                 </div>
+
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2 ">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Code</label>
@@ -99,7 +115,7 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                                 type="text"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                placeholder="Enter Code"
                             />
                         </div>
                     </div>
@@ -114,7 +130,7 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                                 type="text"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                placeholder="Enter Name"
                                 required
                             />
                         </div>
@@ -153,20 +169,10 @@ const LocationForm = ({ user, data, loadData, addData, editData }) => {
                             Warehouse<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col-sm-4">
-                            <select
-                                className="form-control"
-                                name="warehouseId"
-                                value={warehouseId}
-                                onChange={(e) => onChange(e)}
-                                required
-                            >
-                                <option value="">Select Warehouse</option>
-                                <option value="warehouse1">Warehouse 1</option>
-                                <option value="warehouse2">Warehouse 2</option>
-                                <option value="warehouse3">Warehouse 3</option>
-                            </select>
+                            <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
                     </div>
+
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
                             Group<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
@@ -209,11 +215,13 @@ LocationForm.propTypes = {
     loadData: PropTypes.func,
     addData: PropTypes.func,
     editData: PropTypes.func,
+    master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
     data: state.data,
+    master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData })(LocationForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse })(LocationForm);
