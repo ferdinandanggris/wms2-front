@@ -44,6 +44,10 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
           code: data.data.code,
           name: data.data.name,
           occupancy: data.data.occupancy,
+          initial: data.data.initial,
+          incoming: data.data.incoming,
+          outgoing: data.data.outgoing,
+          balance: data.data.balance,
         });
       }
     }
@@ -99,7 +103,7 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
           </div>
         </div>
         <div className="mt-5">
-          <ListTransaction id={id} listType="location" formData={formData} />
+          <ListTransaction id={id} listType="warehouse" formData={formData} />
         </div>
       </div >
     );

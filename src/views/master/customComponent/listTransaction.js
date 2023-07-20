@@ -65,10 +65,10 @@ const ListTransaction = (props) => {
           <td>{item.batchCode}</td>
           <td>{item.itemName}</td>
           <td>{moment(item.transDate).format("DD MMM YYYY")}</td>
-          <td className="text-right">{item.initial}</td>
-          <td className="text-right">{item.incoming}</td>
-          <td className="text-right">{item.outgoing}</td>
-          <td className="text-right">{item.balance}</td>
+          <td className="text-right">{item.initial.toLocaleString()}</td>
+          <td className="text-right">{item.incoming.toLocaleString()}</td>
+          <td className="text-right">{item.outgoing.toLocaleString()}</td>
+          <td className="text-right">{item.balance.toLocaleString()}</td>
         </tr>
       );
     } else if (loading) {
@@ -122,6 +122,7 @@ const ListTransaction = (props) => {
 
   const renderTotal = () => {
     if (formData) {
+
       return (
         <tr className="table-list">
           <th colSpan={5}>TOTAL</th>
