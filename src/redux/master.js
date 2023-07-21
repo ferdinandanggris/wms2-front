@@ -1,4 +1,4 @@
-import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE, LOAD_ITEM } from "../actions/types";
+import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_PACKING } from "../actions/types";
 
 const initialState = {
   user: null,
@@ -13,6 +13,7 @@ const initialState = {
   costCenter: null,
   industry: null,
   customer: null,
+  packing:null,
   sector: null,
   address: null,
   product: null,
@@ -53,8 +54,6 @@ export default function master(state = initialState, action) {
       return { ...state, fleet: payload.data };
     case LOAD_DRIVER:
       return { ...state, driver: payload.data };
-    case LOAD_CATEGORY:
-      return { ...state, category: payload.data };
     case LOAD_INDUSTRY:
       return { ...state, industry: payload.data };
     case LOAD_CUSTOMER:
@@ -87,6 +86,10 @@ export default function master(state = initialState, action) {
       return { ...state, shipment: payload };
     case LOAD_ITEM:
       return { ...state, item: payload };
+    case LOAD_CATEGORY:
+      return { ...state, category: payload.data };
+      case LOAD_PACKING:
+        return { ...state, packing: payload.data };
     case SYNC_DATE:
       return { ...state, sync: payload.data.length > 0 ? payload.data[0] : null };
 

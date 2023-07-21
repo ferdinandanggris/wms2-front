@@ -26,13 +26,14 @@ export const LOAD_USER = "LOAD_USER";
 export const LOAD_ROLE = "LOAD_ROLE";
 export const LOAD_MODULE = "LOAD_MODULE";
 export const LOAD_ITEM ="LOAD_ITEM";
+export const LOAD_CATEGORY ="LOAD_CATEGORY";
+export const LOAD_PACKING ="LOAD_PACKING";
 
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
 export const LOAD_FLEETTYPE = "LOAD_FLEETTYPE";
 export const LOAD_DRIVER = "LOAD_DRIVER";
 export const LOAD_FLEET = "LOAD_FLEET";
-export const LOAD_CATEGORY = "LOAD_CATEGORY";
 export const LOAD_INDUSTRY = "LOAD_INDUSTRY";
 export const LOAD_CUSTOMER = "LOAD_CUSTOMER";
 export const LOAD_WAREHOUSE = "LOAD_WAREHOUSE";
