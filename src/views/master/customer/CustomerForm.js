@@ -81,7 +81,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
 
     });
 
-    const { name, type, isActive, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
+    const { name, type, isActive, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -159,7 +159,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     const element = () => {
         return (
             <div className="detail">
-                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Customer</div>
+                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Detail Information</div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Code</label>
@@ -190,41 +190,50 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             <input name="businessEntityName" value={businessEntityName} type="text" className="form-control text-left" onChange={(e) => onChange(e)} placeholder="" />
                         </div>
                     </div>
+                    
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Payment Term</label>
                         <div className="col-sm-3">
-                            <select className="form-control" name="paymentTerm" value={paymentTerm} onChange={(e) => onChange(e)}>
+                            <select
+                                className="form-control"
+                                name="paymentTerm"
+                                value={paymentTerm}
+                                onChange={(e) => onChange(e)}>
                                 <option value="">Select Payment Term</option>
-                                <option value="term1">Term 1</option>
+                                <option value="C.O.D">C.O.D</option>
                                 <option value="term2">Term 2</option>
                                 <option value="term3">Term 3</option>
                             </select>
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Tempo</label>
                         <div className="col">
-                            <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                            <input className="form-control text-right" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="number" />
                         </div>
                     </div>
+                    
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Customer Type</label>
                         <div className="col-sm-3">
                             <select className="form-control" name="customerType" value={customerType} onChange={(e) => onChange(e)}>
                                 <option value="">Select Customer Type</option>
-                                <option value="type1">Type 1</option>
-                                <option value="type2">Type 2</option>
-                                <option value="type3">Type 3</option>
+                                <option value="1">Type 1</option>
+                                <option value="2">Type 2</option>
+                                <option value="3">Type 3</option>
                             </select>
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Seller</label>
                         <div className="col">
                             <select className="form-control" name="seller" value={seller} onChange={(e) => onChange(e)}>
                                 <option value="">Select Seller</option>
-                                <option value="seller1">Seller 1</option>
-                                <option value="seller2">Seller 2</option>
-                                <option value="seller3">Seller 3</option>
+                                <option value="IDS1">IDS1</option>
+                                <option value="SH">SH</option>
+                                <option value="SD">SD</option>
+                                <option value="SN">SN</option>
+                                <option value="AE01">AE01</option>
                             </select>
                         </div>
                     </div>
+
                     <div className="row form-group align-items-center">
                         <label className="col-sm-2 col-form-label">Status</label>
                         <div className="col-sm-10">
@@ -252,9 +261,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                 <div className="col-sm-3">
                                     <select className="form-control" name="country" value={country} onChange={(e) => onChange(e)}>
                                         <option value="">Select Country</option>
-                                        <option value="country1">Country 1</option>
-                                        <option value="country2">Country 2</option>
-                                        <option value="country3">Country 3</option>
+                                        <option value="1">Country 1</option>
+                                        <option value="2">Country 2</option>
+                                        <option value="3">Country 3</option>
                                     </select>
                                 </div>
                             </div>
@@ -391,7 +400,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                     Name
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="deliveryName" value={deliveryName} type="text" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="deliveryName" value={name} type="text" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
@@ -401,9 +410,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                                 <div className="col-sm-3">
                                     <select className="form-control" value={deliveryProvince} name="deliveryProvince" onChange={(e) => onChange(e)}>
                                         <option value="">Select Province</option>
-                                        <option value="province1">Province 1</option>
-                                        <option value="province2">Province 2</option>
-                                        <option value="province3">Province 3</option>
+                                        <option value="31">Province 31</option>
+                                        <option value="32">Province 32</option>
+                                        <option value="33">Province 33</option>
+                                        <option value="34">Province 34</option>
+                                        <option value="35">Province 35</option>
+                                        <option value="36">Province 36</option>
                                     </select>
                                 </div>
 
@@ -542,7 +554,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                     </Tab>
                 </Tabs>
             </div>
-
         );
 
     };
