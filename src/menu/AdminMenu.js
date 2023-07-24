@@ -137,7 +137,7 @@ const AdminMenu = [
         title: "Raw Material Batch",
       },
       {
-        path: "/transaction/raw-material-receiving",
+        path:"/transaction-rm/raw-material-receiving",
         icon: <FaBox className="sidebar-icon" />,
         title: "Raw Material Receiving",
       },

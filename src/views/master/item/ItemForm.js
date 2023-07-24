@@ -15,7 +15,7 @@ import { loadCategory, loadItem, loadPacking } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
 const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking }) => {
-  let { type, id } = useParams();
+  let {id } = useParams();
 
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
@@ -30,7 +30,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     name: "",
     code: "",
     uomId: 0,
-    packingId: parseInt(""),
+    packingId: "",
     initial: 0,
     incoming: 0,
     outgoing: 0,
@@ -50,7 +50,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     batches: ""
   });
 
-  const { name, code, initial, uomId, packingId, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
+  const { name, code, initial, uomId, packingId, incoming, outgoing, exclusive, category, qtyPerPacking, balance,type } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
@@ -114,7 +114,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   const onSelectChange = (e, name) => {
     console.log(e);
     if(name === "category") {
-      setFormData({...formData, [name]: e.name});
+      setFormData({...formData, [name]: e.code});
     } else if(name === "packingId") {
       setFormData({...formData, [name]: e.id});
     }
@@ -173,26 +173,25 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
             </div>
           </div>
           <div className="row align-items-center mb-3">
-            <label className="col-sm-2 col-form-label">Type</label>
-            <div className="col-sm-3">
-              <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)}>
-                <option value="">** Please select</option>
-                <option value="exclusive">exclusive</option>
-                <option value="free">free</option>
-              </select>
-
-            </div>
-          </div>
+  <label className="col-sm-2 col-form-label">Type</label>
+  <div className="col-sm-3">
+    <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)}>
+      <option value="">Please select</option>
+      <option value="exclusive">exclusive</option>
+      <option value="free">free</option>
+    </select>
+  </div>
+</div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
             <div className="col-sm-3">
               <Select2
                 options={master.category}
                 optionValue={(option) => option.id.toString()}
-                optionLabel={(option) => option.name}
+                optionLabel={(option) => option.code}
                 placeholder={"** Please select"}
                 value={master.category === null ? null : master.category?.filter((option) =>
-                  option.name === formData.category
+                  option.code === formData.category
                 )}
                 handleChange={(e) => onSelectChange(e, "category")}
               />

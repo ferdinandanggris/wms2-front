@@ -47,10 +47,11 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
     spWarehouseDetails: "",
     spLocationDetails: "",
     spPalletDetails: "",
-    batches: ""
+    batches: "",
+    uom:""
   });
 
-  const { name, code, initial, uomId, packingId, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
+  const { name, code, initial, uomId, packingId,uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
@@ -79,7 +80,8 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
           category: data.data.category,
           type: data.data.type,
           qtyPerPacking: data.data.qtyPerPacking,
-          balance: data.data.balance
+          balance: data.data.balance,
+          uom:data.data.uom
         });
       }
     }
@@ -113,7 +115,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
   const onSelectChange = (e, name) => {
     console.log(e);
     if(name === "category") {
-      setFormData({...formData, [name]: e.name});
+      setFormData({...formData, [name]: e.code});
     } else if(name === "packingId") {
       setFormData({...formData, [name]: e.id});
     }
@@ -172,7 +174,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
                 optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
                 value={master.category === null ? null : master.category?.filter((option) =>
-                  option.name === formData.category
+                  option.code === formData.category
                 )}
                 handleChange={(e) => onSelectChange(e, "category")}
               />

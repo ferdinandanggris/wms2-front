@@ -32,7 +32,10 @@ const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
 const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
 const GroupList = lazy(() => import("../../views/master/group/GroupList"));
 const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
-
+const RawMaterialBatchList = lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
+const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
+const RawMaterialBatchReceivingList = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingList"));
+const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingForm"));
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
@@ -175,10 +178,10 @@ const AdminRoutes = [
   { path: "/transaction/non-komersil/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
 
   // TRANSAKSI RM
-  { path: "/transaction-rm/raw-material-batch", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-batch/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-receiving", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-receiving/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-batch", element: < RawMaterialBatchList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-batch/:id?/:type", element: <RawMaterialBatchForm/>, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-receiving", element: <RawMaterialBatchReceivingList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-receiving/:id?/:type", element: <RawMaterialBatchReceivingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-usage", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-usage/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
 
