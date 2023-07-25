@@ -116,32 +116,6 @@ const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transaction
 // const PaymentList = lazy(() => import("../../views/financeManagement/payment/PaymentList"));
 // const PaymentForm = lazy(() => import("../../views/financeManagement/payment/PaymentForm"));
 
-// MASTER
-const ItemList = lazy(() => import("../../views/master/item/ItemList"));
-const ItemForm = lazy(() => import("../../views/master/item/ItemForm"));
-const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
-const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
-const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
-const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
-const LocationList = lazy(() => import("../../views/master/location/LocationList"));
-const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
-const PalletList = lazy(() => import("../../views/master/pallet/PalletList"));
-const PalletForm = lazy(() => import("../../views/master/pallet/PalletForm"));
-const CategoryList = lazy(() => import("../../views/master/category/CategoryList"));
-const CategoryForm = lazy(() => import("../../views/master/category/CategoryForm"));
-const UomList = lazy(() => import("../../views/master/uom/UomList"));
-const UomForm = lazy(() => import("../../views/master/uom/UomForm"));
-const GateList = lazy(() => import("../../views/master/gate/GateList"));
-const GateForm = lazy(() => import("../../views/master/gate/GateForm"));
-const PackingList = lazy(() => import("../../views/master/packing/PackingList"));
-const PackingForm = lazy(() => import("../../views/master/packing/PackingForm"));
-const WarehouseList = lazy(() => import("../../views/master/warehouse/WarehouseList"));
-const WarehouseForm = lazy(() => import("../../views/master/warehouse/WarehouseForm"));
-const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
-const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
-const GroupList = lazy(() => import("../../views/master/group/GroupList"));
-const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
-
 //TRANSACTION
 const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList"));
 const BatchNumberForm = lazy(() => import("../../views/transaction/batchNumber/BatchNumberForm"));
