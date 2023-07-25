@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE,LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -50,7 +50,7 @@ export const loadModule = () => async (dispatch) => {
   }
 }
 
-// Load Customer
+// Load Warehouse
 export const loadWarehouse = () => async (dispatch) => {
   try {
     const res = await axios.get(`/warehouse?sort=name`);
@@ -65,6 +65,24 @@ export const loadWarehouse = () => async (dispatch) => {
     dispatch(setAlert(errMessage, 'danger'));
   }
 }
+
+//Load Group
+export const loadGroup = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/group?sort=name`);
+    dispatch({
+      type: LOAD_GROUP,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+
 //Load Item
 export const loadItem= () => async (dispatch) => {
   try {

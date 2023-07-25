@@ -26,7 +26,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
         name: "",
         type: "",
         capacity: 0,
-        tare: "",
+        tare: 0,
     });
 
     const { code, name, type, capacity, tare } = formData;
@@ -80,7 +80,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
         return (
             <div className="detail">
                 <div className="subTitle">
-                    <FaPallet style={tabIconStyle} />Add Pallets
+                    <FaPallet style={tabIconStyle} />Detail Information
                 </div>
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
@@ -139,7 +139,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                                 value={capacity}
                                 type="number"
                                 onChange={(e) => onChange(e)}
-                                className="form-control text-left"
+                                className="form-control text-right"
                                 placeholder=""
                             />
                         </div>
@@ -153,8 +153,8 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                             <input
                                 name="tare"
                                 value={tare}
-                                type="text"
-                                className="form-control text-left"
+                                type="number"
+                                className="form-control text-right"
                                 onChange={(e) => onChange(e)}
                                 placeholder=""
                             />

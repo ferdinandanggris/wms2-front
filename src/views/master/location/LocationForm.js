@@ -5,23 +5,24 @@ import { FaLayerGroup, FaSearchLocation } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { loadWarehouse } from "../../../actions/master";
+import { loadWarehouse, loadGroup } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+
 import ListTransaction from "../customComponent/listTransaction";
 
 import Select2 from "../../../components/Select2";
 
-const LocationForm = ({ user, data, loadData, addData, editData, master, loadWarehouse }) => {
+const LocationForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadGroup }) => {
     let { id } = useParams();
 
     const navigate = useNavigate();
     const title = "Add Location";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/location/:id?/:location";
+    const path = "/master/location";
     const url = "Location";
     const role = "Master - Location";
-    
+
     const [formData, setFormData] = useState({
         id: 0,
         code: "",
@@ -31,14 +32,16 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
         warehouse: "",
         group: "",
     });
-    
+
     const [warehouseList, setWarehouse] = useState([]);
-    const { name, type, code, remark, capacity, warehouseId, group } = formData;
+    const [groupList, setGroup] = useState([]);
+    const { name, type, code, remark, capacity, warehouseId, groupId } = formData;
 
     useEffect(() => {
         loadWarehouse();
+        loadGroup();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse]);
+    }, [id, user, loadData, loadWarehouse, loadGroup]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -53,6 +56,18 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
             }
             setWarehouse(list);
         }
+        if (master.group !== undefined && master.group !== null) {
+            let list = [...master.group];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Group",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setGroup(list);
+        }
     }, [master]);
 
     useEffect(() => {
@@ -66,6 +81,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                     capacity: data.data.capacity,
                     remark: data.data.remark,
                     warehouseId: data.data.warehouseId,
+                    groupId: data.data.groupId,
                 });
             }
         }
@@ -102,7 +118,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
         return (
             <div className="detail">
                 <div className="subTitle">
-                    <FaSearchLocation style={tabIconStyle} />Add Locations
+                    <FaSearchLocation style={tabIconStyle} />Detail Information
                 </div>
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2 ">
@@ -159,17 +175,23 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 value={capacity}
                                 type="number"
                                 onChange={(e) => onChange(e)}
-                                className="form-control text-left"
+                                className="form-control text-right"
                                 placeholder=""
                             />
                         </div>
                     </div>
+
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
                             Warehouse<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col-sm-4">
-                            <Select2 options={warehouseList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Warehouse"} value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))} handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                            <Select2
+                                options={warehouseList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Warehouse"}
+                                value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
+                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
                     </div>
 
@@ -178,18 +200,12 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                             Group<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col-sm-4">
-                            <select
-                                className="form-control"
-                                name="group"
-                                value={group}
-                                onChange={(e) => onChange(e)}
-                                required
-                            >
-                                <option value="">Select Group</option>
-                                <option value="group1">Group 1</option>
-                                <option value="group2">Group 2</option>
-                                <option value="group3">Group 3</option>
-                            </select>
+                            <Select2
+                                options={groupList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Group"}
+                                value={groupList === null ? null : groupList.filter((option) => option.id === parseInt(groupId))}
+                                handleChange={(e) => onSelectChange(e, "groupId")} />
                         </div>
                     </div>
                 </div>
@@ -198,7 +214,6 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                     <ListTransaction id={id} listType="location" formData={formData} />
                 </div>
             </div>
-
         );
     };
 
@@ -224,4 +239,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse })(LocationForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadGroup })(LocationForm);

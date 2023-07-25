@@ -32,17 +32,15 @@ const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
 const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
 const GroupList = lazy(() => import("../../views/master/group/GroupList"));
 const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
-const RawMaterialBatchList = lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
-const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
 const RawMaterialBatchReceivingList = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingList"));
 const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingForm"));
+
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
 // const RouteForm = lazy(() => import("../../views/master/route/RouteForm"));
 // const ProductList = lazy(() => import("../../views/master/product/ProductList"));
 // const ProductForm = lazy(() => import("../../views/master/product/ProductForm"));
-
 
 // const OrderForm = lazy(() => import("../../views/order/OrderForm"));
 // const DraftList = lazy(() => import("../../views/order/DraftList"));
@@ -95,8 +93,6 @@ const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transaction
 // const SectorList = lazy(() => import("../../views/customerManagement/sector/SectorList"));
 // const SectorForm = lazy(() => import("../../views/customerManagement/sector/SectorForm"));
 
-
-
 // const CostCenterList = lazy(() => import("../../views/fleetManagement/costCenter/CostCenterList"));
 // const CostCenterForm = lazy(() => import("../../views/fleetManagement/costCenter/CostCenterForm"));
 // const FleetList = lazy(() => import("../../views/fleetManagement/fleet/FleetList"));
@@ -120,6 +116,37 @@ const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transaction
 // const PaymentList = lazy(() => import("../../views/financeManagement/payment/PaymentList"));
 // const PaymentForm = lazy(() => import("../../views/financeManagement/payment/PaymentForm"));
 
+// MASTER
+const ItemList = lazy(() => import("../../views/master/item/ItemList"));
+const ItemForm = lazy(() => import("../../views/master/item/ItemForm"));
+const CustomerList = lazy(() => import("../../views/master/customer/CustomerList"));
+const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm"));
+const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
+const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
+const LocationList = lazy(() => import("../../views/master/location/LocationList"));
+const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
+const PalletList = lazy(() => import("../../views/master/pallet/PalletList"));
+const PalletForm = lazy(() => import("../../views/master/pallet/PalletForm"));
+const CategoryList = lazy(() => import("../../views/master/category/CategoryList"));
+const CategoryForm = lazy(() => import("../../views/master/category/CategoryForm"));
+const UomList = lazy(() => import("../../views/master/uom/UomList"));
+const UomForm = lazy(() => import("../../views/master/uom/UomForm"));
+const GateList = lazy(() => import("../../views/master/gate/GateList"));
+const GateForm = lazy(() => import("../../views/master/gate/GateForm"));
+const PackingList = lazy(() => import("../../views/master/packing/PackingList"));
+const PackingForm = lazy(() => import("../../views/master/packing/PackingForm"));
+const WarehouseList = lazy(() => import("../../views/master/warehouse/WarehouseList"));
+const WarehouseForm = lazy(() => import("../../views/master/warehouse/WarehouseForm"));
+const VendorList = lazy(() => import("../../views/master/vendor/VendorList"));
+const VendorForm = lazy(() => import("../../views/master/vendor/VendorForm"));
+const GroupList = lazy(() => import("../../views/master/group/GroupList"));
+const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
+
+//TRANSACTION
+const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList"));
+const BatchNumberForm = lazy(() => import("../../views/transaction/batchNumber/BatchNumberForm"));
+
+//ADMIN
 const UserList = lazy(() => import("../../views/admin/user/UserList"));
 const UserForm = lazy(() => import("../../views/admin/user/UserForm"));
 const RoleList = lazy(() => import("../../views/admin/role/RoleList"));
@@ -130,15 +157,15 @@ const ModuleForm = lazy(() => import("../../views/admin/module/ModuleForm"));
 const AdminRoutes = [
   { path: "/admin", element: <Admin />, meta: { layout: "full", publicRoute: false } },
 
-  // Master
+  // MASTER
   { path: "/master/item", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/item/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/lead-customer", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/lead-customer/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/uom", element: <UomList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/uom/:id?/:type", element: <UomForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/raw-material", element: < RawMaterialList/>, meta: { layout: "full", publicRoute: false } },
-  { path: "/master/raw-material/:id?/:type", element: < RawMaterialForm/>, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/raw-material", element: < RawMaterialList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/master/raw-material/:id?/:type", element: < RawMaterialForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/gate", element: <GateList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/gate/:id?/:type", element: <GateForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/category", element: <CategoryList />, meta: { layout: "full", publicRoute: false } },
@@ -147,13 +174,10 @@ const AdminRoutes = [
   { path: "/master/packing/:id?/:type", element: <PackingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/group", element: <GroupList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/group/:id?/:type", element: <GroupForm />, meta: { layout: "full", publicRoute: false } },
-
   { path: "/master/pallet", element: <PalletList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/pallet/:id?/:type", element: <PalletForm />, meta: { layout: "full", publicRoute: false } },
-
   { path: "/master/location", element: <LocationList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/location/:id?/:type", element: <LocationForm />, meta: { layout: "full", publicRoute: false } },
-
   { path: "/master/warehouse", element: <WarehouseList />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/warehouse/:id?/:type", element: <WarehouseForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/master/customer", element: <CustomerList />, meta: { layout: "full", publicRoute: false } },
@@ -166,8 +190,8 @@ const AdminRoutes = [
   { path: "/transaction/spk/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/production", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/production/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/batch-number", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/batch-number/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/batch-number", element: <BatchNumberList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/batch-number/:id?/:type", element: <BatchNumberForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
@@ -197,6 +221,13 @@ const AdminRoutes = [
   { path: "/report/detail-spk-vs-shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/detail-spk-vs-shipping/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
 
+  // ADMIN
+  { path: "/admin/module", element: <ModuleList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/admin/module/:id?/:type", element: <ModuleForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/admin/user", element: <UserList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/admin/user/:id?/:type", element: <UserForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/admin/role", element: <RoleList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/admin/role/:id?/:type", element: <RoleForm />, meta: { layout: "full", publicRoute: false } },
 
   // // Order
   // { path: "/order", element: <OrderList />, meta: { layout: "full", publicRoute: false } },
@@ -281,15 +312,6 @@ const AdminRoutes = [
   // { path: "/finance-management/payment", element: <PaymentList />, meta: { layout: "full", publicRoute: false } },
   // { path: "/finance-management/payment/:id?/:type", element: <PaymentForm />, meta: { layout: "full", publicRoute: false } },
 
-
-
-  // Admin
-  { path: "/admin/module", element: <ModuleList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/admin/module/:id?/:type", element: <ModuleForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/admin/user", element: <UserList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/admin/user/:id?/:type", element: <UserForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/admin/role", element: <RoleList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/admin/role/:id?/:type", element: <RoleForm />, meta: { layout: "full", publicRoute: false } },
 ];
 
 export default AdminRoutes;
