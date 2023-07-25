@@ -29,6 +29,10 @@ export const LOAD_ITEM = "LOAD_ITEM";
 export const LOAD_CATEGORY = "LOAD_CATEGORY";
 export const LOAD_PACKING = "LOAD_PACKING";
 
+// Transaction
+export const LOAD_BATCH = "LOAD_BATCH";
+
+
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
 export const LOAD_FLEETTYPE = "LOAD_FLEETTYPE";

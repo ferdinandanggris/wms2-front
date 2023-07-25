@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_BATCH, LOAD_BACTHDETAIL } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -8,6 +8,22 @@ export const loadUser = () => async (dispatch) => {
     const res = await axios.get(`/user?sort=fullname`);
     dispatch({
       type: LOAD_USER,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+// Load Customer
+export const loadCustomer = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/customer?sort=name`);
+    dispatch({
+      type: LOAD_CUSTOMER,
       payload: res.data,
     });
   } catch (err) {
@@ -82,7 +98,6 @@ export const loadGroup = () => async (dispatch) => {
   }
 }
 
-
 //Load Item
 export const loadItem= () => async (dispatch) => {
   try {
@@ -99,6 +114,7 @@ export const loadItem= () => async (dispatch) => {
   }
 }
 
+//Load Category
 export const loadCategory= () => async (dispatch) => {
   try {
     const res = await axios.get(`/Category`);
@@ -113,11 +129,29 @@ export const loadCategory= () => async (dispatch) => {
     dispatch(setAlert(errMessage, 'danger'));
   }
 }
+
+//Load Packing
 export const loadPacking= () => async (dispatch) => {
   try {
     const res = await axios.get(`/Packing`);
     dispatch({
       type: LOAD_PACKING,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Batch
+export const loadBatch = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Batch`);
+    dispatch({
+      type: LOAD_BATCH,
       payload: res.data,
     });
   } catch (err) {

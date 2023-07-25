@@ -690,6 +690,9 @@ const ListWrapper = (props) => {
 
   <div className="card-body list-card-body">{loading ? <Spinner /> : renderList()}</div>;
 
+
+  console.log("TEST ITEM", data)
+
   return (
     <Fragment>
       {title !== undefined && renderModule()}

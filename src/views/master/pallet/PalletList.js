@@ -11,7 +11,7 @@ const PalletList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "Pallet";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/master/pallet";
-    const url = "pallet";
+    const url = "Pallet";
     const role = "Master - Pallet";
 
     const columns = [

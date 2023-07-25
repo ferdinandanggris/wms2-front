@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaPallet } from "react-icons/fa";
-
+import { FaLayerGroup, FaInfoCircle } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loadItem } from "../../../actions/master";
-import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
+import { loadItem } from "../../../actions/master";
+import { loadData, addData, editData } from "../../../actions/data";
 
 const BatchNumberForm = ({ user, data, loadData, addData, editData, master, loadItem }) => {
     let { id } = useParams();
@@ -16,15 +15,15 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const title = "Add Batch Number";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/transaction/batch-number";
-    const url = "batch-number";
+    const url = "Batch";
     const role = "Transaction - Batch Number";
 
     const [formData, setFormData] = useState({
         id: 0,
         code: "",
         item: "",
-        batchDate: "",
-        status: 1,
+        transDate: "",
+        status: "",
         color: "",
         qty: 0,
         qc: "",
@@ -33,7 +32,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     });
 
     const [itemList, setItem] = useState([]);
-    const { code, batchDate, status, color, qc, qty, visual, description, itemId } = formData;
+    const { code, transDate, status, color, qc, qty, visual, description, itemId } = formData;
 
     useEffect(() => {
         loadItem();
@@ -62,8 +61,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
-                    item: data.data.item,
-                    batchDate: data.data.batchDate,
+                    transDate: data.data.transDate,
                     status: data.data.status,
                     color: data.data.color,
                     qty: data.data.qty,
@@ -107,7 +105,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         return (
             <div className="detail">
                 <div className="subTitle">
-                    <FaPallet style={tabIconStyle} />Detail Information
+                    <FaInfoCircle style={tabIconStyle} />Detail Information
                 </div>
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
@@ -141,11 +139,11 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         <label className="col-sm-2 col-form-label">Batch Date</label>
                         <div className="col-sm-4">
                             <input
-                                name="batchDate"
-                                value={batchDate}
+                                name="transDate"
+                                value={transDate}
                                 type="text"
                                 onChange={(e) => onChange(e)}
-                                className="form-control text-right"
+                                className="form-control text-left"
                                 placeholder=""
                             />
                         </div>
@@ -154,13 +152,13 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         <label className="col-sm-2 col-form-label">Status</label>
                         <div className="col-sm-10">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="isActive" value={0} checked={status == 0} onChange={(e) => onChange(e)} />
+                                <input class="form-check-input" type="radio" name="status" value="Y" checked={status === "Y"} onChange={(e) => onChange(e)} />
                                 <label class="form-check-label mr-5" >
                                     Approved
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="isActive" value={1} checked={status == 1} onChange={(e) => onChange(e)} />
+                                <input class="form-check-input" type="radio" name="status" value="X" checked={status === "X"} onChange={(e) => onChange(e)} />
                                 <label class="form-check-label">
                                     Pending
                                 </label>
@@ -173,11 +171,11 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Color</label>
                         <div className="col">
-                            <input className="form-control text-right" name="color" value={color} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="color" value={color} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">QC</label>
                         <div className="col">
-                            <input className="form-control text-right" name="qc" value={qc} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="qc" value={qc} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 
@@ -188,7 +186,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Visual</label>
                         <div className="col">
-                            <input className="form-control text-right" name="visual" value={visual} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="visual" value={visual} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 

@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaLayerGroup, FaSearchLocation } from "react-icons/fa";
-
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import ListTransaction from "../customComponent/listTransaction";
+import Select2 from "../../../components/Select2";
 
 import { loadWarehouse, loadGroup } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
 
-import ListTransaction from "../customComponent/listTransaction";
 
-import Select2 from "../../../components/Select2";
 
 const LocationForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadGroup }) => {
     let { id } = useParams();
