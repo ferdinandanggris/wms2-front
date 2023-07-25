@@ -142,7 +142,7 @@ const AdminMenu = [
         title: "Raw Material Receiving",
       },
       {
-        path: "/transaction/raw-material-usage",
+        path:  "/transaction-rm/raw-material-usage",
         icon: <FaBox className="sidebar-icon" />,
         title: "Raw Material Usage",
       },
