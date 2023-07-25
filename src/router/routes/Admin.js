@@ -34,6 +34,8 @@ const GroupList = lazy(() => import("../../views/master/group/GroupList"));
 const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
 const RawMaterialBatchReceivingList = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingList"));
 const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingForm"));
+const RawMaterialBatchList= lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
+const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -115,6 +117,7 @@ const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transaction
 // const InvoiceForm = lazy(() => import("../../views/financeManagement/invoice/InvoiceForm"));
 // const PaymentList = lazy(() => import("../../views/financeManagement/payment/PaymentList"));
 // const PaymentForm = lazy(() => import("../../views/financeManagement/payment/PaymentForm"));
+
 
 //TRANSACTION
 const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList"));
