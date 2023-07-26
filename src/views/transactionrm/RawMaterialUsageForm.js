@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends } from "react-icons/fa";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaHouseUser } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,17 +11,16 @@ import FormWrapper from "../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
 
 
-
 const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
-    const title = " Raw Material Receiving";
+    const title = " Raw Material Usage ";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
-    const path ="/transaction-rm/raw-material-receiving/:id?/:type";
+    const path ="/transaction-rm/raw-material-usage/:id?/:type";
     const url = "Customer";
-    const role = "transaction -RawMaterialBatchReceivingForm";
+    const role = "transaction -RawMaterialUsageForm";
 
     const [formData, setFormData] = useState({
         id: 0,
@@ -163,62 +162,57 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     const element = () => {
         return (
             <div className="detail">
-                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Raw Material Receiving</div>
+                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Raw Material Usage</div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                 <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>
+                        <label className="col-sm-2 col-form-label">Voucher # <span className="text-danger">*</span></label>
                         <div className="col-sm-3">
                         <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Reference#</label>
-                        <div className="col">
-                            <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                    </div>
-                    <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Created <span className="text-danger">*</span></label>
-                        <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">Date</label>
-                        <div className="col">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                    </div>
-          <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Posted</label>
-                        <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">Date</label>
-                        <div className="col">
-                            <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                    </div>
-                    <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Vendor</label>
-                        <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">WareHouse <span className="text-danger">*</span></label>
+                        <label className="col-sm-1 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
                         <div className="col">
                         <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
-            <label className="col-sm-2 col-form-label">Batch No</label>
+            <label className="col-sm-2 col-form-label">WareHouse <span className="text-danger">*</span></label>
             <div className="col-sm-10">
               <input name="code" value={code} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
             </div>
                     </div>
-                    <RTable bordered style={{ float: 'center', width: "100%" }}>
+                    <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
+          <Tab eventKey="ContactDetail" title={<span><FaLayerGroup style={tabIconStyle} /> Item Detail</span>}>
+       <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2"></div>     
+            <div className="row align-items-center mb-3">
+            <div className="row align-items-center mb-3">
+    <label className="col-sm-2 col-form-label">Batch No</label>
+    <div className="col-sm-8"> {/* Increased the column size to make the text box wider */}
+        <input
+            className="form-control text-left"
+            name="tempo"
+            value={tempo}
+            onChange={(e) => onChange(e)}
+            type="text"
+        />
+    </div>
+    <div className="col-sm-1">
+        <input
+            className="form-check-input"
+            type="checkbox"
+            name="checkBoxName"
+            id="checkBoxId"
+            // Add any additional props or event handlers for the checkbox as needed
+        />
+    </div>
+</div>
+              <RTable bordered style={{ float: 'center', width: "100%" }}>
                 <thead>
                   <tr>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Item</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>UOM</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Pallets</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Pallet</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Location</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Remark</th>
                   </tr>
@@ -230,11 +224,38 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
                     <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
                     <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
                     <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
                     <td style={{ textAlign: 'center' }}>{formData.balance}</td>
                   </tr>
                 </tbody>
               </RTable>
+            </div>
+          </Tab>
+
+          <Tab eventKey="BillingDetail" title={<span><FaHouseUser style={tabIconStyle} />Change Logs</span>}>
+          <div className="row align-items-center mb-3">
+                        <label className="col-sm-2 col-form-label">Created</label>
+                        <div className="col-sm-3">
+                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        </div>
+                        <label className="col-sm-1 text-left col-form-label">Created Date</label>
+                        <div className="col">
+                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        </div>
+                    </div>
+                    <div className="row align-items-center mb-3">
+                        <label className="col-sm-2 col-form-label">Posted</label>
+                        <div className="col-sm-3">
+                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        </div>
+                        <label className="col-sm-1 text-left col-form-label">Posted Date</label>
+                        <div className="col">
+                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        </div>
+                    </div>
+          </Tab>
+          </Tabs>
+
                 </div>
                 
             </div>

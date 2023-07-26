@@ -36,6 +36,8 @@ const RawMaterialBatchReceivingList = lazy(() => import("../../views/transaction
 const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingForm"));
 const RawMaterialBatchList = lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
 const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
+const RawMaterialUsageList= lazy(() => import("../../views/transactionrm/RawMaterialUsageList"));
+const RawMaterialUsageForm = lazy(() => import("../../views/transactionrm/RawMaterialUsageForm"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -188,8 +190,8 @@ const AdminRoutes = [
   { path: "/transaction-rm/raw-material-batch/:id?/:type", element: <RawMaterialBatchForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-receiving", element: <RawMaterialBatchReceivingList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-receiving/:id?/:type", element: <RawMaterialBatchReceivingForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-usage", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-usage/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-usage", element: <RawMaterialUsageList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-usage/:id?/:type", element: <RawMaterialUsageForm />, meta: { layout: "full", publicRoute: false } },
 
   // REPORT
   { path: "/report/stock-card", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
