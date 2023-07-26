@@ -16,7 +16,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
     const navigate = useNavigate();
     const title = "Add Pallet";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/pallet";
+    const path = "/master/pallet/:id?/:type";
     const url = "Pallet";
     const role = "Master - Pallet";
 

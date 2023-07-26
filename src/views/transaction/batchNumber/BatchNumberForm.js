@@ -14,7 +14,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const navigate = useNavigate();
     const title = "Add Batch Number";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/batch-number";
+    const path = "/transaction/batch-number/:id?/:type";
     const url = "Batch";
     const role = "Transaction - Batch Number";
 
@@ -25,14 +25,14 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         transDate: "",
         status: "",
         color: "",
-        qty: 0,
         qc: "",
+        qty: 0,
         visual: "",
         description: "",
     });
 
     const [itemList, setItem] = useState([]);
-    const { code, transDate, status, color, qc, qty, visual, description, itemId } = formData;
+    const { code, itemId, transDate, status, color, qc, qty, visual, description } = formData;
 
     useEffect(() => {
         loadItem();
@@ -61,14 +61,14 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
+                    itemId: data.data.itemId,
                     transDate: data.data.transDate,
                     status: data.data.status,
                     color: data.data.color,
-                    qty: data.data.qty,
                     qc: data.data.qc,
+                    qty: data.data.qty,
                     visual: data.data.visual,
                     description: data.data.description,
-                    itemId: data.data.itemId,
                 });
             }
         }
@@ -182,7 +182,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">QTY</label>
                         <div className="col">
-                            <input className="form-control text-right" name="qty" value={qty} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-right" name="qty" value={qty} onChange={(e) => onChange(e)} type="number" placeholder="" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Visual</label>
                         <div className="col">
@@ -192,7 +192,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Description</label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-10">
                             <textarea
                                 name="description"
                                 value={description}
@@ -200,7 +200,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder=""
-                                style={{ height: "500px" }}
+                                style={{ width: "360px" }}
                             />
                         </div>
                     </div>
