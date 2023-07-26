@@ -18,7 +18,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     const title = "Add Customer";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
-    const path = "/master/customer";
+    const path = "/master/customer/:id?/:type";
     const url = "Customer";
     const role = "Master - Customer";
 

@@ -18,7 +18,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
     const navigate = useNavigate();
     const title = "Add Location";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/location";
+    const path = "/master/location/:id?/:type";
     const url = "Location";
     const role = "Master - Location";
 

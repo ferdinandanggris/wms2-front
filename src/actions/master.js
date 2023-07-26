@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_BATCH, LOAD_BACTHDETAIL } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_BATCH, LOAD_BACTHDETAIL, LOAD_VENDOR } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -99,7 +99,7 @@ export const loadGroup = () => async (dispatch) => {
 }
 
 //Load Item
-export const loadItem= () => async (dispatch) => {
+export const loadItem = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Item`);
     dispatch({
@@ -115,7 +115,7 @@ export const loadItem= () => async (dispatch) => {
 }
 
 //Load Category
-export const loadCategory= () => async (dispatch) => {
+export const loadCategory = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Category`);
     dispatch({
@@ -131,7 +131,7 @@ export const loadCategory= () => async (dispatch) => {
 }
 
 //Load Packing
-export const loadPacking= () => async (dispatch) => {
+export const loadPacking = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Packing`);
     dispatch({
@@ -152,6 +152,22 @@ export const loadBatch = () => async (dispatch) => {
     const res = await axios.get(`/Batch`);
     dispatch({
       type: LOAD_BATCH,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Vendor
+export const loadVendor = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Vendor`);
+    dispatch({
+      type: LOAD_VENDOR,
       payload: res.data,
     });
   } catch (err) {

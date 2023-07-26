@@ -11,7 +11,6 @@ const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm
 const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
 const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
 
-
 const LocationList = lazy(() => import("../../views/master/location/LocationList"));
 const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
 
@@ -126,6 +125,10 @@ const BatchNumberList = lazy(() => import("../../views/transaction/batchnumber/B
 const BatchNumberForm = lazy(() => import("../../views/transaction/batchnumber/BatchNumberForm"));
 const SpkList = lazy(() => import("../../views/transaction/spk/SpkList"));
 const SpkForm = lazy(() => import("../../views/transaction/spk/SpkForm"));
+const ItemAdjustmentList = lazy(() => import("../../views/transaction/itemadjustment/ItemAdjustmentList"));
+const ItemAdjustmentForm = lazy(() => import("../../views/transaction/itemadjustment/ItemAdjustmentForm"));
+const ShippingList = lazy(() => import("../../views/transaction/shipping/ShippingList"));
+const ShippingForm = lazy(() => import("../../views/transaction/shipping/ShippingForm"));
 
 //ADMIN
 const UserList = lazy(() => import("../../views/admin/user/UserList"));
@@ -176,12 +179,14 @@ const AdminRoutes = [
   { path: "/transaction/batch-number", element: <BatchNumberList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number/:id?/:type", element: <BatchNumberForm />, meta: { layout: "full", publicRoute: false } },
   
-  { path: "/transaction/item-adjustment", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/item-adjustment/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/item-adjustment", element: <ItemAdjustmentList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/item-adjustment/:id?/:type", element: <ItemAdjustmentForm />, meta: { layout: "full", publicRoute: false } },
+
+  { path: "/transaction/shipping", element: <ShippingList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/shipping/:id?/:type", element: <ShippingForm />, meta: { layout: "full", publicRoute: false } },
+
   { path: "/transaction/receiving", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/shipping/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/non-komersil", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/non-komersil/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
 

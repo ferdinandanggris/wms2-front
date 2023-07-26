@@ -28,6 +28,7 @@ export const LOAD_MODULE = "LOAD_MODULE";
 export const LOAD_ITEM = "LOAD_ITEM";
 export const LOAD_CATEGORY = "LOAD_CATEGORY";
 export const LOAD_PACKING = "LOAD_PACKING";
+export const LOAD_VENDOR = "LOAD_VENDOR";
 
 // Transaction
 export const LOAD_BATCH = "LOAD_BATCH";
