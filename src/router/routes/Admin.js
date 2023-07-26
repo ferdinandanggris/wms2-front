@@ -38,7 +38,10 @@ const RawMaterialBatchList= lazy(() => import("../../views/transactionrm/RawMate
 const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
 const RawMaterialUsageList= lazy(() => import("../../views/transactionrm/RawMaterialUsageList"));
 const RawMaterialUsageForm = lazy(() => import("../../views/transactionrm/RawMaterialUsageForm"));
-
+const ReceivingList = lazy(() => import("../../views/transaction/receiving/ReceivingList"));
+const ReceivingForm = lazy(() => import("../../views/transaction/receiving/ReceivingForm"));
+const ProductionList  = lazy(() => import("../../views/transaction/product/ProductionList"));
+const ProductionForm = lazy(() => import("../../views/transaction/product/ProductionForm"));
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
@@ -167,14 +170,14 @@ const AdminRoutes = [
   // TRANSAKSI
   { path: "/transaction/spk", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/spk/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/production", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/production/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/production", element: <ProductionList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/production/:id?/:type", element: <ProductionForm/>, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number", element: <BatchNumberList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number/:id?/:type", element: <BatchNumberForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/receiving", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/receiving/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/receiving", element: <ReceivingList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/receiving/:id?/:type", element: <ReceivingForm/>, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/shipping/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/non-komersil", element: <ItemList />, meta: { layout: "full", publicRoute: false } },

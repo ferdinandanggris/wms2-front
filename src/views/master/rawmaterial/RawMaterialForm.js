@@ -5,16 +5,16 @@ import { FaLayerGroup } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, FaPallet,FaCubes } from "react-icons/fa";
+import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, FaPallet, FaCubes } from "react-icons/fa";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadPacking } from "../../../actions/master";
+import { loadCategory, loadPacking, loadUom } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 
-const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadCategory,loadPacking  }) => {
+const RawMaterialForm = ({ user, data, loadData, addData, editData, master, loadCategory, loadPacking, loadUom }) => {
   let { type, id } = useParams();
 
   const navigate = useNavigate();
@@ -48,20 +48,20 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
     spLocationDetails: "",
     spPalletDetails: "",
     batches: "",
-    uom:""
+    uom: ""
   });
 
-  const { name, code, initial, uomId, packingId,uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
+  const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
       loadData({ url, id });
     }
 
-
     loadCategory();
     loadPacking();
-  }, [id, user, loadData, loadCategory, loadPacking]);
+    loadUom();
+  }, [id, user, loadData, loadCategory, loadPacking, loadUom]);
 
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
@@ -81,16 +81,29 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
           type: data.data.type,
           qtyPerPacking: data.data.qtyPerPacking,
           balance: data.data.balance,
-          uom:data.data.uom
+          uom: data.data.uom,
         });
       }
     }
   }, [id, data, setFormData]);
 
+  useEffect(() => {
+    if (master.uom !== undefined && master.uom !== null) {
+      if (formData.uomId !== null && formData.uomId !== undefined) {
+        let selectedUom = master.uom?.find((obj) => obj.id === formData.uomId);
+
+        if (selectedUom !== undefined && selectedUom !== null) {
+          setFormData({ ...formData, uom: selectedUom.name });
+        }
+      }
+    }
+  }, [formData.uomId])
+
   const onChange = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
@@ -114,14 +127,14 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
   };
   const onSelectChange = (e, name) => {
     console.log(e);
-    if(name === "category") {
-      setFormData({...formData, [name]: e.code});
-    } else if(name === "packingId") {
-      setFormData({...formData, [name]: e.id});
+    if (name === "category") {
+      setFormData({ ...formData, [name]: e.code });
+    } else if (name === "packingId") {
+      setFormData({ ...formData, [name]: e.id });
     }
   }
-  console.log(formData,'formdata')
-  console.log(master,'master')
+  console.log(formData, 'formdata')
+  console.log(master, 'master')
 
   const element = () => {
     return (
@@ -144,16 +157,25 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">UOM
-              <span className="text-danger">*</span></label>
+              <span className="text-danger">*</span>
+            </label>
             <div className="col-sm-10">
-              <input name="uomId" value={uomId} type="text" onChange={(e) => onChange(e)} className="form-control text-right" placeholder="" required />
+              <input
+                name="uomId"
+                value={formData.uom} // Assuming 'uomData' contains the UOM object with a 'name' property
+                type="text"
+                onChange={onChange}
+                className="form-control text-left"
+                placeholder=""
+                required
+              />
             </div>
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Packing
               <span className="text-danger">*</span></label>
             <div className="col-sm-3">
-            <Select2
+              <Select2
                 options={master.packing}
                 optionValue={(option) => option.id.toString()}
                 optionLabel={(option) => option.name}
@@ -168,7 +190,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
             <div className="col-sm-3">
-            <Select2
+              <Select2
                 options={master.category}
                 optionValue={(option) => option.id.toString()}
                 optionLabel={(option) => option.name}
@@ -186,7 +208,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
         <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
           <Tab eventKey="ContactDetail" title={<span><FaLayerGroup style={tabIconStyle} /> Batch Detail</span>}>
             <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
-              <RTable bordered style={{ float: 'center' ,width:"100%"}}>
+              <RTable bordered style={{ float: 'center', width: "100%" }}>
                 <thead>
                   <tr>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
@@ -198,11 +220,11 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
                 </thead>
                 <tbody>
                   <tr>
-                       <td style={{ textAlign: 'center' }}>{formData.code}</td> 
-          <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-          <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-          <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-          <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.code}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.initial}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
                   </tr>
                 </tbody>
               </RTable>
@@ -211,67 +233,67 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData,master, loadC
           </Tab>
 
           <Tab eventKey="BillingDetail" title={<span><FaHouseUser style={tabIconStyle} />WareHouse Detail</span>}>
-          <RTable bordered style={{ float: 'center' ,width:"100%"}}>
-                <thead>
-                  <tr>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WareHouse</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td> 
+            <RTable bordered style={{ float: 'center', width: "100%" }}>
+              <thead>
+                <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WareHouse</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
                   <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
                   <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
                   <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                  </tr>
-                </tbody>
-              </RTable>
+                </tr>
+              </tbody>
+            </RTable>
           </Tab>
 
 
           <Tab eventKey="DeliveryDetail" title={<span><FaSearchLocation style={tabIconStyle} /> Location Detail</span>}>
-          <RTable bordered style={{ float: 'center' ,width:"100%"}}>
-                <thead>
-                  <tr>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATIOM</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td> 
+            <RTable bordered style={{ float: 'center', width: "100%" }}>
+              <thead>
+                <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATIOM</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
                   <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
                   <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
                   <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                  </tr>
-                </tbody>
-              </RTable>
+                </tr>
+              </tbody>
+            </RTable>
           </Tab>
 
           <Tab eventKey="Document" title={<span><FaPallet style={tabIconStyle} /> Pallets Detail</span>}>
-          <RTable bordered style={{ float: 'center' ,width:"100%"}}>
-                <thead>
-                  <tr>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLETS</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td> 
+            <RTable bordered style={{ float: 'center', width: "100%" }}>
+              <thead>
+                <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLETS</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
                   <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
                   <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
                   <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                  </tr>
-                </tbody>
-              </RTable>
+                </tr>
+              </tbody>
+            </RTable>
           </Tab>
         </Tabs>
       </div>
@@ -293,7 +315,8 @@ RawMaterialForm.propTypes = {
   master: PropTypes.func,
   loadCategory: PropTypes.func,
   loadData: PropTypes.func,
-  loadPacking:PropTypes.func,
+  loadPacking: PropTypes.func,
+  loadUom: PropTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
 };
@@ -304,4 +327,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData,loadCategory,loadPacking  })(RawMaterialForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadCategory, loadPacking, loadUom })(RawMaterialForm);
