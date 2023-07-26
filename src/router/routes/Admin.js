@@ -34,13 +34,13 @@ const GroupList = lazy(() => import("../../views/master/group/GroupList"));
 const GroupForm = lazy(() => import("../../views/master/group/GroupForm"));
 const RawMaterialBatchReceivingList = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingList"));
 const RawMaterialBatchReceivingForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchReceivingForm"));
-const RawMaterialBatchList= lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
+const RawMaterialBatchList = lazy(() => import("../../views/transactionrm/RawMaterialBatchList"));
 const RawMaterialBatchForm = lazy(() => import("../../views/transactionrm/RawMaterialBatchForm"));
-const RawMaterialUsageList= lazy(() => import("../../views/transactionrm/RawMaterialUsageList"));
+const RawMaterialUsageList = lazy(() => import("../../views/transactionrm/RawMaterialUsageList"));
 const RawMaterialUsageForm = lazy(() => import("../../views/transactionrm/RawMaterialUsageForm"));
 const ReceivingList = lazy(() => import("../../views/transaction/receiving/ReceivingList"));
 const ReceivingForm = lazy(() => import("../../views/transaction/receiving/ReceivingForm"));
-const ProductionList  = lazy(() => import("../../views/transaction/product/ProductionList"));
+const ProductionList = lazy(() => import("../../views/transaction/product/ProductionList"));
 const ProductionForm = lazy(() => import("../../views/transaction/product/ProductionForm"));
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -125,8 +125,8 @@ const ProductionForm = lazy(() => import("../../views/transaction/product/Produc
 
 
 //TRANSACTION
-const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList"));
-const BatchNumberForm = lazy(() => import("../../views/transaction/batchNumber/BatchNumberForm"));
+const BatchNumberList = lazy(() => import("../../views/transaction/batchnumber/BatchNumberList"));
+const BatchNumberForm = lazy(() => import("../../views/transaction/batchnumber/BatchNumberForm"));
 
 //ADMIN
 const UserList = lazy(() => import("../../views/admin/user/UserList"));
@@ -171,13 +171,13 @@ const AdminRoutes = [
   { path: "/transaction/spk", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/spk/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/production", element: <ProductionList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/production/:id?/:type", element: <ProductionForm/>, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/production/:id?/:type", element: <ProductionForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number", element: <BatchNumberList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number/:id?/:type", element: <BatchNumberForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/item-adjustment/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving", element: <ReceivingList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/receiving/:id?/:type", element: <ReceivingForm/>, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/receiving/:id?/:type", element: <ReceivingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/shipping/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/non-komersil", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
@@ -185,7 +185,7 @@ const AdminRoutes = [
 
   // TRANSAKSI RM
   { path: "/transaction-rm/raw-material-batch", element: < RawMaterialBatchList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction-rm/raw-material-batch/:id?/:type", element: <RawMaterialBatchForm/>, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction-rm/raw-material-batch/:id?/:type", element: <RawMaterialBatchForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-receiving", element: <RawMaterialBatchReceivingList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-receiving/:id?/:type", element: <RawMaterialBatchReceivingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction-rm/raw-material-usage", element: <RawMaterialUsageList />, meta: { layout: "full", publicRoute: false } },
