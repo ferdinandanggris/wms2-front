@@ -11,10 +11,10 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadItem, loadPacking } from "../../../actions/master";
+import { loadCategory, loadItem, loadPacking,loadUom } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
-const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking }) => {
+const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking,loadUom }) => {
   let {id } = useParams();
 
   const navigate = useNavigate();
@@ -47,10 +47,11 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     spWarehouseDetails: "",
     spLocationDetails: "",
     spPalletDetails: "",
-    batches: ""
+    batches: "",
+    uom: ""
   });
 
-  const { name, code, initial, uomId, packingId, incoming, outgoing, exclusive, category, qtyPerPacking, balance,type } = formData;
+  const { name, code, initial, uomId, packingId, incoming,uom, outgoing, exclusive, category, qtyPerPacking, balance,type } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
@@ -60,7 +61,8 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadItem();
     loadCategory();
     loadPacking();
-  }, [id, user, loadData, loadItem, loadCategory, loadPacking]);
+    loadUom();
+  }, [id, user, loadData, loadItem, loadCategory, loadPacking,loadUom]);
 
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
@@ -79,11 +81,24 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
           category: data.data.category,
           type: data.data.type,
           qtyPerPacking: data.data.qtyPerPacking,
-          balance: data.data.balance
+          balance: data.data.balance,
+          uom: data.data.uom,
         });
       }
     }
   }, [id, data, setFormData]);
+
+  useEffect(() => {
+    if (master.uom !== undefined && master.uom !== null) {
+      if (formData.uomId !== null && formData.uomId !== undefined) {
+        let selectedUom = master.uom?.find((obj) => obj.id === formData.uomId);
+
+        if (selectedUom !== undefined && selectedUom !== null) {
+          setFormData({ ...formData, uom: selectedUom.name });
+        }
+      }
+    }
+  }, [formData.uomId])
 
   const onChange = (e) => {
     e.preventDefault();
@@ -106,6 +121,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
       });
     }
   };
+  
 
   const tabIconStyle = {
     marginRight: '5px',
@@ -144,9 +160,18 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">UOM
-              <span className="text-danger">*</span></label>
+              <span className="text-danger">*</span>
+            </label>
             <div className="col-sm-10">
-              <input name="uomId" value={uomId} type="text" onChange={(e) => onChange(e)} className="form-control text-right" placeholder="" required />
+              <input
+                name="uomId"
+                value={formData.uom} // Assuming 'uomData' contains the UOM object with a 'name' property
+                type="text"
+                onChange={onChange}
+                className="form-control text-left"
+                placeholder=""
+                required
+              />
             </div>
           </div>
           <div className="row align-items-center mb-3">
@@ -177,8 +202,8 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   <div className="col-sm-3">
     <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)}>
       <option value="">Please select</option>
-      <option value="exclusive">exclusive</option>
-      <option value="free">free</option>
+      <option value="Exclusive">Exclusive</option>
+      <option value="Free Item">Free Item</option>
     </select>
   </div>
 </div>
@@ -188,7 +213,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
               <Select2
                 options={master.category}
                 optionValue={(option) => option.id.toString()}
-                optionLabel={(option) => option.code}
+                optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
                 value={master.category === null ? null : master.category?.filter((option) =>
                   option.code === formData.category
@@ -338,6 +363,7 @@ ItemForm.propTypes = {
   loadCategory: PropTypes.func,
   loadData: PropTypes.func,
   loadPacking:PropTypes.func,
+  loadUom:PropTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
 };
@@ -348,4 +374,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking })(ItemForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking,loadUom })(ItemForm);

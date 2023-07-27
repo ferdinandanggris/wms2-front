@@ -29,7 +29,8 @@ export const LOAD_ITEM = "LOAD_ITEM";
 export const LOAD_CATEGORY = "LOAD_CATEGORY";
 export const LOAD_PACKING = "LOAD_PACKING";
 export const LOAD_UOM="LOAD_UOM";
-
+export const LOAD_VENDOR="LOAD_VENDOR";
+export const LOAD_PALLET="LOAD_PALLET";
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
 export const LOAD_FLEETTYPE = "LOAD_FLEETTYPE";

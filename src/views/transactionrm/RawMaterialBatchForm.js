@@ -243,6 +243,34 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                 ></textarea>
         </div>
       </div>
+      <RTable bordered style={{ float: 'center', width: "100%" }}>
+                <thead>
+                  <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TRANSACTION No</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DATE</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INITIAL</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INCOMING</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OUTGOING</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <td style={{ textAlign: 'center' }}>{formData.initial}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.initial}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.code}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                  </tr>
+                </tbody>
+              </RTable>
                 </div>
                 
             </div>

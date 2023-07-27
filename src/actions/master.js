@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE,LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP } from "./types";
+import { LOAD_USER, LOAD_ROLE,LOAD_PALLET, LOAD_MODULE,LOAD_UOM,LOAD_VENDOR, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -132,6 +132,35 @@ export const loadUom= () => async (dispatch) => {
     const res = await axios.get(`/Uom`);
     dispatch({
       type: LOAD_UOM,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+export const loadVendor= () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Vendor`);
+    dispatch({
+      type: LOAD_VENDOR,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+export const loadPallet= () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Pallet`);
+    dispatch({
+      type: LOAD_PALLET,
       payload: res.data,
     });
   } catch (err) {
