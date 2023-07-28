@@ -99,7 +99,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Name<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Name<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <input
