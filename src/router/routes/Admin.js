@@ -125,8 +125,8 @@ const ProductionForm = lazy(() => import("../../views/transaction/product/Produc
 
 
 //TRANSACTION
-const BatchNumberList = lazy(() => import("../../views/transaction/batchnumber/BatchNumberList"));
-const BatchNumberForm = lazy(() => import("../../views/transaction/batchnumber/BatchNumberForm"));
+const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList.js"));
+const BatchNumberForm = lazy(() => import("../../views/transaction/batchNumber/BatchNumberForm.js"));
 const ItemAdjustmentList = lazy(() => import("../../views/transaction/itemadjustment/ItemAdjustmentList"));
 const ItemAdjustmentForm = lazy(() => import("../../views/transaction/itemadjustment/ItemAdjustmentForm"));
 const SpkList = lazy(() => import("../../views/transaction/spk/SpkList"));
