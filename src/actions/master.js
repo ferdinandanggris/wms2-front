@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_CUSTOMERDETAIL } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -85,7 +85,7 @@ export const loadGroup = () => async (dispatch) => {
 //Load Item
 export const loadItem = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Item`);
+    const res = await axios.get(`/Item?limit=10&page=0`);
     dispatch({
       type: LOAD_ITEM,
       payload: res.data,
@@ -98,6 +98,7 @@ export const loadItem = () => async (dispatch) => {
   }
 }
 
+//Load Category
 export const loadCategory = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Category`);
@@ -113,6 +114,7 @@ export const loadCategory = () => async (dispatch) => {
   }
 }
 
+//Load Packing
 export const loadPacking = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Packing`);
@@ -128,6 +130,7 @@ export const loadPacking = () => async (dispatch) => {
   }
 }
 
+//Load Uom
 export const loadUom = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Uom`);
@@ -149,6 +152,117 @@ export const loadVendor = () => async (dispatch) => {
     const res = await axios.get(`/Vendor`);
     dispatch({
       type: LOAD_VENDOR,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Customer
+export const loadCustomer = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Customer`);
+    dispatch({
+      type: LOAD_CUSTOMER,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+export const loadCustomerDetail = ({id}) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Customer/${id}`);
+    dispatch({
+      type: LOAD_CUSTOMERDETAIL,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Pallet
+export const loadPallet = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Pallet?limit=10&page=0`);
+    dispatch({
+      type: LOAD_PALLET,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Location
+export const loadLocation = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Location`);
+    dispatch({
+      type: LOAD_LOCATION,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Batch
+export const loadBatch = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Batch?limit=10&page=0`);
+    dispatch({
+      type: LOAD_BATCH,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Shipping
+export const loadShipping = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Shipping`);
+    dispatch({
+      type: LOAD_SHIPPING,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load ShippingDetail
+export const loadShippingDetail = ({id}) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Shipping/${id}`);
+    dispatch({
+      type: LOAD_SHIPPINGDETAIL,
       payload: res.data,
     });
   } catch (err) {

@@ -7,10 +7,10 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { loadItem } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
+import { Table as RTable } from "react-bootstrap";
 
 const BatchNumberForm = ({ user, data, loadData, addData, editData, master, loadItem }) => {
     let { id } = useParams();
-
     const navigate = useNavigate();
     const title = "Add Batch Number";
     const img = <FaLayerGroup className="module-img" />;
@@ -34,10 +34,25 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const [itemList, setItem] = useState([]);
     const { code, itemId, transDate, status, color, qc, qty, visual, description } = formData;
 
+    const stockData = [
+        { no: 1, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 1, incoming: 0, outgoing: 0, balance: 0 },
+        { no: 2, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 1, outgoing: 0, balance: 0 },
+        { no: 3, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 2, outgoing: 0, balance: 0 },
+        { no: 4, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 7, incoming: 0, outgoing: 4, balance: 4 },
+        { no: 5, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 0, outgoing: 0, balance: 2 },
+
+    ];
+
+    function calculateTotal(data, property) {
+        return data.reduce((total, item) => total + item[property], 0);
+    }
+
     useEffect(() => {
         loadItem();
         if (user !== null && id !== undefined) loadData({ url, id });
     }, [id, user, loadData, loadItem]);
+
+    console.log(master)
 
     useEffect(() => {
         if (master.item !== undefined && master.item !== null) {
@@ -116,9 +131,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 name="code"
                                 value={code}
                                 type="text"
+                                placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
                             />
                         </div>
                     </div>
@@ -142,9 +157,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 name="transDate"
                                 value={transDate}
                                 type="text"
+                                placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
                             />
                         </div>
                     </div>
@@ -152,16 +167,26 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         <label className="col-sm-2 col-form-label">Status</label>
                         <div className="col-sm-10">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status" value="Y" checked={status === "Y"} onChange={(e) => onChange(e)} />
-                                <label class="form-check-label mr-5" >
-                                    Approved
-                                </label>
+                                <input
+                                    name="status"
+                                    value="Y"
+                                    type="radio"
+                                    checked={status === "Y"}
+                                    onChange={(e) => onChange(e)}
+                                    className="form-check-input"
+                                />
+                                <label class="form-check-label mr-5" >Approved</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status" value="X" checked={status === "X"} onChange={(e) => onChange(e)} />
-                                <label class="form-check-label">
-                                    Pending
-                                </label>
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="X"
+                                    checked={status === "X"}
+                                    onChange={(e) => onChange(e)}
+                                    className="form-check-input"
+                                />
+                                <label class="form-check-label">Pending</label>
                             </div>
                         </div>
                     </div>
@@ -171,25 +196,44 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Color</label>
                         <div className="col">
-                            <input className="form-control text-left" name="color" value={color} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="color"
+                                value={color}
+                                type="text"
+                                placeholder=""
+                                className="form-control text-left"
+                                onChange={(e) => onChange(e)}
+                            />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">QC</label>
                         <div className="col">
                             <input className="form-control text-left" name="qc" value={qc} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
-
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">QTY</label>
                         <div className="col">
-                            <input className="form-control text-right" name="qty" value={qty} onChange={(e) => onChange(e)} type="number" placeholder="" />
+                            <input
+                                name="qty"
+                                value={qty}
+                                type="number"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-right"
+                            />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Visual</label>
                         <div className="col">
-                            <input className="form-control text-left" name="visual" value={visual} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="visual"
+                                value={visual}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                     </div>
-
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Description</label>
                         <div className="col-sm-10">
@@ -197,19 +241,55 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 name="description"
                                 value={description}
                                 type="text"
+                                placeholder=""
+                                style={{ width: "360px", minHeight: "100px" }}
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
-                                style={{ width: "360px" }}
                             />
                         </div>
                     </div>
                 </div>
-
+                <div style={{ marginTop: "50px" }}></div>
+                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
+                    <RTable bordered style={{ float: 'center', width: "100%" }}>
+                        <thead>
+                            <tr>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NO</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TRANSACTION NO</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DATE</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INITIAL</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INCOMING</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OUTGOING</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {stockData.map((item, index) => (
+                                <tr>
+                                    <td style={{ textAlign: 'center' }}>{item.no}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.transaction}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.item}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.date}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.initial}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.incoming}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.outgoing}</td>
+                                    <td style={{ textAlign: 'center' }}>{item.balance}</td>
+                                </tr>
+                            ))}
+                            <tr>
+                                <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>Total</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "initial")}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "incoming")}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "outgoing")}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "balance")}</td>
+                            </tr>
+                        </tbody>
+                    </RTable>
+                </div>
             </div>
         );
     };
-
     return (
         <FormWrapper img={img} title={title} path={path} role={role} id={id} handleSave={handleSave}>
             {element}
