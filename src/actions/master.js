@@ -85,7 +85,7 @@ export const loadGroup = () => async (dispatch) => {
 //Load Item
 export const loadItem = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Item?limit=10&page=0`);
+    const res = await axios.get(`/Item?sort=name`);
     dispatch({
       type: LOAD_ITEM,
       payload: res.data,
@@ -178,7 +178,7 @@ export const loadCustomer = () => async (dispatch) => {
   }
 }
 
-export const loadCustomerDetail = ({id}) => async (dispatch) => {
+export const loadCustomerDetail = ({ id }) => async (dispatch) => {
   try {
     const res = await axios.get(`/Customer/${id}`);
     dispatch({
@@ -258,7 +258,7 @@ export const loadShipping = () => async (dispatch) => {
 }
 
 //Load ShippingDetail
-export const loadShippingDetail = ({id}) => async (dispatch) => {
+export const loadShippingDetail = ({ id }) => async (dispatch) => {
   try {
     const res = await axios.get(`/Shipping/${id}`);
     dispatch({
