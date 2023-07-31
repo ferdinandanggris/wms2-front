@@ -127,8 +127,6 @@ const TransactionItemConsumptionForm= lazy(() => import("../../views/transaction
 
 
 //TRANSACTION
-
-
 const BatchNumberList = lazy(() => import("../../views/transaction/batchNumber/BatchNumberList.js"));
 const BatchNumberForm = lazy(() => import("../../views/transaction/batchNumber/BatchNumberForm.js"));
 const ItemAdjustmentList = lazy(() => import("../../views/transaction/itemadjustment/ItemAdjustmentList"));
@@ -137,7 +135,6 @@ const SpkList = lazy(() => import("../../views/transaction/spk/SpkList"));
 const SpkForm = lazy(() => import("../../views/transaction/spk/SpkForm"));
 const ShippingList = lazy(() => import("../../views/transaction/shipping/ShippingList"));
 const ShippingForm = lazy(() => import("../../views/transaction/shipping/ShippingForm"));
-
 
 //ADMIN
 const UserList = lazy(() => import("../../views/admin/user/UserList"));
@@ -179,14 +176,17 @@ const AdminRoutes = [
   { path: "/master/vendor/:id?/:type", element: <VendorForm />, meta: { layout: "full", publicRoute: false } },
 
   // TRANSAKSI
-  { path: "/transaction/spk", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/spk/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/production", element: <ProductionList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/production/:id?/:type", element: <ProductionForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number", element: <BatchNumberList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/batch-number/:id?/:type", element: <BatchNumberForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/item-adjustment", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/item-adjustment/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/item-adjustment", element: <ItemAdjustmentList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/item-adjustment/:id?/:type", element: <ItemAdjustmentForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/shipping", element: <ShippingList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/shipping/:id?/:type", element: <ShippingForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/spk", element: <SpkList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/spk/:id?/:type", element: <SpkForm />, meta: { layout: "full", publicRoute: false } },
+
+  { path: "/transaction/production", element: <ProductionList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/production/:id?/:type", element: <ProductionForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving", element: <ReceivingList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving/:id?/:type", element: <ReceivingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
