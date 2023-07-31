@@ -15,13 +15,13 @@ const ItemAdjustmentList = ({ user, data, refreshData, deleteData, exportData })
     const role = "Transaction - Item Adjustment";
 
     const columns = [
-        { label: "VOUCHER #", key: "voucher", width: 40, type: "text", align: "left", cardTitle: true },
-        { label: "REFERENCE #", key: "reference", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "VENDOR", key: "vendor", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED BY", key: "createdby", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "VOUCHER #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
+        { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "VENDOR", key: "vendorId", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "CREATED DATE", key: "createddate", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED BY", key: "postedby", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED DATE", key: "posteddate", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "POSTED DATE", key: "postDate", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "STATUS", key: "status", width: 40, type: "text", align: "right", cardSubTitle: true },
     ];

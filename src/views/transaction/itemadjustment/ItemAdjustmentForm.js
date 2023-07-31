@@ -5,12 +5,11 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table as RTable, Modal, Button } from "react-bootstrap";
-import { loadVendor, loadWarehouse } from "../../../actions/master";
+import { Table as RTable } from "react-bootstrap";
+import { loadVendor, loadWarehouse, loadBatch } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 
-
-const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor }) => {
+const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Add Item Adjustment";
@@ -21,12 +20,12 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
     const [formData, setFormData] = useState({
         id: 0,
-        voucher: "",
-        reference: "",
-        created: "",
-        transdate: "",
-        posted: "",
-        postdate: "",
+        voucherNo: "",
+        referenceNo: "",
+        createdBy: "",
+        transDate: "",
+        postedBy: "",
+        postDate: "",
         vendor: "",
         warehouse: "",
         batch: "",
@@ -35,14 +34,17 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
     const [warehouseList, setWarehouse] = useState([]);
     const [vendorList, setVendor] = useState([]);
+    const [batchList, setBatch] = useState([]);
 
-    const { voucher, reference, created, transdate, posted, postdate, vendorId, warehouseId, batch, file } = formData;
+    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, vendorId, warehouseId, batchId, file } = formData;
 
     useEffect(() => {
         loadWarehouse();
         loadVendor();
-        if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse, loadVendor]);
+        loadBatch();
+        if (user !== null && id !== undefined)
+            loadData({ url, id });
+    }, [id, user, loadData, loadWarehouse, loadBatch]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -69,6 +71,18 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             }
             setVendor(list);
         }
+        if (master.batch !== undefined && master.batch !== null) {
+            let list = [...master.batch];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Batch",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setBatch(list);
+        }
     }, [master]);
 
     useEffect(() => {
@@ -77,15 +91,15 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
-                    voucher: data.data.voucher,
-                    reference: data.data.reference,
-                    created: data.data.created,
-                    transdate: data.data.transdate,
-                    posted: data.data.posted,
-                    postdate: data.data.postdate,
+                    voucherNo: data.data.voucherNo,
+                    referenceNo: data.data.referenceNo,
+                    createdBy: data.data.createdBy,
+                    transDate: data.data.transDate,
+                    postedBy: data.data.postedBy,
+                    postDate: data.data.postDate,
                     vendorId: data.data.vendorId,
                     warehouseId: data.data.warehouseId,
-                    batch: data.data.batch,
+                    batchId: data.data.batchId,
                     file: data.data.file,
                 });
             }
@@ -129,44 +143,79 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">
-                            Voucher #<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Voucher #<span className="required-star" >*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="voucher" value={voucher} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="voucherNo"
+                                value={voucherNo}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">
-                            Reference #  <span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Reference #  <span className="required-star">*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="reference" value={reference} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="referenceNo"
+                                value={referenceNo}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">Created</label>
                         <div className="col">
-                            <input className="form-control text-left" name="created" value={created} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="createdBy"
+                                value={createdBy}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Trans Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="transdate" value={transdate} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="transDate" value={transDate} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">Posted</label>
                         <div className="col">
-                            <input className="form-control text-left" name="posted" value={posted} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="postedBy"
+                                value={postedBy}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Post Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="postdate" value={postdate} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                name="postDate"
+                                value={postDate}
+                                type="text"
+                                placeholder=""
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                            />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">
-                            Vendor<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Vendor<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-5">
                             <Select2
@@ -177,7 +226,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 handleChange={(e) => onSelectChange(e, "vendorId")} />
                         </div>
                         <label className="col-sm-1 col-form-label">
-                            Warehouse<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Warehouse<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-5">
                             <Select2
@@ -187,20 +236,16 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
                                 handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
-
                     </div>
-
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-1 col-form-label">Batch No</label>
                         <div className="col-sm-5">
-                            <input
-                                name="code"
-                                value="batch"
-                                type="number"
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-right"
-                                placeholder=""
-                            />
+                            <Select2
+                                options={batchList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                                placeholder={"Pick Batch"}
+                                value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(batchId))}
+                                handleChange={(e) => onSelectChange(e, "bacthId")} />
                         </div>
                         <div className="input-group-append col-sm-1 col-form-label">
                             <button className="btn btn-primary" >
@@ -210,11 +255,14 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         <div className="col-sm-2" style={{ marginLeft: "30px" }}>
                             <div className="form-check">
                                 <input
-                                    className="form-check-input"
-                                    type="checkbox"
                                     id="newItemCheckbox"
+                                    type="checkbox"
+                                    className="form-check-input"
                                 />
-                                <label className="form-check-label" htmlFor="newItemCheckbox">
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="newItemCheckbox"
+                                >
                                     New Item
                                 </label>
                             </div>
@@ -225,11 +273,11 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         <div className="col-sm-5">
                             <div className="input-group">
                                 <input
-                                    className="form-control-file"
                                     name=""
-                                    value=""
+                                    value={file}
                                     type="file"
                                     onChange={(e) => onChange(e)}
+                                    className="form-control-file"
                                 />
                             </div>
                         </div>
@@ -296,4 +344,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadVendor, loadWarehouse })(ItemAdjustmentForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadVendor, loadWarehouse, loadBatch })(ItemAdjustmentForm);
