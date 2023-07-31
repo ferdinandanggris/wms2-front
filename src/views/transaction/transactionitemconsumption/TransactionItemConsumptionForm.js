@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, } from "react-icons/fa";
+import { Table as RTable, Tab, Tabs,Button  } from "react-bootstrap";
+import { FaLayerGroup,FaPlus,FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -12,7 +12,7 @@ import { BsBorderBottom } from "react-icons/bs";
 import { loadPallet, loadVendor, loadWarehouse } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
-
+import moment from "moment";
 
 const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadPallet }) => {
     let { id } = useParams();
@@ -59,7 +59,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
 
     });
 
-    const { name, vendor, locationId, location, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
+    const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [vendorList, setVendor] = useState([]);
@@ -70,6 +70,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     useEffect(() => {
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
+            let details = data.data. itemConsumptionDetails;
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
@@ -101,6 +102,8 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     location: data.data.location,
                     pallet: data.data.pallet,
                     warehouse: data.data.warehouse,
+                    itemConsumptionDetails:data.dat.itemConsumptionDetails,
+
 
 
                 });
@@ -174,7 +177,45 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
     };
+    const handleNewRow = (e) => {
+        e.preventDefault();
+        let details = data.data. itemConsumptionDetails;
+        if (details === undefined || details === null) details = [];
 
+        details.push({
+            id: 0,
+            itemConsumptionId: 0,
+            voucherNo: "",
+            batchId:0,
+            itemId: 0,
+            remark: "null",
+            qty: 0,
+            dateIn:0,
+            dateUp: 0,
+            userIn: "null",
+            userUp:" null",
+            itemName: "",
+            uom: "",
+            totalPcs: 0
+        });
+        setFormData({ ...formData, itemConsumptionDetails: details });
+    };
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+
+        let details =itemConsumptionDetails;
+        if (details === undefined || details === null) details = [];
+
+        let newDetail = [];
+
+        details.map((item) => {
+            if (!item.checked) newDetail.push(item);
+            return null;
+        });
+
+        setFormData({ ...formData,itemConsumptionDetails: newDetail });
+    };
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
     };
@@ -201,7 +242,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">shippingDate</label>
                         <div className="col-sm-3">
-                            <input className="form-control text-left" name="shippingDate" value={shippingDate} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="shippingdate" value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Type <span className="text-danger">*</span></label>
                         <div className="col">
@@ -305,36 +346,30 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 required
                             />
                         </div>
-                        <div className="col-sm-1">
-                            <div className="input-group-text" style={{ background: "#0e81ca", color: "white" }}>
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    style={{ marginRight: "6px" }} // Add margin to the checkbox
-                                // Add onChange prop here for checkbox functionality
-                                />
-                                <i className="fa fa-search" aria-hidden="true"></i> Search {/* Add the search icon here */}
-                            </div>
+                        <div className="col-sm-1 text-left col-form-label">
+                            <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
                         </div>
-                        <div className="col-sm-2">
-                            <div className="form-check mt-2">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                // Add onChange prop here for checkbox functionality
-                                />
-                                <label className="form-check-label">New Item</label>
-                            </div>
+                        <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
+                            <label style={{ marginLeft: "5px" }}>
+                                <input type="checkbox" /> New Item
+                            </label>
                         </div>
-                        <div className="form-check mt-2">
-                            <input
-                                type="checkbox"
-                                className="form-check-input"
-                            // Add onChange prop here for checkbox functionality
-                            />
-                            <label className="form-check-label">Full pallet</label>
+                          <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
+                            <label style={{ marginLeft: "5px" }}>
+                                <input type="checkbox" /> Full Pallet
+                            </label>
                         </div>
                     </div>
+                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+
+<div className="d-flex justify-content-end mb-2">
+    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+        <FaPlus className="mr-2" /> <span>Add</span>
+    </button>
+    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
+        <FaTimes className="mr-2" /> <span>Delete</span>
+    </button>
+</div>
 
 
 
@@ -364,7 +399,6 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                             <td style={{ textAlign: 'center' }}>{formData.balance}</td>
                                             <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
                                             <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.balance}</td>
                                         </tr>
                                     </tbody>
                                 </RTable>
@@ -409,22 +443,14 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                         required
                                     />
                                 </div>
-                                <div className="col-sm-1">
-                                    <div className="input-group-text" style={{ background: "#0e81ca", color: "white" }}>
-                                        <input
-                                            type="checkbox"
-                                            className="form-check-input"
-                                            style={{ marginRight: "6px" }}
-
-                                        />
-                                        <i className="fa fa-plus" aria-hidden="true"></i> Add {/* Add the search icon here */}
-                                    </div>
-                                </div>
+                                <div className="col-sm-1 text-left col-form-label">
+                            <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
+                        </div>
                             </div>
                             <RTable bordered style={{ float: 'center', width: "40%" }}>
                                 <thead>
                                     <tr>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'left' }}>Reference No</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'Center' }}>Reference No</th>
                                     </tr>
                                 </thead>
                                 <tbody>
