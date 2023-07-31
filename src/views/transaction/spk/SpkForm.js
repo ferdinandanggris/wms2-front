@@ -1,108 +1,65 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaLayerGroup, FaInfoCircle } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table as RTable, Modal, Button } from "react-bootstrap";
-import { loadItem, loadWarehouse, loadCustomer } from "../../../actions/master";
+import { loadItem, loadWarehouse } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
-import { NumericFormat } from "react-number-format";
-// import Autocomplete from '@mui/material/Autocomplete';
-// import TextField from '@mui/material/TextField';
-// import Paper from "@mui/material/Paper";
-// import Box from '@mui/material/Box';
-// import { createTheme, ThemeProvider } from "@mui/material/styles";
-import moment from "moment";
-import axios from "axios";
-import { setAlert } from "../../../actions/alert";
-import { useDispatch } from "react-redux";
 
-const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadItem, loadCustomer }) => {
+
+const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadItem }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Add SPK";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/spk";
-    const url = "order";
+    const path = "/transaction/spk/:id?/:type";
+    const url = "Spk";
     const role = "Transaction - SPK";
-
-    const dispatch = useDispatch();
-    // const theme = createTheme({
-    //     typography: {
-    //         fontSize: 11, // Ganti dengan ukuran font yang diinginkan
-    //     },
-    // });
-
-    const [searchParams] = useSearchParams();
-    const [returnUrl, setReturnUrl] = useState(path);
-    useEffect(() => {
-        if (searchParams.get("return_url") !== undefined && searchParams.get("return_url") !== null) setReturnUrl(searchParams.get("return_url"));
-    }, []);
 
     const [formData, setFormData] = useState({
         id: 0,
-        customerId: 0,
-        warehouseId: 0,
-        transDate: null,
-        shippingDate: null,
-        closedDate: null,
-        flag: 0,
-        voucherNo: "",
-        referenceNo: "",
-        createdBy: "",
-        status: "",
-        truckNo: "",
+        voucher: "",
+        reference: "",
+        created: "",
+        date: "",
         expedition: "",
-        print: "",
-        closedBy: "",
+        shippingdate: "",
+        customer: "",
+        truckno: "",
         warehouse: "",
-        orderDetails: []
+        item: ""
     });
 
     const [itemList, setItem] = useState([]);
-    const [customerList, setCustomer] = useState([]);
     const [warehouseList, setWarehouse] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const handleClose = () => setShowModal(false);
     const handleCekStock = () => setShowModal(true);
-    const {
-        customerId,
-        warehouseId,
-        transDate,
-        shippingDate,
-        closedDate,
-        flag,
-        voucherNo,
-        referenceNo,
-        createdBy,
-        status,
-        truckNo,
-        expedition,
-        print,
-        closedBy,
-        orderDetails,
-        warehouse,
-    } = formData;
+    const { voucher, reference, created, date, expedition, shippingdate, customer,  truckno, warehouseId, itemId } = formData;
+
+    const stockData = [
+        { warehouse: "Warehouse A", stock: 50, booked: 10, availability: 40 },
+        { warehouse: "Warehouse B", stock: 30, booked: 5, availability: 25 },
+    ];
 
     useEffect(() => {
         loadItem();
         loadWarehouse();
-        loadCustomer();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData, loadItem, loadWarehouse, loadCustomer]);
+    }, [id, user, loadData, loadItem, loadWarehouse]);
 
     useEffect(() => {
         if (master.item !== undefined && master.item !== null) {
             let list = [...master.item];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
-                // list.push({
-                //     id: 0,
-                //     code: "NO ITEM",
-                //     name: "SELECT",
-                // });
+                list.push({
+                    name: "No Item",
+                    id: 0,
+                });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setItem(list);
@@ -111,25 +68,13 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             let list = [...master.warehouse];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
-                // list.push({
-                //     name: "No Warehouse",
-                //     id: 0,
-                // });
+                list.push({
+                    name: "No Warehouse",
+                    id: 0,
+                });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setWarehouse(list);
-        }
-        if (master.customer !== undefined && master.customer !== null) {
-            let list = [...master.customer];
-            const obj = list.find((obj) => obj.id === 0);
-            if (obj === undefined || obj === null) {
-                // list.push({
-                //     name: "No Warehouse",
-                //     id: 0,
-                // });
-                list.sort((a, b) => (a.id > b.id ? 1 : -1));
-            }
-            setCustomer(list);
         }
     }, [master]);
 
@@ -137,38 +82,22 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
-                let details = data.data.orderDetails;
-                if (details === undefined || details === null) details = [];
-
-                details.map((item) => {
-                    item.checked = false;
-                    return null;
-                });
-
-
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
-                    customerId: data.data.customerId,
-                    warehouseId: data.data.warehouseId,
-                    transDate: data.data.transDate,
-                    shippingDate: data.data.shippingDate,
-                    closedDate: data.data.closedDate,
-                    flag: data.data.flag,
-                    voucherNo: data.data.voucherNo,
-                    referenceNo: data.data.referenceNo,
-                    createdBy: data.data.createdBy,
-                    status: data.data.status,
-                    truckNo: data.data.truckNo,
+                    voucher: data.data.voucher,
+                    reference: data.data.reference,
+                    created: data.data.created,
+                    date: data.data.date,
                     expedition: data.data.expedition,
-                    print: data.data.print,
-                    closedBy: data.data.closedBy,
-                    warehouse: data.data.warehouse,
-                    orderDetails: data.data.orderDetails,
+                    shippingdate: data.data.shippingdate,
+                    customer: data.data.customer,
+                    truckno: data.data.truckno,
+                    warehouseId: data.data.warehouseId,
+                    itemId: data.data.itemId,
                 });
             }
         }
     }, [id, data, setFormData]);
-
 
     const onChange = (e) => {
         e.preventDefault();
@@ -184,209 +113,17 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                navigate(`${path}/${formData.id}/edit`);
+                navigate(`${path}`);
             });
         } else {
             editData({ url, body: formData }).then(() => {
-                if (searchParams.get("return_url") !== undefined && searchParams.get("return_url") !== null) navigate(`${searchParams.get("return_url")}`);
-                else navigate(`${returnUrl}`);
+                navigate(`${path}`);
             });
         }
     };
 
     const tabIconStyle = {
         marginRight: '5px',
-    };
-
-    const onDetailCheck = (e, index) => {
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        let checked = details[index]["checked"];
-        details[index]["checked"] = checked ? false : true;
-
-        setFormData({ ...formData, orderDetails: details });
-    };
-
-    // Get Detail
-
-    const getDetail = ({ itemId, warehouseId, qty, voucherNo }) => async (dispatch) => {
-        try {
-            const queryParams = { itemId, warehouseId, qty, voucherNo };
-            // console.log(axios.defaults.baseURL);
-            const res = await axios.get(`/order/detail`, { params: queryParams });
-            return Promise.resolve(res.data);
-        } catch (err) {
-            let errMessage = "";
-            if (err.message) errMessage = err.message;
-            if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
-            dispatch(setAlert(errMessage, "danger"));
-        }
-    };
-
-    const onDetailSelectChange = async (e, value, index) => {
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        const product = itemList.find((obj) => {
-            return obj.id === e.id;
-        });
-        if (product === undefined && product === null) return;
-
-        details[index]["itemId"] = e.id;
-
-        var qty = details[index]["qty"];
-
-        var data = await dispatch(
-            getDetail({
-                itemId: e.id,
-                warehouseId: warehouseId,
-                qty: qty,
-                voucherNo: voucherNo,
-            })
-        );
-
-        if (data != null) {
-            details[index]["uom"] = data.data.uom;
-            details[index]["qtyPerPacking"] = data.data.qtyPerPacking;
-            details[index]["totalPcs"] = qty * data.data.qtyPerPacking;
-            details[index]["qtyBooked"] = data.data.qtyBooked;
-            details[index]["availability"] = data.data.availability;
-            details[index]["stock"] = data.data.stock;
-            details[index]["diff"] = data.data.diff;
-        }
-
-        setFormData({ ...formData, orderDetails: details });
-
-    };
-
-    const onDetailChange = (e, index) => {
-        e.preventDefault();
-
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        details[index][e.target.name] = e.target.value;
-        if (e.target.name == "qty") {
-            details[index]["qty"] = e.target.value;
-            details[index]["totalPcs"] = e.target.value * details[index]["qtyPerPacking"];
-        }
-
-        setFormData({ ...formData, orderDetails: details });
-    };
-
-    const renderItem = () =>
-        orderDetails !== undefined &&
-        orderDetails !== null &&
-        orderDetails.map((item, index) => {
-            return (
-                <tr key={index}>
-                    <td className="text-center">
-                        <input type="checkbox" checked={item.checked !== undefined && item.checked} onChange={(e) => onDetailCheck(e, index)} />
-                    </td>
-                    <td className="text-center">{index + 1}</td>
-                    <td className="text-left">
-                        <Select2 maxLength={300} options={itemList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name + ' - ' + option.code} placeholder={"Pick Product"} value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(item.itemId))} handleChange={(e) => onDetailSelectChange(e, "itemId", index)} />
-                        {/* <ThemeProvider theme={theme}>
-
-                            <Autocomplete
-                                autoHighlight
-                                id="productId"
-                                options={itemList}
-                                getOptionLabel={(option) => option.name + ' - ' + option.code}
-                                value={itemList == null || itemList.length == 0 ? null : itemList.find((key) => key.id === item.itemId) || undefined}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                sx={{ width: 200 }}
-                                size="small"
-                                onChange={(event, newValue) => {
-                                    onDetailSelectChange(event, newValue, index); // Simpan nilai yang dipilih saat berubah
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Pick Product"
-                                        fullWidth
-
-                                    />
-                                )}
-
-                                PaperComponent={({ children }) => (
-                                    <Paper sx={{ width: 400 }} style={{ position: "absolute", top: "100%", left: 0, minWidth: "fit-content" }}>
-                                        {children}
-                                    </Paper>
-                                )}
-
-                            />
-                        </ThemeProvider> */}
-                    </td>
-
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="qty" value={item.qty} onChange={(e) => onDetailChange(e, index)} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-center" >
-                        <input className="form-control" type="text" style={{ textAlign: "center" }} name="uom" readOnly={true} value={item.uom} onChange={(e) => onDetailChange(e, index)} placeholder="Enter Name" />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" width={50} name="qtyPerPacking" readOnly={true} value={item.qtyPerPacking} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="totalPcs" readOnly={true} value={item.totalPcs} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="qtyBooked" readOnly={true} value={item.qtyBooked} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="availability" readOnly={true} value={item.availability} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="stock" readOnly={true} value={item.stock} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="shipping" readOnly={true} value={item.shipping} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="diff" readOnly={true} value={item.diff} allowNegative={false} thousandSeparator="," decimalScale={0} />
-                    </td>
-                    <td className="text-right">
-                        <input className="form-control text-left" name="remark" value={item.remark || undefined} type="text" placeholder="Remark" onChange={(e) => onDetailChange(e, index)} />
-                    </td>
-                </tr >
-            );
-        });
-
-    const handleNewRow = (e) => {
-        e.preventDefault();
-
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        details.push({
-            checked: false,
-            productID: 0,
-            id: 0,
-            orderId: 0,
-            itemId: 0,
-            qty: 0,
-            voucherNo: "",
-            remark: "",
-        });
-        setFormData({ ...formData, orderDetails: details });
-    };
-
-    const handleDelete = (e) => {
-        e.preventDefault();
-
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        let newDetail = [];
-
-        details.map((item) => {
-            if (!item.checked) newDetail.push(item);
-            return null;
-        });
-
-        setFormData({ ...formData, orderDetails: newDetail });
     };
 
     const element = () => {
@@ -398,63 +135,58 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">
+                        <label className="col-sm-1 col-form-label">
                             Voucher #<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="voucher" value={voucher} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
-                        <label className="col-sm-2 text-left col-form-label">
+                        <label className="col-sm-1 text-left col-form-label">
                             Reference #  <span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="reference" value={referenceNo} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="reference" value={reference} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Created</label>
+                        <label className="col-sm-1 col-form-label">Created</label>
                         <div className="col">
-                            <input className="form-control text-left" name="created" value={createdBy} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input className="form-control text-left" name="created" value={created} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
-                        <label className="col-sm-2 text-left col-form-label">Date</label>
+                        <label className="col-sm-1 text-left col-form-label">Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="transdate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                            <input className="form-control text-left" name="date" value={date} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Expedition</label>
+                        <label className="col-sm-1 col-form-label">Expedition</label>
                         <div className="col">
                             <input className="form-control text-left" name="expedition" value={expedition} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
-                        <label className="col-sm-2 text-left col-form-label">Shipping Date</label>
+                        <label className="col-sm-1 text-left col-form-label">Shipping Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="shippingdate" value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                            <input className="form-control text-left" name="shippingdate" value={shippingdate} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Customer</label>
+                        <label className="col-sm-1 col-form-label">Customer</label>
                         <div className="col">
-                            <Select2
-                                options={customerList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                placeholder={"Pick customer"}
-                                value={customerList === null ? null : customerList.filter((option) => option.id === parseInt(customerId))}
-                                handleChange={(e) => onSelectChange(e, "customerId")} />
+                            <input className="form-control text-left" name="customer" value={customer} onChange={(e) => onChange(e)} type="text" placeholder="" />
                         </div>
-                        <label className="col-sm-2 text-left col-form-label">Truck No</label>
+                        <label className="col-sm-1 text-left col-form-label">Truck No</label>
                         <div className="col">
-                            <input className="form-control text-right" name="truckno" value={truckNo} onChange={(e) => onChange(e)} type="number" placeholder="" />
+                            <input className="form-control text-right" name="truckno" value={truckno} onChange={(e) => onChange(e)} type="number" placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">
+                        <label className="col-sm-1 col-form-label">
                             Warehouse<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-5">
                             <Select2
                                 options={warehouseList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
@@ -464,38 +196,104 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                         </div>
                     </div>
                 </div>
-                <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+                <hr style={{ borderColor: "gray", margin: "30px 0", opacity: 0.5 }} />
+                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
+                    <div className="row align-items-center mt-4 mb-3">
+                        <label className="col-sm-1 col-form-label">
+                            Item No<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                        </label>
+                        <div className="col-sm-5">
+                            <Select2
+                                options={itemList}
+                                optionValue={(option) => option.id.toString()}
+                                optionLabel={(option) => option.name}
+                                placeholder={"Pick Item"}
+                                value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
+                                handleChange={(e) => onSelectChange(e, "itemId")}
+                            />
+                        </div>
+                        <div className="col-sm-1 text-left col-form-label">
+                            <Button variant="primary"> &#x2713; Select</Button>{' '}
+                        </div>
+                        <div className="col-sm-1 text-left col-form-label" style={{ marginLeft: "10px" }}>
+                            <Button variant="primary" onClick={handleCekStock}>
+                                📋 Cek Stock
+                            </Button>{' '}
+                        </div>
+                        <Modal show={showModal} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Stock Item</Modal.Title>
 
-                <div className="d-flex justify-content-end mb-2">
-                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-                        <FaPlus className="mr-2" /> <span>Add</span>
-                    </button>
-                    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-                        <FaTimes className="mr-2" /> <span>Delete</span>
-                    </button>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <table className="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>WAREHOUSE</th>
+                                            <th>STOCK</th>
+                                            <th>BOOKED</th>
+                                            <th>AVAILABILITY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {stockData.map((item, index) => (
+                                            <tr key={index} className="text-center">
+                                                <td>{item.warehouse}</td>
+                                                <td>{item.stock}</td>
+                                                <td>{item.booked}</td>
+                                                <td>{item.availability}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleClose}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+                        <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
+                            <label style={{ marginLeft: "5px" }}>
+                                <input type="checkbox" /> New Item
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div>
+                <div style={{ marginTop: "50px" }}></div>
+                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
                             <tr>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
-                                <th style={{ minWidth: "200px", width: "200px", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Product</th>
-
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty</th>
-                                <th style={{ minWidth: "35px", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Uom</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty/Box</th>
-                                <th style={{ minWidth: "65px", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Total Pcs</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty Booked</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Availability</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Stock</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Shipping</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Diff</th>
-                                <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Remark</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NAME</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>UOM</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY/BOX</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TOTAL PCS</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY BOOKED</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>AVAILABILITY</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>STOCK</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>SHIPPING</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DIFF</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REMARK</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {renderItem()}
+                            <tr>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                                <td style={{ textAlign: 'center' }}></td>
+                            </tr>
                         </tbody>
                     </RTable>
                 </div>
@@ -515,7 +313,7 @@ SpkForm.propTypes = {
     loadData: PropTypes.func,
     addData: PropTypes.func,
     editData: PropTypes.func,
-    master: PropTypes.object
+    master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -524,4 +322,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadWarehouse, loadCustomer })(SpkForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadWarehouse })(SpkForm);

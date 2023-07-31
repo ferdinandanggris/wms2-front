@@ -15,10 +15,10 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
     const role = "Master - Customer";
 
     const columns = [
-        { label: "CODE", key: "code", width: 100, type: "number", align: "left", cardTitle: true },
-        { label: "NAME", key: "name", width: 40, type: "number", align: "left", cardSubTitle: true },
-        { label: "STATUS", key: "isActive", width: 100, type: "custom", align: "middle", cardSubTitle: true },
-    ];
+        { label: "CODE", key: "code", width: 100,  type: "number", align: "right", cardTitle: true },
+        { label: "NAME", key: "name", width: 40, type: "number", align: "right", cardSubTitle: true },
+        { label: "STATUS", key: "isActive", width: 100, type: "number", align: "right", cardSubTitle: true },
+      ];
 
     const exportFilename = "item-type.csv";
 
@@ -28,19 +28,10 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
         }
     }, [user, refreshData]);
 
-    const customRenderValue = (col, value, item) => {
-        if (col.key == "isActive") {
-            if (value == 0)
-                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
-            else
-                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">In Active</div></h6 >);
-        }
-    };
-
     return (
         <ListWrapper
             img={img}
-            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}
+            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}
         />
     )
 };

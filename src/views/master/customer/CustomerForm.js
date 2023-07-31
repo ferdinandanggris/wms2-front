@@ -17,7 +17,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     const navigate = useNavigate();
     const title = "Add Customer";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/customer/:id?/:customer";
+    // const path = "/master/customer/:id?/:customer";
+    const path = "/master/customer/:id?/:type";
     const url = "Customer";
     const role = "Master - Customer";
 
@@ -162,19 +163,19 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Code</label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-10">
                             <input name="code" value={code} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Name</label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-10">
                             <input name="name" value={name} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Business Entity</label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-10">
                             <select className="form-control" name="businessEntity" value={businessEntity} onChange={(e) => onChange(e)}>
                                 <option value="">Select Business Entity</option>
                                 <option value="entity1">Entity 1</option>
@@ -185,7 +186,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Business Entity Name</label>
-                        <div className="col-sm-4">
+                        <div className="col-sm-10">
                             <input name="businessEntityName" value={businessEntityName} type="text" className="form-control text-left" onChange={(e) => onChange(e)} placeholder="" />
                         </div>
                     </div>
@@ -297,6 +298,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                         </div>
                     </Tab>
+
                     <Tab eventKey="BillingDetail" title={<span><FaFileAlt style={tabIconStyle} /> Billing Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mt-4 mb-3">
@@ -307,7 +309,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Title Name<span className="required-star">*</span>
+                                    Title Name<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <input className="form-control text-left" name="titleNama" value={billingTitleName} type="text" placeholder="" onChange={(e) => onChange(e)} required />
@@ -320,7 +322,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Province<span className="required-star">*</span>
+                                    Province<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <input className="form-control text-left" name="billingProvince" value={billingProvince} type="text" placeholder="" onChange={(e) => onChange(e)} required />
@@ -333,7 +335,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    City<span className="required-star">*</span>
+                                    City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <input className="form-control text-left" name="billingCity" value={billingCity} type="text" placeholder="" onChange={(e) => onChange(e)} required />
@@ -346,7 +348,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    District<span className="required-star">*</span>
+                                    District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <input className="form-control text-left" name="billingDistrict" value={billingDistrict} type="text" placeholder="" onChange={(e) => onChange(e)} required />
@@ -365,23 +367,25 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mt-4 mb-3">
                                 <label className="col-sm-2 col-form-label">Billing Street</label>
-                                <div className="col-sm-7">
+                                <div className="col-sm-10">
                                     <input name="billingStreet" value={billingStreet} type="text" className="form-control text-left" placeholder="" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>
                             <div className="row align-items-center mt-4 mb-3">
                                 <label className="col-sm-2 col-form-label">Billing Address</label>
-                                <div className="col-sm-7" >
+                                <div className="col-sm-10">
                                     <input name="billingAddress" value={billingAddress} type="text" className="form-control text-left" placeholder="" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>
                         </div>
                     </Tab>
+
+
                     <Tab eventKey="DeliveryDetail" title={<span><FaCar style={tabIconStyle} /> Delivery Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Title Name<span className="required-star">*</span>
+                                    Title Name<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" name="deliveryTitleName" onChange={(e) => onChange(e)} required>
@@ -401,7 +405,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Province<span className="required-star">*</span>
+                                    Province<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" value={deliveryProvince} name="deliveryProvince" onChange={(e) => onChange(e)}>
@@ -424,7 +428,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    City<span className="required-star">*</span>
+                                    City<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" name="deliveryCity" value={deliveryCity} onChange={(e) => onChange(e)} required>
@@ -444,7 +448,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    District<span className="required-star">*</span>
+                                    District<span className="text-danger">*</span>
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" name="deliveryDistrict" value={deliveryDistrict} onChange={(e) => onChange(e)} required>
@@ -470,13 +474,13 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
                             </div>
                             <div className="row align-items-center mt-4 mb-3">
                                 <label className="col-sm-2 col-form-label">Delivery Street</label>
-                                <div className="col-sm-7">
+                                <div className="col-sm-10">
                                     <input name="deliveryStreet" value={deliveryStreet} type="text" className="form-control text-left" placeholder="" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>
                             <div className="row align-items-center mt-4 mb-3">
                                 <label className="col-sm-2 col-form-label">Delivery Address</label>
-                                <div className="col-sm-7">
+                                <div className="col-sm-10">
                                     <input name="deliveryAddress" value={deliveryAddress} type="text" className="form-control text-left" placeholder="" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>

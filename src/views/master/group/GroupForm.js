@@ -27,7 +27,7 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
     id: 0,
     code: "",
     name: "",
-    warehouseId: 0
+    warehouse: ""
   });
 
   const [warehouseList, setWarehouse] = useState([]);
