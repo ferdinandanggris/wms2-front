@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends } from "react-icons/fa";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaPlus,FaTimes } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -51,7 +51,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
         billingProvince: "",
         billingCity: "",
         billingDistrict: "",
-
+        itemConsumptionDetails: "",
         deliveryAddress: "",
         deliveryPostalCode: "",
         deliveryPhone: "",
@@ -82,7 +82,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
 
     });
 
-    const { name, type, isActive, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
+    const { name, type, isActive, itemConsumptionDetails, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -129,6 +129,8 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                     billingCity: data.data.billingCity,
                     billingDistrict: data.data.billingDistrict,
                     isActive: data.data.isActive,
+                    itemConsumptionDetails:data.dat.itemConsumptionDetails,
+
                 });
             }
         }
@@ -159,7 +161,45 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
     const tabIconStyle = {
         marginRight: '5px',
     };
+    const handleNewRow = (e) => {
+      e.preventDefault();
+      let details = data.data. itemConsumptionDetails;
+      if (details === undefined || details === null) details = [];
 
+      details.push({
+          id: 0,
+          itemConsumptionId: 0,
+          voucherNo: "",
+          batchId:0,
+          itemId: 0,
+          remark: "null",
+          qty: 0,
+          dateIn:0,
+          dateUp: 0,
+          userIn: "null",
+          userUp:" null",
+          itemName: "",
+          uom: "",
+          totalPcs: 0
+      });
+      setFormData({ ...formData, itemConsumptionDetails: details });
+  };
+
+  const handleDelete = (e) => {
+      e.preventDefault();
+
+      let details =itemConsumptionDetails;
+      if (details === undefined || details === null) details = [];
+
+      let newDetail = [];
+
+      details.map((item) => {
+          if (!item.checked) newDetail.push(item);
+          return null;
+      });
+
+      setFormData({ ...formData,itemConsumptionDetails: newDetail });
+  };
     const element = () => {
         return (
             <div className="detail">
@@ -243,6 +283,46 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                 ></textarea>
         </div>
       </div>
+      <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+
+<div className="d-flex justify-content-end mb-2">
+    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+        <FaPlus className="mr-2" /> <span>Add</span>
+    </button>
+    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
+        <FaTimes className="mr-2" /> <span>Delete</span>
+    </button>
+</div>
+
+
+      <RTable bordered style={{ float: 'center', width: "100%" }}>
+                <thead>
+                  <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TRANSACTION No</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DATE</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INITIAL</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INCOMING</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OUTGOING</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <td style={{ textAlign: 'center' }}>{formData.initial}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.initial}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.code}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
+                  </tr>
+                </tbody>
+              </RTable>
                 </div>
                 
             </div>
