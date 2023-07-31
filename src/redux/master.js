@@ -37,7 +37,6 @@ const initialState = {
   shipping: null,
   shippingDetail: null,
   customerDetail: null,
-
 };
 
 export default function master(state = initialState, action) {

@@ -11,19 +11,19 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Reciving List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/transaction/receiving";
-  const url = "Receiving";
+  const url = "Item";
   const role = "transaction- RecivingList";
 
   const columns = [
-    { label: "VOUCHER #", key: "voucherNo", width: 100, cardTitle: true },
+    { label: "VOUCHER #", key: "code", width: 100, cardTitle: true },
     { label: "REFERENCE #", key: "uomId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VENDOR", key: " vendors", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY ", key: " createdBy", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED DATE ", key: "transDate", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED BY", key: " postedBy", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED DATE", key: "postDate", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VENDOR", key: "packingId", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED BY ", key: "qtyPerPacking", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED DATE ", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED BY", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED DATE", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "LINE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "STATUS", key: "maxTemp", width: 80, type: "number", align: "right", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";

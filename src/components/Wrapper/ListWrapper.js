@@ -405,7 +405,16 @@ const ListWrapper = (props) => {
   });
 
   const renderValue = (col, value, item) => {
-    if (value === undefined) return null;
+    if (value === undefined) {
+      if (customRenderValue !== undefined) {
+        var returnValue = customRenderValue(col, value, item);
+        if (returnValue === undefined)
+          returnValue = null;
+
+        return returnValue;
+      } else return null;
+
+    }
     if (col.type === "date") {
       return value === undefined || value === null ? "" : moment(value).format("DD MMM YYYY");
     } else if (col.type === "datetime") {
@@ -492,16 +501,9 @@ const ListWrapper = (props) => {
             {page * limit + index + 1}
           </td>
           {columns.map((col, key) => {
-            console.log(col.key)
             return (
               <td key={key} className={"align-middle data-item " + (item["status"] !== undefined && item["status"] !== null ? item["status"] : "") + " " + (col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : "text-left")} onClick={(e) => (col.link === undefined ? handleView(e, item.id) : null)}>
-                {col.label === "Percentage" ? (
-                  <div class="progress">
-                    <div class="progress-bar" role="progressbar" style={{ width: "75%" }} aria-valuenow={renderValue(col, item[col.key], item)} aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                ) : (
-                  renderValue(col, item[col.key], item)
-                )}
+                {renderValue(col, item[col.key], item)}
               </td>
             )
           })}
@@ -691,7 +693,6 @@ const ListWrapper = (props) => {
   <div className="card-body list-card-body">{loading ? <Spinner /> : renderList()}</div>;
 
 
-  console.log("TEST ITEM", data)
 
   return (
     <Fragment>
