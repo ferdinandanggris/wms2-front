@@ -30,7 +30,10 @@ const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "warehouseId") {
-      return item.warehouse.name;
+      if (item.warehouse != null)
+        return item.warehouse.name;
+      else
+        return "";
     }
   };
 

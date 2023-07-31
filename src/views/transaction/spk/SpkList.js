@@ -11,19 +11,19 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "SPK Module";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/transaction/spk";
-    const url = "Spk";
+    const url = "order";
     const role = "Transaction - SPK";
 
     const columns = [
-        { label: "VOUCHER #", key: "voucher", width: 40, type: "text", align: "left", cardTitle: true },
-        { label: "CUSTOMER", key: "customer", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "WAREHOUSE", key: "warehouse", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED BY", key: "createdby", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED DATE", key: "createddate", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "SHIPING DATE", key: "shipingdate", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "Voucher #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
+        { label: "Customer", key: "customerId", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "Warehouse", key: "warehouseId", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "Created By", key: "createdby", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CREATED Date", key: "createddate", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "Shipping Date", key: "shipingdate", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "PRINT", key: "print", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "Status", key: "status", width: 40, type: "text", align: "Center", cardSubTitle: true },
+        { label: "Print", key: "print", width: 40, type: "text", align: "Center", cardSubTitle: true },
     ];
 
     const exportFilename = "spk.csv";
@@ -34,10 +34,25 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
         }
     }, [user, refreshData]);
 
+    const customRenderValue = (col, value, item) => {
+        if (col.key == "customerId") {
+            if (item.customer != null)
+                return item.customer.name;
+            else
+                return "";
+        }
+        else if (col.key == "warehouseId") {
+            if (item.warehouse != null)
+                return item.warehouse.name;
+            else
+                return "";
+        }
+    };
+
     return (
         <ListWrapper
             img={img}
-            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}
+            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}
         />
     )
 };

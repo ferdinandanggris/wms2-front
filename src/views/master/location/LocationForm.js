@@ -18,7 +18,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
     const navigate = useNavigate();
     const title = "Add Location";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/location/:id?/:type";
+    const path = "/master/location/:id?/:location";
     const url = "Location";
     const role = "Master - Location";
 
@@ -136,7 +136,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Name<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Name<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -152,7 +152,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Remark<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Remark<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -182,7 +182,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
 
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Warehouse<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Warehouse<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <Select2
@@ -196,7 +196,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
 
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Group<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
+                            Group<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-4">
                             <Select2
