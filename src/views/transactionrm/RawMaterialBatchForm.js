@@ -283,7 +283,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                 ></textarea>
         </div>
       </div>
-      <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+     
 
 <div className="d-flex justify-content-end mb-2">
     <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>

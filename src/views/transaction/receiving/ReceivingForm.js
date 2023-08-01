@@ -45,13 +45,14 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     userUp: "",
     warehouses: "",
     vendors: "",
-    receivingDetails: null
+    receivingDetails: []
 
   });
 
   const { name, vendor, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [vendorList, setVendor] = useState([]);
+  const[tempbatchno,settempbatchno]=useState(0);
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
   }, [id, user, loadData]);
@@ -80,7 +81,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
           userUp: data.data.userUp,
           warehouses: data.data.warehouse,
           vendors: data.data.vendor,
-          receivingDetails: null,
+          receivingDetails: data.data.receivingDetails,
 
         });
       }
@@ -122,7 +123,11 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const onChange = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    if(e.target.name === "batchno"){
+        settempbatchno(e.target.value)
+    }
+
+};
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -142,7 +147,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   };
   const handleNewRow = (e) => {
     e.preventDefault();
-    let details = data.data. receivingDetails;
+    let details = receivingDetails;
     if (details === undefined || details === null) details = [];
 
     details.push({
@@ -274,8 +279,8 @@ const handleDelete = (e) => {
             <label className="col-sm-2 col-form-label">Batch No</label>
             <div className="col-sm-3">
               <input
-                name="code"
-                value={voucherNo}
+                name="batchno"
+                value={receivingDetails.batchId}
                 type="text"
                 onChange={(e) => onChange(e)}
                 className="form-control text-left"
@@ -305,7 +310,7 @@ const handleDelete = (e) => {
 
 
 
-
+{console.log("receivingDetails",receivingDetails)}
 
           <RTable bordered style={{ float: 'center', width: "100%" }}>
             <thead>
@@ -319,17 +324,25 @@ const handleDelete = (e) => {
                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Remark</th>
               </tr>
             </thead>
+
             <tbody>
-              <tr>
-                <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-                <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-              </tr>
-            </tbody>
+    { receivingDetails!== undefined &&
+       receivingDetails !== null &&
+       receivingDetails .map((details , index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.palletId}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.locationId}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
+
+          </tr>
+        );
+      })}
+  </tbody>
           </RTable>
         </div>
 

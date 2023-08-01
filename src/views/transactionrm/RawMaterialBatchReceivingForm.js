@@ -251,8 +251,6 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
               <input name="code" value={code} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
             </div>
                     </div>
-                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
-
 <div className="d-flex justify-content-end mb-2">
     <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
         <FaPlus className="mr-2" /> <span>Add</span>

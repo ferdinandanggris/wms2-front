@@ -13,6 +13,7 @@ import { loadPallet, loadVendor, loadWarehouse } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
+import { te } from "date-fns/locale";
 
 const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadPallet }) => {
     let { id } = useParams();
@@ -55,14 +56,16 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
         location: "",
         pallet: "",
         warehouse: "",
-        itemConsumptionDetails: ""
+        itemConsumptionDetails: []
 
     });
 
-    const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
+    const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [vendorList, setVendor] = useState([]);
+    const[tempbatchno,settempbatchno]=useState(0);
+
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
     }, [id, user, loadData]);
@@ -102,7 +105,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     location: data.data.location,
                     pallet: data.data.pallet,
                     warehouse: data.data.warehouse,
-                    itemConsumptionDetails:data.dat.itemConsumptionDetails,
+                    itemConsumptionDetails:data.data.itemConsumptionDetails,
 
 
 
@@ -159,6 +162,10 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if(e.target.name === "batchno"){
+            settempbatchno(e.target.value)
+        }
+
     };
 
     const handleSave = (e) => {
@@ -179,7 +186,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     };
     const handleNewRow = (e) => {
         e.preventDefault();
-        let details = data.data. itemConsumptionDetails;
+        let details =itemConsumptionDetails;
         if (details === undefined || details === null) details = [];
 
         details.push({
@@ -223,7 +230,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const tabIconStyle = {
         marginRight: '5px',
     };
-
+     
     const element = () => {
         return (
             <div className="detail">
@@ -332,13 +339,13 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                             ></textarea>
                         </div>
                     </div>
-
+                  
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
                             <input
-                                name="code"
-                                value={voucherNo}
+                                name="batchno"
+                                value={itemConsumptionDetails.batchId}
                                 type="text"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
@@ -391,16 +398,23 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                                            <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                                        </tr>
-                                    </tbody>
+    {  itemConsumptionDetails!== undefined &&
+       itemConsumptionDetails !== null &&
+       itemConsumptionDetails .map((details , index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.totalPcs}</td> {}
+            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
+
+          </tr>
+        );
+      })}
+  </tbody>
                                 </RTable>
                             </div>
                         </Tab>
@@ -413,7 +427,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 </div>
                                 <label className="col-sm-1 text-left col-form-label">Created Date</label>
                                 <div className="col">
-                                    <input className="form-control text-left" name="transDate" value={transDate} onChange={(e) => onChange(e)} type="text" />
+                                <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
@@ -423,7 +437,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 </div>
                                 <label className="col-sm-1 text-left col-form-label">Posted Date</label>
                                 <div className="col">
-                                    <input className="form-control text-left" name="postDate" value={postDate} onChange={(e) => onChange(e)} type="text" />
+                                <input className="form-control text-left" name="postDate" value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                                 </div>
                             </div>
                         </Tab>

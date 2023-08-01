@@ -44,14 +44,15 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     dateUp: "",
     userIn: "",
     userUp: "",
-    spWarehouseDetails: "",
-    spLocationDetails: "",
-    spPalletDetails: "",
-    batches: "",
+    spWarehouseDetails: [],
+    spLocationDetails: [],
+    spPalletDetails: [],
+    batches: [],
     uom: ""
   });
 
-  const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance } = formData;
+  const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails,spLocationDetails, 
+    spPalletDetails,batches } = formData;
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
@@ -82,6 +83,10 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
           qtyPerPacking: data.data.qtyPerPacking,
           balance: data.data.balance,
           uom: data.data.uom,
+          batches:data.data.batches,
+          spPalletDetails:data.dataspPalletDetails,
+          spWarehouseDetails: data.data.spWarehouseDetails,
+          spLocationDetails: data.data.spLocationDetails,
         });
       }
     }
@@ -219,14 +224,20 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                  </tr>
-                </tbody>
+    {batches !== undefined &&
+      batches !== null &&
+      batches.map((batch, index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{batch.code}</td> {}
+            <td style={{ textAlign: 'center' }}>{batch.initial}</td> {}
+            <td style={{ textAlign: 'center' }}>{batch.incoming}</td> {}
+            <td style={{ textAlign: 'center' }}>{batch.outgoing}</td> {}
+            <td style={{ textAlign: 'center' }}>{batch.balance}</td> {}
+          </tr>
+        );
+      })}
+  </tbody>
               </RTable>
             </div>
 
@@ -243,13 +254,19 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                </tr>
-              </tbody>
+    {spWarehouseDetails !== undefined &&
+      spWarehouseDetails !== null &&
+      spWarehouseDetails.map((WarehouseDetails, index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{WarehouseDetails.code}</td> {}
+            <td style={{ textAlign: 'center' }}>{WarehouseDetails.incoming}</td> {}
+            <td style={{ textAlign: 'center' }}>{WarehouseDetails.outgoing}</td> {}
+            <td style={{ textAlign: 'center' }}>{WarehouseDetails.balance}</td> {}
+          </tr>
+        );
+      })}
+  </tbody>
             </RTable>
           </Tab>
 
@@ -265,13 +282,19 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                </tr>
-              </tbody>
+    {spLocationDetails !== undefined &&
+      spLocationDetails !== null &&
+      spLocationDetails.map((LocationDetails, index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{LocationDetails.code}</td> {}
+            <td style={{ textAlign: 'center' }}>{LocationDetails.incoming}</td> {}
+            <td style={{ textAlign: 'center' }}>{LocationDetails.outgoing}</td> {}
+            <td style={{ textAlign: 'center' }}>{LocationDetails.balance}</td> {}
+          </tr>
+        );
+      })}
+  </tbody>
             </RTable>
           </Tab>
 
@@ -286,13 +309,19 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                  <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                </tr>
-              </tbody>
+    {spPalletDetails!== undefined &&
+      spPalletDetails !== null &&
+      spPalletDetails .map((PalletDetails , index) => { 
+        return (
+          <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{PalletDetails.code}</td> {}
+            <td style={{ textAlign: 'center' }}>{PalletDetails.incoming}</td> {}
+            <td style={{ textAlign: 'center' }}>{PalletDetails.outgoing}</td> {}
+            <td style={{ textAlign: 'center' }}>{PalletDetails.balance}</td> {}
+          </tr>
+        );
+      })}
+  </tbody>
             </RTable>
           </Tab>
         </Tabs>
