@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Table as RTable, Tab, Tabs,Button } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaTimes,FaPlus } from "react-icons/fa";
+import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaTimes, FaPlus } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -52,7 +52,8 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const { name, vendor, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [vendorList, setVendor] = useState([]);
-  const[tempbatchno,settempbatchno]=useState(0);
+  const [tempbatchno, settempbatchno] = useState(0);
+
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
   }, [id, user, loadData]);
@@ -60,7 +61,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
-       let details =receivingDetails;
+      let details = receivingDetails;
       if (data.data !== undefined && data.data !== null) {
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
@@ -82,7 +83,6 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
           warehouses: data.data.warehouse,
           vendors: data.data.vendor,
           receivingDetails: data.data.receivingDetails,
-
         });
       }
     }
@@ -120,14 +120,15 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       setVendor(list);
     }
   }, [master]);
+
   const onChange = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if(e.target.name === "batchno"){
-        settempbatchno(e.target.value)
+    if (e.target.name === "batchno") {
+      settempbatchno(e.target.value)
     }
 
-};
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -142,48 +143,50 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       });
     }
   };
+
   const onSelectChange = (e, name) => {
     setFormData({ ...formData, [name]: e.id });
   };
+
   const handleNewRow = (e) => {
     e.preventDefault();
     let details = receivingDetails;
     if (details === undefined || details === null) details = [];
 
     details.push({
-        id: 0,
-        itemConsumptionId: 0,
-        voucherNo: "",
-        batchId:0,
-        itemId: 0,
-        remark: "null",
-        qty: 0,
-        dateIn:0,
-        dateUp: 0,
-        userIn: "null",
-        userUp:" null",
-        itemName: "",
-        uom: "",
-        totalPcs: 0
+      id: 0,
+      itemConsumptionId: 0,
+      voucherNo: "",
+      batchId: 0,
+      itemId: 0,
+      remark: "null",
+      qty: 0,
+      dateIn: 0,
+      dateUp: 0,
+      userIn: "null",
+      userUp: " null",
+      itemName: "",
+      uom: "",
+      totalPcs: 0
     });
     setFormData({ ...formData, receivingDetails: details });
-};
+  };
 
-const handleDelete = (e) => {
+  const handleDelete = (e) => {
     e.preventDefault();
 
-    let details =receivingDetails;
+    let details = receivingDetails;
     if (details === undefined || details === null) details = [];
 
     let newDetail = [];
 
     details.map((item) => {
-        if (!item.checked) newDetail.push(item);
-        return null;
+      if (!item.checked) newDetail.push(item);
+      return null;
     });
 
-    setFormData({ ...formData,receivingDetails: newDetail });
-};
+    setFormData({ ...formData, receivingDetails: newDetail });
+  };
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
@@ -267,11 +270,11 @@ const handleDelete = (e) => {
             <label className="col-sm-1 text-left col-form-label">WareHouse <span className="text-danger">*</span></label>
             <div className="col">
               <Select2
-       options={warehouseList}
-       optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-       placeholder={"Pick Warehouse"}
-       value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-       handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                options={warehouseList}
+                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                placeholder={"Pick Warehouse"}
+                value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
+                handleChange={(e) => onSelectChange(e, "warehouseId")} />
             </div>
           </div>
 
@@ -289,28 +292,28 @@ const handleDelete = (e) => {
               />
             </div>
             <div className="col-sm-1 text-left col-form-label">
-                            <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
-                        </div>
-       <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
-       <label style={{ marginLeft: "5px" }}>
-       <input type="checkbox" /> New Item
-      </label>
-      </div>
+              <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
+            </div>
+            <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
+              <label style={{ marginLeft: "5px" }}>
+                <input type="checkbox" /> New Item
+              </label>
+            </div>
           </div>
           <hr style={{ borderColor: "gray", opacity: 0.5 }} />
 
-<div className="d-flex justify-content-end mb-2">
-    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-        <FaPlus className="mr-2" /> <span>Add</span>
-    </button>
-    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-        <FaTimes className="mr-2" /> <span>Delete</span>
-    </button>
-</div>
+          <div className="d-flex justify-content-end mb-2">
+            <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+              <FaPlus className="mr-2" /> <span>Add</span>
+            </button>
+            <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
+              <FaTimes className="mr-2" /> <span>Delete</span>
+            </button>
+          </div>
 
 
 
-{console.log("receivingDetails",receivingDetails)}
+          {console.log("receivingDetails", receivingDetails)}
 
           <RTable bordered style={{ float: 'center', width: "100%" }}>
             <thead>
@@ -326,23 +329,24 @@ const handleDelete = (e) => {
             </thead>
 
             <tbody>
-    { receivingDetails!== undefined &&
-       receivingDetails !== null &&
-       receivingDetails .map((details , index) => { 
-        return (
-          <tr key={index}>
-            <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.palletId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.locationId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
+              {receivingDetails !== undefined &&
+                receivingDetails !== null &&
+                receivingDetails.map((details, index) => {
+                  return (
+                    <tr key={index}>
+                      <td style={{ textAlign: 'center' }}>{details.batchId}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.itemName}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.qty}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.uom}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.palletId}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.locationId}</td> { }
+                      <td style={{ textAlign: 'center' }}>{details.remark}</td> { }
 
-          </tr>
-        );
-      })}
-  </tbody>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
           </RTable>
         </div>
 

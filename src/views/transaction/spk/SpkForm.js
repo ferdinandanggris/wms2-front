@@ -5,15 +5,10 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table as RTable, Modal, Button } from "react-bootstrap";
+import { Table as RTable } from "react-bootstrap";
 import { loadItem, loadWarehouse, loadCustomer } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import { NumericFormat } from "react-number-format";
-// import Autocomplete from '@mui/material/Autocomplete';
-// import TextField from '@mui/material/TextField';
-// import Paper from "@mui/material/Paper";
-// import Box from '@mui/material/Box';
-// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import moment from "moment";
 import axios from "axios";
 import { setAlert } from "../../../actions/alert";
@@ -29,14 +24,10 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
     const role = "Transaction - SPK";
 
     const dispatch = useDispatch();
-    // const theme = createTheme({
-    //     typography: {
-    //         fontSize: 11, // Ganti dengan ukuran font yang diinginkan
-    //     },
-    // });
 
     const [searchParams] = useSearchParams();
     const [returnUrl, setReturnUrl] = useState(path);
+
     useEffect(() => {
         if (searchParams.get("return_url") !== undefined && searchParams.get("return_url") !== null) setReturnUrl(searchParams.get("return_url"));
     }, []);
@@ -98,11 +89,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             let list = [...master.item];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
-                // list.push({
-                //     id: 0,
-                //     code: "NO ITEM",
-                //     name: "SELECT",
-                // });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setItem(list);
@@ -111,10 +97,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             let list = [...master.warehouse];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
-                // list.push({
-                //     name: "No Warehouse",
-                //     id: 0,
-                // });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setWarehouse(list);
@@ -123,10 +105,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             let list = [...master.customer];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
-                // list.push({
-                //     name: "No Warehouse",
-                //     id: 0,
-                // });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setCustomer(list);
@@ -144,8 +122,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                     item.checked = false;
                     return null;
                 });
-
-
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     customerId: data.data.customerId,
@@ -169,6 +145,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         }
     }, [id, data, setFormData]);
 
+    console.log("ORDER", orderDetails)
 
     const onChange = (e) => {
         e.preventDefault();
@@ -275,6 +252,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         setFormData({ ...formData, orderDetails: details });
     };
 
+    console.log("ORDERDATA", orderDetails)
+
     const renderItem = () =>
         orderDetails !== undefined &&
         orderDetails !== null &&
@@ -286,69 +265,123 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                     </td>
                     <td className="text-center">{index + 1}</td>
                     <td className="text-left">
-                        <Select2 maxLength={300} options={itemList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name + ' - ' + option.code} placeholder={"Pick Product"} value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(item.itemId))} handleChange={(e) => onDetailSelectChange(e, "itemId", index)} />
-                        {/* <ThemeProvider theme={theme}>
-
-                            <Autocomplete
-                                autoHighlight
-                                id="productId"
-                                options={itemList}
-                                getOptionLabel={(option) => option.name + ' - ' + option.code}
-                                value={itemList == null || itemList.length == 0 ? null : itemList.find((key) => key.id === item.itemId) || undefined}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                sx={{ width: 200 }}
-                                size="small"
-                                onChange={(event, newValue) => {
-                                    onDetailSelectChange(event, newValue, index); // Simpan nilai yang dipilih saat berubah
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Pick Product"
-                                        fullWidth
-
-                                    />
-                                )}
-
-                                PaperComponent={({ children }) => (
-                                    <Paper sx={{ width: 400 }} style={{ position: "absolute", top: "100%", left: 0, minWidth: "fit-content" }}>
-                                        {children}
-                                    </Paper>
-                                )}
-
-                            />
-                        </ThemeProvider> */}
+                        <Select2
+                            maxLength={300}
+                            options={itemList}
+                            optionValue={(option) => option.id.toString()}
+                            optionLabel={(option) => option.name + ' - ' + option.code}
+                            placeholder={"Pick Product"}
+                            value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(item.itemId))}
+                            handleChange={(e) => onDetailSelectChange(e, "itemId", index)}
+                        />
                     </td>
 
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="qty" value={item.qty} onChange={(e) => onDetailChange(e, index)} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="qty" value={item.qty}
+                            onChange={(e) => onDetailChange(e, index)}
+                            allowNegative={false} thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-center" >
-                        <input className="form-control" type="text" style={{ textAlign: "center" }} name="uom" readOnly={true} value={item.uom} onChange={(e) => onDetailChange(e, index)} placeholder="Enter Name" />
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="uom"
+                            readOnly={true}
+                            value={item.uom}
+                            onChange={(e) => onDetailChange(e, index)}
+                            placeholder="Enter Name"
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" width={50} name="qtyPerPacking" readOnly={true} value={item.qtyPerPacking} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            width={50}
+                            name="qtyPerPacking"
+                            readOnly={true}
+                            value={item.qtyPerPacking}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="totalPcs" readOnly={true} value={item.totalPcs} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="totalPcs"
+                            readOnly={true}
+                            value={item.totalPcs}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="qtyBooked" readOnly={true} value={item.qtyBooked} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="qtyBooked"
+                            readOnly={true}
+                            value={item.qtyBooked}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="availability" readOnly={true} value={item.availability} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="availability"
+                            readOnly={true}
+                            value={item.availability}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="stock" readOnly={true} value={item.stock} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="stock"
+                            readOnly={true}
+                            value={item.stock}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="shipping" readOnly={true} value={item.shipping} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="shipping" readOnly={true}
+                            value={item.shipping}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <NumericFormat className="form-control text-right" name="diff" readOnly={true} value={item.diff} allowNegative={false} thousandSeparator="," decimalScale={0} />
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="diff"
+                            readOnly={true}
+                            value={item.diff}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalScale={0}
+                        />
                     </td>
                     <td className="text-right">
-                        <input className="form-control text-left" name="remark" value={item.remark || undefined} type="text" placeholder="Remark" onChange={(e) => onDetailChange(e, index)} />
+                        <input
+                            className="form-control text-left"
+                            name="remark"
+                            value={item.remark || undefined}
+                            type="text"
+                            placeholder="Remark"
+                            onChange={(e) => onDetailChange(e, index)}
+                        />
                     </td>
                 </tr >
             );
@@ -388,6 +421,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
         setFormData({ ...formData, orderDetails: newDetail });
     };
+
+
 
     const element = () => {
         return (
@@ -481,7 +516,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                 <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                 <th style={{ minWidth: "200px", width: "200px", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Product</th>
-
                                 <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty</th>
                                 <th style={{ minWidth: "35px", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Uom</th>
                                 <th style={{ minWidth: "auto", backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty/Box</th>
