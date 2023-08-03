@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle } from "react-icons/fa";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { FaLayerGroup, FaInfoCircle, FaPlus, FaTimes } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
@@ -8,6 +9,8 @@ import Select2 from "../../../components/Select2";
 import { loadItem } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import { Table as RTable } from "react-bootstrap";
+import moment from "moment";
+import { NumericFormat } from "react-number-format";
 
 const BatchNumberForm = ({ user, data, loadData, addData, editData, master, loadItem }) => {
     let { id } = useParams();
@@ -17,6 +20,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const path = "/transaction/batch-number/:id?/:type";
     const url = "Batch";
     const role = "Transaction - Batch Number";
+    const dispatch = useDispatch();
+    const [searchParams] = useSearchParams();
+    const [returnUrl, setReturnUrl] = useState(path);
 
     const [formData, setFormData] = useState({
         id: 0,
@@ -29,10 +35,11 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         qty: 0,
         visual: "",
         description: "",
+        spListTransactions: []
     });
 
     const [itemList, setItem] = useState([]);
-    const { code, itemId, transDate, status, color, qc, qty, visual, description } = formData;
+    const { code, itemId, transDate, status, color, qc, qty, visual, description, spListTransactions } = formData;
 
     const stockData = [
         { no: 1, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 1, incoming: 0, outgoing: 0, balance: 0 },
@@ -49,7 +56,8 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
     useEffect(() => {
         loadItem();
-        if (user !== null && id !== undefined) loadData({ url, id });
+        if (user !== null && id !== undefined)
+            loadData({ url, id });
     }, [id, user, loadData, loadItem]);
 
     console.log(master)
@@ -73,6 +81,12 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
+                let details = data.data.spListTransactions;
+                if (details === undefined || details === null) details = [];
+                details.map((item) => {
+                    item.checked = false;
+                    return null;
+                });
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
@@ -84,6 +98,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                     qty: data.data.qty,
                     visual: data.data.visual,
                     description: data.data.description,
+                    spListTransactions: data.data.spListTransactions
                 });
             }
         }
@@ -103,18 +118,94 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
+                // navigate(`${path}`);
+                navigate(`${path}/${formData.id}/edit`);
             });
         } else {
             editData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
+                // navigate(`${path}`);
+                if (searchParams.get("return_url") !== undefined && searchParams.get("return_url") !== null) navigate(`${searchParams.get("return_url")}`);
+                else navigate(`${returnUrl}`);
             });
         }
+    };
+
+    const renderItem = () => {
+        spListTransactions !== undefined &&
+            spListTransactions !== null &&
+            spListTransactions.map((item, index) => {
+                return (
+                    <tr key={index}>
+                        <td className="text-center">{index + 1}</td>
+                        <td style={{ textAlign: 'center' }}>{item.transaction}</td>
+                        <td style={{ textAlign: 'center' }}>{item.item}</td>
+                        <td style={{ textAlign: 'center' }}>{item.transDate}</td>
+                        <td style={{ textAlign: 'center' }}>{item.initial}</td>
+                        <td style={{ textAlign: 'center' }}>{item.incoming}</td>
+                        <td style={{ textAlign: 'center' }}>{item.outgoing}</td>
+                        <td style={{ textAlign: 'center' }}>{item.balance}</td>
+                    </tr >
+                );
+            });
+    }
+
+    const handleNewRow = (e) => {
+        e.preventDefault();
+
+        let details = spListTransactions;
+        if (details === undefined || details === null) details = [];
+
+        details.push({
+            checked: false,
+            productID: 0,
+            id: 0,
+            orderId: 0,
+            itemId: 0,
+            qty: 0,
+            voucherNo: "",
+            remark: "",
+        });
+        setFormData({ ...formData, spListTransactions: details });
+    };
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+
+        let details = spListTransactions;
+        if (details === undefined || details === null) details = [];
+
+        let newDetail = [];
+
+        details.map((item) => {
+            if (!item.checked) newDetail.push(item);
+            return null;
+        });
+
+        setFormData({ ...formData, spListTransactions: newDetail });
     };
 
     const tabIconStyle = {
         marginRight: '5px',
     };
+
+    console.log("BATCH", data)
+
+    let totalInitial = 0;
+    let totalIncoming = 0;
+    let totalOutgoing = 0;
+    let totalBalance = 0;
+
+    if (spListTransactions !== undefined && spListTransactions !== null) {
+        spListTransactions.forEach((details) => {
+            totalInitial += details.initial;
+            totalIncoming += details.incoming;
+            totalOutgoing += details.outgoing;
+            totalBalance += details.balance;
+        });
+    }
+
+    // data.data.spListTransactions?.map((obj) => {
+    // })
 
     const element = () => {
         return (
@@ -155,8 +246,8 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         <div className="col-sm-4">
                             <input
                                 name="transDate"
-                                value={transDate}
-                                type="text"
+                                value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")}
+                                type="date"
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
@@ -249,7 +340,20 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         </div>
                     </div>
                 </div>
-                <div style={{ marginTop: "50px" }}></div>
+
+                <hr style={{ borderColor: "gray", opacity: 0.5, marginTop: "50px" }} />
+
+                <div className="d-flex justify-content-end mb-2 mr-3">
+                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+                        <FaPlus className="mr-2" /> <span>Add</span>
+                    </button>
+                    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
+                        <FaTimes className="mr-2" /> <span>Delete</span>
+                    </button>
+                </div>
+
+                <div style={{ marginTop: "20px" }}></div>
+
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
@@ -265,7 +369,8 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                             </tr>
                         </thead>
                         <tbody>
-                            {stockData.map((item, index) => (
+                            
+                            {/* {stockData.map((item, index) => (
                                 <tr>
                                     <td style={{ textAlign: 'center' }}>{item.no}</td>
                                     <td style={{ textAlign: 'center' }}>{item.transaction}</td>
@@ -276,13 +381,38 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                     <td style={{ textAlign: 'center' }}>{item.outgoing}</td>
                                     <td style={{ textAlign: 'center' }}>{item.balance}</td>
                                 </tr>
-                            ))}
-                            <tr>
+                            ))} */}
+                            {/* <tr>
                                 <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>Total</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "initial")}</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "incoming")}</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "outgoing")}</td>
                                 <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "balance")}</td>
+                            </tr> */}
+                            {/* {renderItem()} */}
+
+                            {spListTransactions !== undefined &&
+                                spListTransactions !== null &&
+                                spListTransactions.map((details, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td style={{ textAlign: 'center' }}>{details.transactionId}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.transDate}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.initial}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.incoming}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.outgoing}</td> { }
+                                            <td style={{ textAlign: 'center' }}>{details.balance}</td> { }
+                                        </tr>
+                                    );
+                                })
+                            }
+                            <tr>
+                                <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>Total</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalInitial}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalIncoming}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalOutgoing}</td>
+                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalBalance}</td>
                             </tr>
                         </tbody>
                     </RTable>

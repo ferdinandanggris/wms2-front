@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaSearch, FaFile } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle, FaSearch, FaFile, FaPlus, FaTimes } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table as RTable } from "react-bootstrap";
-import { loadVendor, loadWarehouse, loadBatch } from "../../../actions/master";
+import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
+import moment from "moment";
 
 const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch }) => {
     let { id } = useParams();
@@ -30,21 +31,26 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         warehouse: "",
         batch: "",
         file: "",
+        itemAdjustmentDetails: []
     });
 
     const [warehouseList, setWarehouse] = useState([]);
     const [vendorList, setVendor] = useState([]);
     const [batchList, setBatch] = useState([]);
+    const [locationList, setLocation] = useState([]);
+    const [palletList, setPallet] = useState([]);
 
-    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, vendorId, warehouseId, batchId, file } = formData;
+    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
 
     useEffect(() => {
         loadWarehouse();
         loadVendor();
         loadBatch();
+        loadLocation();
+        loadPallet();
         if (user !== null && id !== undefined)
             loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse, loadBatch]);
+    }, [id, user, loadData, loadWarehouse, loadBatch, loadLocation, loadPallet]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -76,12 +82,36 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "No Batch",
+                    code: "No Batch",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setBatch(list);
+        }
+        if (master.location !== undefined && master.location !== null) {
+            let list = [...master.location];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Location",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setLocation(list);
+        }
+        if (master.pallet !== undefined && master.pallet !== null) {
+            let list = [...master.pallet];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Pallet",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setPallet(list);
         }
     }, [master]);
 
@@ -89,6 +119,12 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
+                let details = data.data.itemAdjustmentDetails;
+                if (details === undefined || details === null) details = [];
+                details.map((item) => {
+                    item.checked = false;
+                    return null;
+                });
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
@@ -99,8 +135,11 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     postDate: data.data.postDate,
                     vendorId: data.data.vendorId,
                     warehouseId: data.data.warehouseId,
+                    locationId: data.data.locationId,
+                    palletId: data.data.palletId,
                     batchId: data.data.batchId,
                     file: data.data.file,
+                    itemAdjustmentDetails: data.data.itemAdjustmentDetails
                 });
             }
         }
@@ -113,6 +152,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
+    };
+
+    const handleNewRow = (e) => {
+        e.preventDefault();
+        let details = itemAdjustmentDetails;
+        if (details === undefined || details === null) details = [];
+        details.push({
+            checked: false,
+            productID: 0,
+            id: 0,
+            orderId: 0,
+            itemId: 0,
+            qty: 0,
+            voucherNo: "",
+            remark: "",
+        });
+        setFormData({ ...formData, itemAdjustmentDetails: details });
     };
 
     const handleSave = (e) => {
@@ -129,8 +185,35 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         }
     };
 
+    const handleDelete = (e) => {
+        e.preventDefault();
+        let details = itemAdjustmentDetails;
+        if (details === undefined || details === null) details = [];
+        let newDetail = [];
+        details.map((item) => {
+            if (!item.checked) newDetail.push(item);
+            return null;
+        });
+        setFormData({ ...formData, itemAdjustmentDetails: newDetail });
+    };
+
     const tabIconStyle = {
         marginRight: '5px',
+    };
+
+    const getLocationNameById = (locationId) => {
+        const location = locationList.find((loc) => loc.id === locationId);
+        return location ? location.name : "Unknown Location";
+    };
+
+    const getPalletNameById = (palletId) => {
+        const pallet = palletList.find((pal) => pal.id === palletId);
+        return pallet ? pallet.name : "Unknown Pallet";
+    };
+
+    const getBatchCodeById = (batchId) => {
+        const batch = batchList.find((bat) => bat.id === batchId);
+        return batch ? batch.code : "Unknown Batch";
     };
 
     const element = () => {
@@ -184,7 +267,14 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Trans Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="transDate" value={transDate} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="transDate"
+                                value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")}
+                                onChange={(e) => onChange(e)}
+                                type="date"
+                                placeholder=""
+                            />
                         </div>
                     </div>
 
@@ -204,8 +294,8 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         <div className="col">
                             <input
                                 name="postDate"
-                                value={postDate}
-                                type="text"
+                                value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
+                                type="date"
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
@@ -290,7 +380,20 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         </div>
                     </div>
                 </div>
-                <div style={{ marginTop: "50px" }}></div>
+
+                <hr style={{ borderColor: "gray", opacity: 0.5, marginTop: "50px" }} />
+
+                <div className="d-flex justify-content-end mb-2 mr-3">
+                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+                        <FaPlus className="mr-2" /> <span>Add</span>
+                    </button>
+                    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
+                        <FaTimes className="mr-2" /> <span>Delete</span>
+                    </button>
+                </div>
+
+                <div style={{ marginTop: "20px" }}></div>
+
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
@@ -306,16 +409,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                                <td style={{ textAlign: 'center' }}></td>
-                            </tr>
+                            {itemAdjustmentDetails !== undefined &&
+                                itemAdjustmentDetails !== null &&
+                                itemAdjustmentDetails.map((details, index) => {
+                                    return (
+                                        <tr>
+                                            <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.stock}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.uom}</td>
+                                            <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                        </tr>
+                                    );
+                                })
+                            }
                         </tbody>
                     </RTable>
                 </div>
