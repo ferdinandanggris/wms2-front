@@ -129,7 +129,7 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
                     billingCity: data.data.billingCity,
                     billingDistrict: data.data.billingDistrict,
                     isActive: data.data.isActive,
-                    itemConsumptionDetails:data.dat.itemConsumptionDetails,
+                    itemConsumptionDetails:data.data.itemConsumptionDetails,
                 });
             }
         }

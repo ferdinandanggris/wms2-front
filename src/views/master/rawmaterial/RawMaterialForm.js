@@ -21,7 +21,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
   const [status, setStatus] = useState('');
   const title = "RawMaterialForm";
   const img = <FaLayerGroup className="module-img" />;
-  const path = "/master/raw-material/:id?/:type";
+  const path = "/master/raw-material";
   const url = "RawMaterial";
   const role = "Master - RawMaterial";
 
@@ -48,7 +48,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     spLocationDetails: [],
     spPalletDetails: [],
     batches: [],
-    uom: ""
+    uom: {}
   });
 
   const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails,spLocationDetails, 
@@ -68,6 +68,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
       if (data.data !== undefined && data.data !== null) {
+        console.log(data.data)
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
           name: data.data.name,
@@ -98,7 +99,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
         let selectedUom = master.uom?.find((obj) => obj.id === formData.uomId);
 
         if (selectedUom !== undefined && selectedUom !== null) {
-          setFormData({ ...formData, uom: selectedUom.name });
+          setFormData({ ...formData, uom: selectedUom });
         }
       }
     }
@@ -118,11 +119,11 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
 
     if (id === undefined) {
       addData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        navigate(`${path}/create?`);
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        navigate(`${path}/${id}/edit?`);
       });
     }
   };
@@ -137,6 +138,10 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     } else if (name === "packingId") {
       setFormData({ ...formData, [name]: e.id });
     }
+    else if (name === "uomId") {
+      setFormData({ ...formData, [name]: e.id });
+    }
+    
   }
   console.log(formData, 'formdata')
   console.log(master, 'master')
@@ -165,14 +170,15 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
               <span className="text-danger">*</span>
             </label>
             <div className="col-sm-10">
-              <input
-                name="uomId"
-                value={formData.uom} // Assuming 'uomData' contains the UOM object with a 'name' property
-                type="text"
-                onChange={onChange}
-                className="form-control text-left"
-                placeholder=""
-                required
+            <Select2
+                options={master.uom}
+                optionValue={(option) => option.id.toString()}
+                optionLabel={(option) => option.name}
+                placeholder={"** Please select"}
+                value={master.uom === null ? null : master.uom?.filter((option) =>
+                  option.id === formData.uomId
+                )}
+                handleChange={(e) => onSelectChange(e, "uomId")}
               />
             </div>
           </div>

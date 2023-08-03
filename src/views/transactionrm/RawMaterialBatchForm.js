@@ -5,88 +5,71 @@ import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,F
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { loadItem } from "../../actions/master";
 
 import { loadData, addData, editData } from "../../actions/data";
 import FormWrapper from "../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
+import { propTypes } from "react-bootstrap/esm/Image";
+import Select2 from "../../components/Select2";
 
 
-
-const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
+const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadItem,master }) => {
     let { id } = useParams();
-    const [status, setStatus] = useState('');
-    const navigate = useNavigate();
+     const navigate = useNavigate();
     const title = "Add Raw Material Batch";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
-    const path ="/transaction-rm/raw-material-batch/:id?/:type";
-    const url = "Customer";
-    const role = "Master - Customer";
+    const path ="/transaction-rm/raw-material-batch";
+    const url = "RawMaterialBatch";
+    const role = "transaction -RawMaterialBatchForm";
 
     const [formData, setFormData] = useState({
-        id: 0,
-        code: "",
-        name: "",
-        country: 0,
-        pic: "",
-        mobile1: "",
-        mobile2: "",
-        email: "",
-        web: "",
-        paymentTerm: "",
-        customerType: "",
-        nik: "",
-        npwp: "",
-        taxType: "",
-        tax1: "",
-        tax2: "",
-        virtualAccount: "",
-        seller: "",
-        isActive: 1,
-
-        billingAddress: "",
-        billingPostalCode: "",
-        billingPhone: "",
-        billingFax: "",
-        billingProvince: "",
-        billingCity: "",
-        billingDistrict: "",
-        itemConsumptionDetails: "",
-        deliveryAddress: "",
-        deliveryPostalCode: "",
-        deliveryPhone: "",
-        deliveryFax: "",
-        deliveryProvince: "",
-        deliveryCity: "",
-        deliveryDistrict: "",
-
-        billingTitleName: "",
-        billingName: "",
-        billingEmail: "",
-        billingStreet: "",
-
-        businessEntity: "",
-        category: "",
-        tempo: 0,
-
-        deliveryName: "",
-        deliveryEmail: "",
-        deliveryStreet: "",
-
-        fotoKTP: "",
-        fotoNPWP: "",
-        fotoSPPKP: "",
-        SPPKP: "",
-        tanggalSPPKP: "",
-        NIBSIUPTDP: "",
+    id: 0,
+    code: "",
+    itemId: 0,
+    status: "",
+    expired: 0,
+    initial: 0,
+    incoming: 0,
+    outgoing: 0,
+    balance: 0,
+    color: "",
+    qty: "",
+    visual:"",
+    qc: "",
+    number: 0,
+    description: "",
+    transDate:0,
+    dateIn: 0,
+    dateUp: 0,
+    userIn:"",
+    userUp: "",
+    itemConsumptionDetails: "",
 
     });
-
-    const { name, type, isActive, itemConsumptionDetails, code, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
+    const [itemList, setItem] = useState([]);
+    const { name, type, isActive,status, itemConsumptionDetails, code, businessEntity,itemId,expired,initial,incoming,outgoing,balance,color,qty,visual,qc,number,description,transDate,dateIn,dateUp,userIn,userUp } = formData;
 
     useEffect(() => {
+        loadItem();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData]);
+    }, [id, user, loadData,loadItem]);
+    useEffect(() => {
+        if (master.item !== undefined && master.item !== null) {
+            let list = [...master.item];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Item",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setItem(list);
+        }
+    }, [master]);
+
 
     useEffect(() => {
         if (data !== undefined && data !== null && id !== undefined) {
@@ -95,41 +78,25 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
-                    name: data.data.name,
-                    seller: data.data.seller,
-                    country: data.data.country,
-                    deliveryAddress: data.data.deliveryAddress,
-                    deliveryPostalCode: data.data.deliveryPostalCode,
-                    deliveryPhone: data.data.deliveryPhone,
-                    deliveryFax: data.data.deliveryFax,
-                    billingAddress: data.data.billingAddress,
-                    billingPostalCode: data.data.billingPostalCode,
-                    billingPhone: data.data.billingPhone,
-                    billingFax: data.data.billingFax,
-                    pic: data.data.pic,
-                    mobile1: data.data.mobile1,
-                    mobile2: data.data.mobile2,
-                    email: data.data.email,
-                    web: data.data.web,
-                    paymentTerm: data.data.paymentTerm,
-                    currency: data.data.currency,
-                    customerType: data.data.customerType,
-                    nik: data.data.nik,
-                    npwp: data.data.npwp,
-                    taxType: data.data.taxType,
-                    tax1: data.data.tax1,
-                    tax2: data.data.tax2,
-                    virtualAccount: data.data.virtualAccount,
-                    seller: data.data.seller,
-                    deliveryProvince: data.data.deliveryProvince,
-                    deliveryCity: data.data.deliveryCity,
-                    deliveryDistrict: data.data.deliveryDistrict,
-                    deliveryProvince: data.data.deliveryProvince,
-                    billingProvince: data.data.billingProvince,
-                    billingCity: data.data.billingCity,
-                    billingDistrict: data.data.billingDistrict,
-                    isActive: data.data.isActive,
-                    itemConsumptionDetails:data.dat.itemConsumptionDetails,
+                    itemId:data.data.itemId,
+                    status:data.data.status,
+                    expired:data.data.expired,
+                    initial:data.data.initial,
+                    incoming:data.data.incoming,
+                    outgoing:data.data.outgoing,
+                    balance:data.data.balance,
+                    color:data.data.color,
+                    qty:data.data.qty,
+                    number:data.data.number,
+                    qc:data.data.qc,
+                    visual:data.data.visual,
+                    description:data.data.description,
+                    transDate:data.data.transDate,
+                    dateIn:data.data.dateIn,
+                    dateUp:data.data.dateUp,
+                    userIn:data.data.userIn,
+                    userUp:data.data.userUp,
+                    itemConsumptionDetails:data.data.itemConsumptionDetails,
 
                 });
             }
@@ -140,23 +107,25 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handleSave = (e) => {
         e.preventDefault();
-
+    
         if (id === undefined) {
-            addData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          addData({ url, body: formData }).then(() => {
+            navigate(`${path}/create?`);
+          });
         } else {
-            editData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          editData({ url, body: formData }).then(() => {
+            console.log("formdata",path)
+            navigate(`${path}/${id}/edit?`);
+          });
         }
-    };
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
       };
+
+      const onSelectChange = (e, name) => {
+        setFormData({ ...formData, [name]: e.id });
+    };
+
     
     const tabIconStyle = {
         marginRight: '5px',
@@ -215,57 +184,66 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Item<span className="text-danger">*</span></label>
                         <div className="col-sm-10">
-                            <select className="form-control" name="businessEntity" value={businessEntity} onChange={(e) => onChange(e)}>
-                                <option value="">** Please Select</option>
-                                <option value="entity1">Entity 1</option>
-                                <option value="entity2">Entity 2</option>
-                                <option value="entity3">Entity 3</option>
-                            </select>
+                        <Select2
+                                options={itemList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Item"}
+                                value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
+                                handleChange={(e) => onSelectChange(e, "itemId")} />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch Date</label>
                         <div className="col-sm-10">
-                            <input name="name" value={name} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" />
+                            <input name="transDate" value={transDate} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" />
                         </div>
                     </div>
                     
           <div style={{borderBottom:"1px solid gray"}} className="row align-items-center mb-3">
-            <label className="col-sm-2 col-form-label">Status
-              <span className="text-danger">*</span></label>
-            <div className="d-flex">
-              <div className="mr-5">
-                <label>
-                  <input type="radio" name="status" value="inactive" onChange={handleStatusChange} required />
-                 Approved
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input type="radio" name="status" value="active" onChange={handleStatusChange} required />
-                 Pending
-                </label>
-              </div>
-            </div>
+          <label className="col-sm-2 col-form-label">Status<span className="text-danger">*</span></label>
+                        <div className="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <input
+                                    name="status"
+                                    value="Y"
+                                    type="radio"
+                                    checked={status === "Y"}
+                                    onChange={(e) => onChange(e)}
+                                    className="form-check-input"
+                                />
+                                <label class="form-check-label mr-5" >Approved</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input
+                                    type="radio"
+                                    name="status"
+                                    value="X"
+                                    checked={status === "X"}
+                                    onChange={(e) => onChange(e)}
+                                    className="form-check-input"
+                                />
+                                <label class="form-check-label">Pending</label>
+                            </div>
+                        </div>
           </div>
           <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Color</label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="color" value={color} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">QC</label>
                         <div className="col">
-                            <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                            <input className="form-control text-left" name="qc" value={qc} onChange={(e) => onChange(e)} type="text" />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">QTY</label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="qty" value={qty} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Visual</label>
                         <div className="col">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="visual" value={visual} onChange={(e) => onChange(e)} type="text" />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
@@ -274,55 +252,16 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData }) => {
         </label>
         <div className="col-sm-10">
         <textarea
-                  className="form-control"
-                  style={{ minHeight: "100px" }}
-                  rows={60}
-                  name="notes"
-                  value={formData.notes}
-                  onChange={onChange}
-                ></textarea>
+         name="description"
+        value={description}
+        type="text"
+        placeholder=""
+        style={{ width: "360px", minHeight: "100px" }}
+        onChange={(e) => onChange(e)}
+        className="form-control text-left"
+         />
         </div>
       </div>
-     
-
-<div className="d-flex justify-content-end mb-2">
-    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-        <FaPlus className="mr-2" /> <span>Add</span>
-    </button>
-    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-        <FaTimes className="mr-2" /> <span>Delete</span>
-    </button>
-</div>
-
-
-      <RTable bordered style={{ float: 'center', width: "100%" }}>
-                <thead>
-                  <tr>
-                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TRANSACTION No</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DATE</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INITIAL</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INCOMING</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OUTGOING</th>
-                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                  <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.initial}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.code}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.incoming}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.outgoing}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                    <td style={{ textAlign: 'center' }}>{formData.balance}</td>
-                  </tr>
-                </tbody>
-              </RTable>
                 </div>
                 
             </div>
@@ -342,13 +281,16 @@ RawMaterialBatchForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     loadData: PropTypes.func,
+    loadItem:propTypes.func,
     addData: PropTypes.func,
     editData: PropTypes.func,
+    master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
     data: state.data,
+    master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData })(RawMaterialBatchForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem })(RawMaterialBatchForm);

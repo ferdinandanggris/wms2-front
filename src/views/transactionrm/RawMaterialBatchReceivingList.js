@@ -11,20 +11,20 @@ const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, ex
   const title = "Raw Material Receiving List";
   const img = <FaLayerGroup className="module-img" />;
   const path ="/transaction-rm/raw-material-receiving";
-  const url = "RawMaterial";
+  const url = "RawMaterialBatch";
   const role = "transaction -RawMaterialBatchReceivingList";
 
   const columns = [
     { label: "CODE", key: "code", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VOUCHER#", key: "name", width: 100, cardTitle: true },
-    { label: "REFERENCE#", key: "uomId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VENDOR", key: "packingId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED DATE", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED BY", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED Date", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "LINE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VOUCHER#", key: "", width: 100, cardTitle: true },
+    { label: "REFERENCE#", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VENDOR", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED BY", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED DATE", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED BY", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED Date", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "LINE", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";

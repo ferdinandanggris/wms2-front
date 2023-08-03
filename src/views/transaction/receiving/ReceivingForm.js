@@ -9,12 +9,12 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadVendor, loadWarehouse } from "../../../actions/master";
+import { loadCategory, loadVendor, loadWarehouse } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
 
-const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor }) => {
+const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory }) => {
   let { id } = useParams();
   const navigate = useNavigate();
   console.log("master", master)
@@ -22,7 +22,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const title = " Receiving Form";
   const img = <FaLayerGroup className="module-img" />;
   // const path = "/master/customer/:id?/:customer";
-  const path = "/transaction/receiving/:id?/:type";
+  const path = "/transaction/receiving";
   const url = "Receiving";
   const role = "transaction - ReceivingForm";
 
@@ -91,8 +91,9 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   useEffect(() => {
     loadWarehouse();
     loadVendor();
+    loadCategory();
     if (user !== null && id !== undefined) loadData({ url, id });
-  }, [id, user, loadData, loadWarehouse, loadVendor]);
+  }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory]);
 
   useEffect(() => {
     if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -134,16 +135,21 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
     if (id === undefined) {
       addData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        navigate(`${path}/create?`);
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        navigate(`${path}/${id}/edit?`);
       });
     }
   };
   const onSelectChange = (e, name) => {
-    setFormData({ ...formData, [name]: e.id });
+
+    if (name === "category"){
+      setFormData({ ...formData, [name]: e.name });
+    }else{
+      setFormData({ ...formData, [name]: e.id });
+    }
   };
   const handleNewRow = (e) => {
     e.preventDefault();
@@ -156,12 +162,12 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
         voucherNo: "",
         batchId:0,
         itemId: 0,
-        remark: "null",
+        remark: "",
         qty: 0,
         dateIn:0,
         dateUp: 0,
-        userIn: "null",
-        userUp:" null",
+        userIn: "",
+        userUp:"",
         itemName: "",
         uom: "",
         totalPcs: 0
@@ -259,7 +265,7 @@ const handleDelete = (e) => {
                 optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
                 value={master.category === null ? null : master.category?.filter((option) =>
-                  option.code === formData.category
+                  option.name === formData.category
                 )}
                 handleChange={(e) => onSelectChange(e, "category")}
               />
@@ -366,6 +372,7 @@ ReceivingForm.propTypes = {
   addData: PropTypes.func,
   loadWarehouse: PropTypes.func,
   loadVendor: PropTypes.func,
+  loadCategory: PropTypes.func,
   editData: PropTypes.func,
   master: PropTypes.object,
 };
@@ -376,4 +383,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor })(ReceivingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadCategory })(ReceivingForm);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends } from "react-icons/fa";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaCheck } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -205,29 +205,27 @@ const ProductionForm = ({ user, data, loadData, addData, editData }) => {
       <option value="AE01">AE01</option>
     </select>
   </div>
-  <div className="col-sm-1">
-    <div className="input-group-text" style={{ background: "#0e81ca", color: "white" }}>
-      <input
-        type="checkbox"
-        className="form-check-input"
-        style={{ marginRight: "6px" }} // Add margin to the checkbox
-        // Add onChange prop here for checkbox functionality
-      />
-      <i className="fa fa-check" aria-hidden="true">Select</i>  {/* Add the search icon here */}
-    </div>
-  </div>
-  <div className="col-sm-2">
-    <div className="form-check mt-2">
-      <input
-        type="checkbox"
-        className="form-check-input"
-        // Add onChange prop here for checkbox functionality
-      />
-      <label className="form-check-label">New Item</label>
-    </div>
-  </div>
-</div>
-
+     <div className="input-group-append col-sm-1 col-form-label">
+                            <button className="btn btn-primary" >
+                                <FaCheck /> Select
+                            </button>
+                        </div>
+                        <div className="col-sm-2" style={{ marginLeft: "30px" }}>
+                            <div className="form-check">
+                                <input
+                                    id="newItemCheckbox"
+                                    type="checkbox"
+                                    className="form-check-input"
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="newItemCheckbox"
+                                >
+                                    New Item
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
 
 

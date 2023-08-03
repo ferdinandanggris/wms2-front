@@ -21,7 +21,8 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   const [status, setStatus] = useState('');
   const title = "Item Type";
   const img = <FaLayerGroup className="module-img" />;
-  const path = "/master/item/:id?/:type";
+  // const path = "/master/item/:id?/:type";
+  const path = "/master/item";
   const url = "Item";
   const role = "Master - Item";
 
@@ -39,18 +40,18 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     category: "",
     type: "",
     qtyPerPacking: 0,
-    isActive: 1,
     dateIn: "",
     dateUp: "",
     userIn: "",
     userUp: "",
+    isActive: true,
     spWarehouseDetails: [],
     spLocationDetails: [],
     spPalletDetails: [],
     batches: []
   });
 
-  const { name, code, initial, uomId, packingId, incoming, outgoing, exclusive, category, qtyPerPacking, balance,type,spWarehouseDetails,spLocationDetails, 
+  const { name, code, initial, uomId, packingId, isActive, incoming, outgoing, exclusive, category, qtyPerPacking, balance,type,spWarehouseDetails,spLocationDetails, 
     spPalletDetails,batches} = formData;
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadCategory();
     loadPacking();
   }, [id, user, loadData, loadItem, loadCategory, loadPacking]);
-
+console.log("formdata",formData)
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
@@ -83,19 +84,29 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
           qtyPerPacking: data.data.qtyPerPacking,
           balance: data.data.balance,
           batches:data.data.batches,
+          isActive: data.data.isActive,
           spPalletDetails:data.dataspPalletDetails,
           spWarehouseDetails: data.data.spWarehouseDetails,
           spLocationDetails: data.data.spLocationDetails,
-
+          
         });
       }
     }
   }, [id, data, setFormData]);
+  
 
   const onChange = (e) => {
     e.preventDefault();
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+    let isTrue = false;
+
+    if(e.target.name === "isActive") {
+      isTrue = e.target.value === "true";
+      setFormData({ ...formData, [e.target.name]: isTrue });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
+  };
+  
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
@@ -105,14 +116,16 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
 
     if (id === undefined) {
       addData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        navigate(`${path}/create?`);
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        navigate(`${path}`);
+        console.log("formdata",path)
+        navigate(`${path}/${id}/edit?`);
       });
     }
   };
+
 
   const tabIconStyle = {
     marginRight: '5px',
@@ -179,16 +192,23 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
               <input name="qtyPerPacking" value={qtyPerPacking} type="text" onChange={(e) => onChange(e)} className="form-control text-right" placeholder="" />
             </div>
           </div>
-          <div className="row align-items-center mb-3">
-  <label className="col-sm-2 col-form-label">Type</label>
-  <div className="col-sm-3">
-    <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)}>
-      <option value="">Please select</option>
-      <option value="exclusive">exclusive</option>
-      <option value="free">free</option>
-    </select>
-  </div>
-</div>
+
+            <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">
+              Type <span className="required-star">*</span>
+            </label>
+            <div className="col-sm-10">
+              <select
+                class="form-control"
+                name="exclusive"
+                onChange={(e) => onChange(e)}
+                value={exclusive}
+              >
+                <option value="Free Item">Free Item</option>
+                <option value="Exclusives">Exclusives</option>
+              </select>
+            </div>
+          </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
             <div className="col-sm-3">
@@ -212,19 +232,18 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
             </div>
           </div>
 
-          <div className="row align-items-center mb-3">
-            <label className="col-sm-2 col-form-label">Status
-              <span className="text-danger">*</span></label>
-            <div className="d-flex">
-              <div className="mr-5">
-                <label>
-                  <input type="radio" name="status" value="inactive" onChange={handleStatusChange} required />
-                  Inactive
+          <div className="row form-group align-items-center">
+            <label className="col-sm-2 col-form-label">Status</label>
+            <div className="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isActive" value={false} checked={isActive === false} onChange={(e) => onChange(e)} />
+                <label class="form-check-label mr-5" >
+                  InActive
                 </label>
               </div>
-              <div>
-                <label>
-                  <input type="radio" name="status" value="active" onChange={handleStatusChange} required />
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isActive" value={true} checked={isActive === true} onChange={(e) => onChange(e)} />
+                <label class="form-check-label">
                   Active
                 </label>
               </div>

@@ -11,14 +11,14 @@ const RawMaterialBatchList = ({ user, data, refreshData, deleteData, exportData 
   const title = "Raw Material Batch List";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/transaction-rm/raw-material-batch";
-  const url = "RawMaterial";
+  const url = "RawMaterialBatch";
   const role = "transaction -RawMaterialBatchList";
 
   const columns = [
     { label: "CODE", key: "code", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "Item#", key: "name", width: 100, cardTitle: true },
+    { label: "Item#", key: "itemId", width: 100, cardTitle: true },
     { label: "Item", key: "uomId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "Status", key: "packingId", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "Status", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "INITIAL", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },

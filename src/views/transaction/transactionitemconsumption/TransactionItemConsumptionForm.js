@@ -22,7 +22,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const title = " Transaction Item ConsumptionForm";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
-    const path = "/transaction/non-komersil/:id?/:type";
+    const path = "/transaction/non-komersil";
     const url = "ItemConsumption";
     const role = "transaction -TransactionItemConsumptionForm";
 
@@ -73,7 +73,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     useEffect(() => {
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
-            let details = data.data. itemConsumptionDetails;
+            let details = itemConsumptionDetails;
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
@@ -170,17 +170,17 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
 
     const handleSave = (e) => {
         e.preventDefault();
-
+    
         if (id === undefined) {
-            addData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          addData({ url, body: formData }).then(() => {
+            navigate(`${path}/create?`);
+          });
         } else {
-            editData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          editData({ url, body: formData }).then(() => {
+            navigate(`${path}/${id}/edit?`);
+          });
         }
-    };
+      };
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
     };
