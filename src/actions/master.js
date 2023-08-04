@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_CUSTOMERDETAIL, LOAD_PRODUCTION } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -168,21 +168,6 @@ export const loadCustomer = () => async (dispatch) => {
     const res = await axios.get(`/Customer`);
     dispatch({
       type: LOAD_CUSTOMER,
-      payload: res.data,
-    });
-  } catch (err) {
-    let errMessage = "";
-    if (err.message) errMessage = err.message;
-    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
-    dispatch(setAlert(errMessage, 'danger'));
-  }
-}
-
-export const loadCustomerDetail = ({ id }) => async (dispatch) => {
-  try {
-    const res = await axios.get(`/Customer/${id}`);
-    dispatch({
-      type: LOAD_CUSTOMERDETAIL,
       payload: res.data,
     });
   } catch (err) {

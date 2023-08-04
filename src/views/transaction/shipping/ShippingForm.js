@@ -6,8 +6,9 @@ import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadShipping, loadShippingDetail, loadCustomer } from "../../../actions/master";
+import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadShippingDetail, loadCustomer } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
+import moment from "moment";
 
 const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadShippingDetail, loadCustomer }) => {
     let { id } = useParams();
@@ -278,8 +279,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         <div className="col">
                             <input
                                 name="shippingDate"
-                                value={shippingDate}
-                                type="text"
+                                value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")}
+                                type="date"
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"

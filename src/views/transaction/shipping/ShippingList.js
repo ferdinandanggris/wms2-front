@@ -18,7 +18,7 @@ const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
         { label: "VOUCHER #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
         { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "CUSTOMER", key: "customerId", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "SPK#", key: "spk", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "SPK#", key: "orderId", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "CREATED DATE", key: "creatDate", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "right", cardSubTitle: true },
@@ -34,6 +34,15 @@ const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
             refreshData({ url });
         }
     }, [user, refreshData]);
+
+    const customRenderValue = (col, value, item) => {
+        if (col.key == "customerId") {
+            if (item.customer != null)
+                return item.customer.name;
+            else
+                return "";
+        }
+    };
 
     return (
         <ListWrapper
