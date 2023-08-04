@@ -19,66 +19,26 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     const path ="/transaction-rm/raw-material-usage/:id?/:type";
-    const url = "Customer";
+    const url = "RawMaterialUsage";
     const role = "transaction -RawMaterialUsageForm";
 
     const [formData, setFormData] = useState({
-        id: 0,
-        code: "",
-        name: "",
-        country: 0,
-        pic: "",
-        mobile1: "",
-        mobile2: "",
-        email: "",
-        web: "",
-        paymentTerm: "",
-        customerType: "",
-        nik: "",
-        npwp: "",
-        taxType: "",
-        tax1: "",
-        tax2: "",
-        virtualAccount: "",
-        seller: "",
-        isActive: 1,
-
-        billingAddress: "",
-        billingPostalCode: "",
-        billingPhone: "",
-        billingFax: "",
-        billingProvince: "",
-        billingCity: "",
-        billingDistrict: "",
-
-        deliveryAddress: "",
-        deliveryPostalCode: "",
-        deliveryPhone: "",
-        deliveryFax: "",
-        deliveryProvince: "",
-        deliveryCity: "",
-        deliveryDistrict: "",
-
-        billingTitleName: "",
-        billingName: "",
-        billingEmail: "",
-        billingStreet: "",
-
-        businessEntity: "",
-        category: "",
-        tempo: 0,
-
-        deliveryName: "",
-        deliveryEmail: "",
-        deliveryStreet: "",
-
-        fotoKTP: "",
-        fotoNPWP: "",
-        fotoSPPKP: "",
-        SPPKP: "",
-        tanggalSPPKP: "",
-        NIBSIUPTDP: "",
-        itemConsumptionDetails: "",
+        "id": 2790,
+        "voucherNo": "RMU0002798",
+        "referenceNo": "OUT- RESIN # SA 135 20/03/2023",
+        "status": "N",
+        "transDate": "2023-03-20T13:28:37",
+        "postDate": null,
+        "createdBy": "Junan & RONI",
+        "postedBy": null,
+        "vendorId": null,
+        "warehouseId": 1,
+        "dateIn": null,
+        "dateUp": null,
+        "userIn": null,
+        "userUp": null,
+        "warehouse": null,
+        "rawMaterialUsageDetails": null
 
     });
 
