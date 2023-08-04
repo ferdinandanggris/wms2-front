@@ -9,12 +9,12 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadCategory, loadVendor, loadWarehouse } from "../../../actions/master";
+import { loadCategory, loadVendor, loadWarehouse,loadproduction } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
 
-const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory }) => {
+const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory,loadproduction }) => {
   let { id } = useParams();
   const navigate = useNavigate();
   console.log("master", master)
@@ -49,7 +49,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
   });
 
-  const { name, vendor, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
+  const { name, vendor, warehouse, vendorId,postedBy, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [vendorList, setVendor] = useState([]);
   const[tempbatchno,settempbatchno]=useState(0);
@@ -92,6 +92,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     loadWarehouse();
     loadVendor();
     loadCategory();
+    
     if (user !== null && id !== undefined) loadData({ url, id });
   }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory]);
 
@@ -144,9 +145,9 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     }
   };
   const onSelectChange = (e, name) => {
-
     if (name === "category"){
-      setFormData({ ...formData, [name]: e.name });
+      e.preventDefault();
+      setFormData({ ...formData, [name]: e.target.value });
     }else{
       setFormData({ ...formData, [name]: e.id });
     }
@@ -207,17 +208,17 @@ const handleDelete = (e) => {
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>
             <div className="col-sm-3">
-              <input className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
+              <input readOnly className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
             </div>
             <label className="col-sm-1 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
             <div className="col">
-              <input className="form-control text-left" name="transDate" value={transDate} onChange={(e) => onChange(e)} type="text" />
+              <input className="form-control text-left" name="transDate" value={referenceNo} onChange={(e) => onChange(e)} type="text" />
             </div>
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Created</label>
             <div className="col-sm-3">
-              <input className="form-control text-left" name="createdBy" value={createdBy} onChange={(e) => onChange(e)} type="text" />
+              <input readOnly className="form-control text-left" name="createdBy" value={createdBy} onChange={(e) => onChange(e)} type="text" />
             </div>
             <label className="col-sm-1 text-left col-form-label">Trans date</label>
             <div className="col">
@@ -227,7 +228,7 @@ const handleDelete = (e) => {
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Posted</label>
             <div className="col-sm-3">
-              <input className="form-control text-left" name="postDate" value={postDate} onChange={(e) => onChange(e)} type="text" />
+              <input readOnly className="form-control text-left" name="postedBy" value={postedBy} onChange={(e) => onChange(e)} type="text" />
             </div>
             <label className="col-sm-1 text-left col-form-label">Post date</label>
             <div className="col">
@@ -259,16 +260,12 @@ const handleDelete = (e) => {
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
             <div className="col-sm-3">
-              <Select2
-                options={master.category}
-                optionValue={(option) => option.id.toString()}
-                optionLabel={(option) => option.name}
-                placeholder={"** Please select"}
-                value={master.category === null ? null : master.category?.filter((option) =>
-                  option.name === formData.category
-                )}
-                handleChange={(e) => onSelectChange(e, "category")}
-              />
+            <select className="form-control" name="category" value={category} onChange={(e) => onSelectChange(e, "category")}>
+                <option value="">** Please select</option>
+                <option value="REWORK">REWORK</option>
+                <option value="PO">PO</option>
+                <option value="RETURN">RETURN</option>
+              </select>
             </div>
             <label className="col-sm-1 text-left col-form-label">WareHouse <span className="text-danger">*</span></label>
             <div className="col">
@@ -305,15 +302,6 @@ const handleDelete = (e) => {
           </div>
           <hr style={{ borderColor: "gray", opacity: 0.5 }} />
 
-<div className="d-flex justify-content-end mb-2">
-    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-        <FaPlus className="mr-2" /> <span>Add</span>
-    </button>
-    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-        <FaTimes className="mr-2" /> <span>Delete</span>
-    </button>
-</div>
-
 
 
 {console.log("receivingDetails",receivingDetails)}
@@ -321,6 +309,7 @@ const handleDelete = (e) => {
           <RTable bordered style={{ float: 'center', width: "100%" }}>
             <thead>
               <tr>
+              <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty</th>
@@ -337,6 +326,7 @@ const handleDelete = (e) => {
        receivingDetails .map((details , index) => { 
         return (
           <tr key={index}>
+               <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
             <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
             <td style={{ textAlign: 'center' }}>{details.qty}</td> {}

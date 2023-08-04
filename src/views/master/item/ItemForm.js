@@ -11,10 +11,10 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadItem, loadPacking } from "../../../actions/master";
+import { loadCategory, loadItem, loadPacking,loadGroup,loadUom } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
-const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking }) => {
+const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking,loadGroup,loadUom }) => {
   let {id } = useParams();
 
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     exclusive: "",
     category: "",
     type: "",
+    group:"",
     qtyPerPacking: 0,
     dateIn: "",
     dateUp: "",
@@ -62,7 +63,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadItem();
     loadCategory();
     loadPacking();
-  }, [id, user, loadData, loadItem, loadCategory, loadPacking]);
+    loadGroup();
+    loadUom();
+  }, [id, user, loadData, loadItem, loadCategory, loadPacking,loadGroup,loadUom]);
 console.log("formdata",formData)
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
@@ -83,12 +86,12 @@ console.log("formdata",formData)
           type: data.data.type,
           qtyPerPacking: data.data.qtyPerPacking,
           balance: data.data.balance,
+          group:data.data.group,
           batches:data.data.batches,
           isActive: data.data.isActive,
-          spPalletDetails:data.dataspPalletDetails,
           spWarehouseDetails: data.data.spWarehouseDetails,
-          spLocationDetails: data.data.spLocationDetails,
-          
+          spPalletDetails:data.data.spPalletDetails,
+          spLocationDetails:data.data.spLocationDetails
         });
       }
     }
@@ -132,11 +135,17 @@ console.log("formdata",formData)
   };
 
   const onSelectChange = (e, name) => {
-    console.log(e);
+    console.log("event", e);
     if(name === "category") {
       setFormData({...formData, [name]: e.code});
     } else if(name === "packingId") {
       setFormData({...formData, [name]: e.id});
+    }
+    else if(name === "group") {
+      setFormData({...formData, [name]: e.code});
+    }
+    else if (name === "uomId") {
+      setFormData({ ...formData, [name]: e.id });
     }
   }
 
@@ -165,14 +174,23 @@ console.log("formdata",formData)
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">UOM
               <span className="text-danger">*</span></label>
-            <div className="col-sm-10">
-              <input name="uomId" value={uomId} type="text" onChange={(e) => onChange(e)} className="form-control text-right" placeholder="" required />
+            <div className="col-sm-2">
+            <Select2
+                options={master.uom}
+                optionValue={(option) => option.id.toString()}
+                optionLabel={(option) => option.name}
+                placeholder={"** Please select"}
+                value={master.uom === null ? null : master.uom?.filter((option) =>
+                  option.id === formData.uomId
+                )}
+                handleChange={(e) => onSelectChange(e, "uomId")}
+              />
             </div>
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Packing
               <span className="text-danger">*</span></label>
-            <div className="col-sm-3">
+              <div className="col-sm-2">
             
               <Select2
                 options={master.packing}
@@ -188,7 +206,7 @@ console.log("formdata",formData)
           </div>
           <div className="row align-items-center mt-4 mb-3">
             <label className="col-sm-2 col-form-label">Qty Per Packing</label>
-            <div className="col-sm-10">
+            <div className="col-sm-2">
               <input name="qtyPerPacking" value={qtyPerPacking} type="text" onChange={(e) => onChange(e)} className="form-control text-right" placeholder="" />
             </div>
           </div>
@@ -197,7 +215,7 @@ console.log("formdata",formData)
             <label className="col-sm-2 col-form-label">
               Type <span className="required-star">*</span>
             </label>
-            <div className="col-sm-10">
+            <div className="col-sm-2">
               <select
                 class="form-control"
                 name="exclusive"
@@ -211,11 +229,11 @@ console.log("formdata",formData)
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
-            <div className="col-sm-3">
+            <div className="col-sm-2">
               <Select2
                 options={master.category}
                 optionValue={(option) => option.id.toString()}
-                optionLabel={(option) => option.code}
+                optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
                 value={master.category === null ? null : master.category?.filter((option) =>
                   option.code === formData.category
@@ -228,7 +246,16 @@ console.log("formdata",formData)
             <label className="col-sm-2 col-form-label">Group
               <span className="text-danger">*</span></label>
             <div className="col-sm-10">
-              <input name="name" value={name} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
+            <Select2
+                options={master.group}
+                optionValue={(option) => option.id.toString()}
+                optionLabel={(option) => (option.code.toString()).concat(" - ", option.warehouse.name)}
+                placeholder={"** Please select"}
+                value={master.group === null ? null : master.group?.filter((option) =>
+                  option.code === formData.group
+                )}
+                handleChange={(e) => onSelectChange(e, "group")}
+              />
             </div>
           </div>
 
@@ -258,6 +285,7 @@ console.log("formdata",formData)
             <RTable bordered style={{ float: 'center', width: "100%" }}>
   <thead>
     <tr>
+      <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
       <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
       <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Initial</th>
       <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
@@ -271,11 +299,12 @@ console.log("formdata",formData)
       batches.map((batch, index) => { 
         return (
           <tr key={index}>
-            <td style={{ textAlign: 'center' }}>{batch.code}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.initial}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.incoming}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.outgoing}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.balance}</td> {}
+            <td style={{ textAlign: 'center' }}>{index + 1}</td>
+            <td style={{ textAlign: 'center' }}>{batch.code}</td>
+            <td style={{ textAlign: 'center' }}>{batch.initial}</td>
+            <td style={{ textAlign: 'center' }}>{batch.incoming}</td>
+            <td style={{ textAlign: 'center' }}>{batch.outgoing}</td>
+            <td style={{ textAlign: 'center' }}>{batch.balance}</td>
           </tr>
         );
       })}
@@ -288,6 +317,7 @@ console.log("formdata",formData)
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WareHouse</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -300,6 +330,7 @@ console.log("formdata",formData)
       spWarehouseDetails.map((WarehouseDetails, index) => { 
         return (
           <tr key={index}>
+               <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.outgoing}</td> {}
@@ -316,6 +347,7 @@ console.log("formdata",formData)
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATIOM</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -328,6 +360,7 @@ console.log("formdata",formData)
       spLocationDetails.map((LocationDetails, index) => { 
         return (
           <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{LocationDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{LocationDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{LocationDetails.outgoing}</td> {}
@@ -343,6 +376,7 @@ console.log("formdata",formData)
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLETS</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -355,6 +389,7 @@ console.log("formdata",formData)
       spPalletDetails .map((PalletDetails , index) => { 
         return (
           <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{PalletDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{PalletDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{PalletDetails.outgoing}</td> {}
@@ -386,7 +421,9 @@ ItemForm.propTypes = {
   loadItem: PropTypes.func,
   loadCategory: PropTypes.func,
   loadData: PropTypes.func,
+  loadUom:propTypes.func,
   loadPacking:PropTypes.func,
+  loadGroup:propTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
 };
@@ -397,4 +434,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking })(ItemForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking,loadGroup,loadUom })(ItemForm);

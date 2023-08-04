@@ -11,19 +11,18 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Reciving List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/transaction/receiving";
-  const url = "Item";
+  const url = "Receiving";
   const role = "transaction- RecivingList";
 
   const columns = [
-    { label: "VOUCHER #", key: "code", width: 100, cardTitle: true },
-    { label: "REFERENCE #", key: "uomId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VENDOR", key: "packingId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY ", key: "qtyPerPacking", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED DATE ", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED BY", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED DATE", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "LINE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "maxTemp", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VOUCHER #", key: "voucherNo", width: 100, cardTitle: true },
+    { label: "REFERENCE #", key: "referenceNo", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "VENDOR", key: "vendors", width: 80, align: "left", cardSubTitle: true },
+    { label: "CREATED BY ", key: "userIn", width: 80, align: "left", cardSubTitle: true },
+    { label: "CREATED DATE ", key: "dateIn", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "POSTED BY", key: "postedBy", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "POSTED DATE", key: "postDate", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "custom", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";
@@ -34,8 +33,18 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData }) => {
     }
   }, [user, refreshData]);
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} />;
+  const customRenderValue = (col, value, item) => {
+    if (col.key == "status") {
+        if (value == "Y")
+            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
+        else
+            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
+    }
 };
+
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}  customRenderValue={customRenderValue} />;
+};
+
 
 RecivingList.propTypes = {
   user: PropTypes.object,

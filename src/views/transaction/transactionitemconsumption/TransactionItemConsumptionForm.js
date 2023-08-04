@@ -64,6 +64,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [vendorList, setVendor] = useState([]);
+    const [remarks, setRemarks] = useState({});
     const[tempbatchno,settempbatchno]=useState(0);
 
     useEffect(() => {
@@ -239,7 +240,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>
                         <div className="col-sm-3">
-                            <input className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
+                            <input readOnly className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
                         <div className="col">
@@ -333,8 +334,8 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 className="form-control"
                                 style={{ minHeight: "100px" }}
                                 rows={60}
-                                name="notes"
-                                value={formData.notes}
+                                name="note"
+                                value={formData.note}
                                 onChange={onChange}
                             ></textarea>
                         </div>
@@ -367,26 +368,13 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                             </label>
                         </div>
                     </div>
-                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
-
-<div className="d-flex justify-content-end mb-2">
-    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-        <FaPlus className="mr-2" /> <span>Add</span>
-    </button>
-    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-        <FaTimes className="mr-2" /> <span>Delete</span>
-    </button>
-</div>
-
-
-
-
                     <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                         <Tab eventKey="ContactDetail" title={<span><FaLayerGroup style={tabIconStyle} /> Item Detail</span>}>
                             <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                                 <RTable bordered style={{ float: 'center', width: "100%" }}>
                                     <thead>
                                         <tr>
+                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
@@ -403,14 +391,20 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
        itemConsumptionDetails .map((details , index) => { 
         return (
           <tr key={index}>
+               <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
             <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
             <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
             <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
             <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
             <td style={{ textAlign: 'center' }}>{details.totalPcs}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
-
+            <td style={{ textAlign: 'center' }}>
+                  <input
+                    type="text"
+                    value={remarks[index] || ""}
+                    onChange={(e) => setRemarks({ ...remarks, [index]: e.target.value })}
+                  />
+                </td>
           </tr>
         );
       })}

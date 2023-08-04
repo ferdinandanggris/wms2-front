@@ -169,7 +169,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
             <label className="col-sm-2 col-form-label">UOM
               <span className="text-danger">*</span>
             </label>
-            <div className="col-sm-10">
+            <div className="col-sm-2">
             <Select2
                 options={master.uom}
                 optionValue={(option) => option.id.toString()}
@@ -185,7 +185,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Packing
               <span className="text-danger">*</span></label>
-            <div className="col-sm-3">
+              <div className="col-sm-2">
               <Select2
                 options={master.packing}
                 optionValue={(option) => option.id.toString()}
@@ -200,7 +200,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
           </div>
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Category</label>
-            <div className="col-sm-3">
+            <div className="col-sm-2">
               <Select2
                 options={master.category}
                 optionValue={(option) => option.id.toString()}
@@ -222,6 +222,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
               <RTable bordered style={{ float: 'center', width: "100%" }}>
                 <thead>
                   <tr>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Initial</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
@@ -235,6 +236,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
       batches.map((batch, index) => { 
         return (
           <tr key={index}>
+              <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{batch.code}</td> {}
             <td style={{ textAlign: 'center' }}>{batch.initial}</td> {}
             <td style={{ textAlign: 'center' }}>{batch.incoming}</td> {}
@@ -253,6 +255,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WareHouse</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -265,6 +268,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
       spWarehouseDetails.map((WarehouseDetails, index) => { 
         return (
           <tr key={index}>
+            <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{WarehouseDetails.outgoing}</td> {}
@@ -281,6 +285,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATIOM</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -293,6 +298,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
       spLocationDetails.map((LocationDetails, index) => { 
         return (
           <tr key={index}>
+              <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{LocationDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{LocationDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{LocationDetails.outgoing}</td> {}
@@ -308,6 +314,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
+                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLETS</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -320,6 +327,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
       spPalletDetails .map((PalletDetails , index) => { 
         return (
           <tr key={index}>
+              <td style={{ textAlign: 'center' }}>{index + 1}</td>
             <td style={{ textAlign: 'center' }}>{PalletDetails.code}</td> {}
             <td style={{ textAlign: 'center' }}>{PalletDetails.incoming}</td> {}
             <td style={{ textAlign: 'center' }}>{PalletDetails.outgoing}</td> {}

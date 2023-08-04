@@ -16,15 +16,14 @@ const TransactionItemConsumptionList = ({ user, data, refreshData, deleteData, e
 
   const columns = [
     { label: "VOUCHER #", key: "voucherNo", width: 100, cardTitle: true },
-    { label: "REFERENCE #", key: "referenceNo", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "REFERENCE #", key: "referenceNo", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "CUSTOMER", key: "customerName", width: 100, cardTitle: true },
     { label: "type", key: "type", width: 100, cardTitle: true },
     { label: "CREATED BY", key: "createdBy", width: 100, cardTitle: true },
-    { label: "CREATED DATE ", key: "transDate", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED DATE ", key: "transDate", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "POSTED BY", key: "postedBy", width: 100, cardTitle: true },
-    { label: "POSTED DATE", key: "postDate", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "LINE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED DATE", key: "postDate", width: 80, type: "number", align: "leftt", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "custom", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";
@@ -34,8 +33,16 @@ const TransactionItemConsumptionList = ({ user, data, refreshData, deleteData, e
       refreshData({ url });
     }
   }, [user, refreshData]);
+  const customRenderValue = (col, value, item) => {
+    if (col.key == "status") {
+      if (value == "Y")
+          return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
+      else
+          return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
+  }
+};
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} />;
+return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}  customRenderValue={customRenderValue} />;
 };
 
 TransactionItemConsumptionList.propTypes = {
