@@ -252,8 +252,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         setFormData({ ...formData, orderDetails: details });
     };
 
-    console.log("ORDERDATA", orderDetails)
-
     const renderItem = () =>
         orderDetails !== undefined &&
         orderDetails !== null &&

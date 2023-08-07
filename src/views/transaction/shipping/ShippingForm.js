@@ -5,12 +5,12 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadShippingDetail, loadCustomer } from "../../../actions/master";
+import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
+import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import moment from "moment";
 
-const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadShippingDetail, loadCustomer }) => {
+const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Add Shipping";
@@ -24,48 +24,42 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         voucherNo: "",
         referenceNo: "",
         orderNo: "",
-        shippingDate: "",
+        status: "",
+        transDate: "",
+        postDate: "",
+        createdBy: "",
+        postedBy: "",
         customerId: "",
+        orderId: "",
+        orderNo: "",
         truckNo: "",
+        picker: "",
+        deliveryOrderNo: "",
+        warehouseId: "",
         picQc: "",
         picWarehouse: "",
         picExpedisi: "",
         security: "",
-        picker: "",
+        shippingDate: "",
+        dateIn: "",
+        dateUp: "",
+        userIn: "",
+        userUp: "",
         warehouse: "",
         batch: "",
-
-        //orderdetail
-        code: "",
-        name: "",
-        qty: "",
-        pcs: "",
-        totalpcs: "",
-        shipping: "",
-        diff: "",
-
-        //itemdetail
-        item: "",
-        uom: "",
-        pallet: "",
-        location: "",
-        remark: "",
-
-        //changelog
-        createdBy: "",
-        createDate: "",
-        postedBy: "",
-        postDate: "",
+        order: "",
+        shippingDetails: [],
+        warehouse: [],
     });
 
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [locationList, setLocation] = useState([]);
     const [batchList, setBatch] = useState([]);
-    const [shippingDetailList, setShippingDetail] = useState([]);
     const [customerList, setCustomer] = useState([]);
+    const [orderList, setOrder] = useState([]);
 
-    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, code, name, qty, pcs, totalpcs, shipping, diff, palletId, warehouseId, item, uom, locationId, remark, createdBy, createDate, postedBy, postDate, batchId } = formData;
+    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, qty, palletId, warehouseId, locationId, remark, createdBy, dateIn, postedBy, postDate, batchId, shippingDetails, warehouse } = formData;
 
     useEffect(() => {
         loadWarehouse();
@@ -75,9 +69,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         loadCustomer();
         if (user !== null && id !== undefined) {
             loadData({ url, id });
-            loadShippingDetail({ url, id });
         }
-    }, [id, user, loadData, loadWarehouse, loadPallet, loadLocation, loadShippingDetail, loadCustomer]);
+    }, [id, user, loadData, loadWarehouse, loadPallet, loadLocation, loadCustomer]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -140,17 +133,17 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             }
             setCustomer(list);
         }
-        if (master.shipping !== undefined && master.shipping !== null) {
-            let list = [...master.shipping];
+        if (master.order !== undefined && master.order !== null) {
+            let list = [...master.order];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "No Shipping",
+                    name: "No Order",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
-            setShippingDetail(list);
+            setOrder(list);
         }
     }, [master]);
 
@@ -158,38 +151,45 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
+                let details = data.data.shippingDetails;
+                if (details === undefined || details === null) details = [];
+                let warehouse = data.data.warehouse;
+                if (warehouse === undefined || warehouse === null) warehouse = [];
+                details.map((item) => {
+                    item.checked = false;
+                    return null;
+                });
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
                     referenceNo: data.data.referenceNo,
-                    orderNo: data.data.orderNo,
-                    shippingDate: data.data.shippingDate,
+                    status: data.data.status,
+                    transDate: data.data.transDate,
+                    postDate: data.data.postdate,
+                    createdBy: data.data.createdBy,
+                    postedBy: data.data.postedBy,
                     customerId: data.data.customerId,
+                    orderId: data.data.orderId,
+                    orderNo: data.data.orderNo,
                     truckNo: data.data.truckNo,
+                    picker: data.data.picker,
+                    deliveryOrderNo: data.data.deliveryOrderNo,
+                    warehouseId: data.data.warehouseId,
                     picQc: data.data.picQc,
                     picWarehouse: data.data.picWarehouse,
                     picExpedisi: data.data.picExpedisi,
                     security: data.data.security,
-                    picker: data.data.picker,
-                    warehouseId: data.data.warehouseId,
-                    batchId: data.data.batchId,
-                    code: data.data.code,
-                    name: data.data.name,
-                    qty: data.data.qty,
-                    pcs: data.data.pcs,
-                    totalpcs: data.data.totalpcs,
-                    shipping: data.data.shipping,
-                    diff: data.data.diff,
-                    item: data.data.item,
-                    uom: data.data.uom,
-                    palletId: data.data.palletId,
-                    locationId: data.data.locationId,
-                    remark: data.data.remark,
-                    createdBy: data.data.created,
-                    createDate: data.data.createDate,
-                    postedBy: data.data.posted,
-                    postDate: data.data.postdate,
+                    shippingDate: data.data.shippingDate,
+                    dateIn: data.data.dateIn,
+                    dateUp: data.data.dateUp,
+                    userIn: data.data.userIn,
+                    userUp: data.data.userUp,
 
+                    palletId: data.data.palletId,
+                    batchId: data.data.batchId,
+                    locationId: data.data.locationId,
+                    shippingDetails: data.data.shippingDetails,
+                    warehouse: data.data.warehouse,
                 });
             }
         }
@@ -221,8 +221,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const tabIconStyle = {
         marginRight: '5px',
     };
-
-    console.log("TEST SHIPPING", master.shippingDetail)
 
     const element = () => {
         return (
@@ -438,8 +436,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         </div>
                     </div>
                 </div>
+
                 <hr style={{ borderColor: "gray", margin: "30px 0", opacity: 0.5 }} />
                 <div style={{ marginTop: "50px" }}></div>
+
                 <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                     <Tab eventKey="ContactDetail" title={<span><FaFile style={tabIconStyle} />Order Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
@@ -456,15 +456,22 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                    </tr>
+                                    {shippingDetails !== undefined &&
+                                        shippingDetails !== null &&
+                                        shippingDetails.map((details, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td style={{ textAlign: 'center' }}>{details.batchId}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.itemName}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.shippingId}</td> { }
+                                                    <td style={{ textAlign: 'center' }}>{details.diff}</td> { }
+                                                </tr>
+                                            );
+                                        })
+                                    }
                                 </tbody>
                             </RTable>
                         </div>
@@ -561,11 +568,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 <label className="col-sm-0 text-left col-form-label">Created Date</label>
                                 <div className="col">
                                     <input
-                                        name="createDate"
-                                        value={createDate}
-                                        type="text"
-                                        placeholder=""
-                                        onChange={(e) => onChange(e)}
+                                        name="dateIn"
+                                        vvalue={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder=""
                                         className="form-control text-left"
                                     />
                                 </div>
@@ -586,10 +590,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 <div className="col">
                                     <input
                                         name="postDate"
-                                        value={postDate}
-                                        type="text"
-                                        placeholder=""
+                                        value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
                                         onChange={(e) => onChange(e)}
+                                        type="date"
+                                        placeholder=""
                                         className="form-control text-left"
                                     />
                                 </div>
@@ -602,13 +606,16 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 <label className="col-sm-3 col-form-label">Reference No</label>
                                 <div className="col mr-5">
                                     <input
-                                        name="createdBy"
-                                        value={createdBy}
+                                        name="referenceNo"
+                                        value={referenceNo}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)}
                                         className="form-control text-left"
                                     />
+                                </div>
+                                <div className="col-sm- text-left col-form-label">
+                                    <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
                                 </div>
                             </div>
                         </div>
@@ -621,7 +628,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={{ textAlign: 'center' }}></td>
+                                        <td style={{ textAlign: 'center' }}>{formData.referenceNo}</td>
                                     </tr>
                                 </tbody>
                             </RTable>
@@ -631,6 +638,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             </div>
         );
     };
+
     return (
         <FormWrapper img={img} title={title} path={path} role={role} id={id} handleSave={handleSave}>
             {element}
@@ -648,7 +656,6 @@ ShippingForm.propTypes = {
     loadPallet: PropTypes.func,
     loadLocation: PropTypes.func,
     loadWarehouse: PropTypes.func,
-    loadShippingDetail: PropTypes.func,
     loadCustomer: PropTypes.func,
 };
 
@@ -658,4 +665,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadShippingDetail, loadCustomer })(ShippingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer })(ShippingForm);

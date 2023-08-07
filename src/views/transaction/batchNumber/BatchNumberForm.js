@@ -11,6 +11,7 @@ import { loadData, addData, editData } from "../../../actions/data";
 import { Table as RTable } from "react-bootstrap";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
+import ListTransaction from "../../master/customComponent/listTransaction";
 
 const BatchNumberForm = ({ user, data, loadData, addData, editData, master, loadItem }) => {
     let { id } = useParams();
@@ -41,26 +42,11 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const [itemList, setItem] = useState([]);
     const { code, itemId, transDate, status, color, qc, qty, visual, description, spListTransactions } = formData;
 
-    const stockData = [
-        { no: 1, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 1, incoming: 0, outgoing: 0, balance: 0 },
-        { no: 2, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 1, outgoing: 0, balance: 0 },
-        { no: 3, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 2, outgoing: 0, balance: 0 },
-        { no: 4, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 7, incoming: 0, outgoing: 4, balance: 4 },
-        { no: 5, transaction: "RC0050432", code: "A-11000", item: "Botol Saus", date: "07 Jun 2023", initial: 0, incoming: 0, outgoing: 0, balance: 2 },
-
-    ];
-
-    function calculateTotal(data, property) {
-        return data.reduce((total, item) => total + item[property], 0);
-    }
-
     useEffect(() => {
         loadItem();
         if (user !== null && id !== undefined)
             loadData({ url, id });
     }, [id, user, loadData, loadItem]);
-
-    console.log(master)
 
     useEffect(() => {
         if (master.item !== undefined && master.item !== null) {
@@ -118,77 +104,19 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                // navigate(`${path}`);
                 navigate(`${path}/${formData.id}/edit`);
             });
         } else {
             editData({ url, body: formData }).then(() => {
-                // navigate(`${path}`);
                 if (searchParams.get("return_url") !== undefined && searchParams.get("return_url") !== null) navigate(`${searchParams.get("return_url")}`);
                 else navigate(`${returnUrl}`);
             });
         }
     };
 
-    const renderItem = () => {
-        spListTransactions !== undefined &&
-            spListTransactions !== null &&
-            spListTransactions.map((item, index) => {
-                return (
-                    <tr key={index}>
-                        <td className="text-center">{index + 1}</td>
-                        <td style={{ textAlign: 'center' }}>{item.transaction}</td>
-                        <td style={{ textAlign: 'center' }}>{item.item}</td>
-                        <td style={{ textAlign: 'center' }}>{item.transDate}</td>
-                        <td style={{ textAlign: 'center' }}>{item.initial}</td>
-                        <td style={{ textAlign: 'center' }}>{item.incoming}</td>
-                        <td style={{ textAlign: 'center' }}>{item.outgoing}</td>
-                        <td style={{ textAlign: 'center' }}>{item.balance}</td>
-                    </tr >
-                );
-            });
-    }
-
-    const handleNewRow = (e) => {
-        e.preventDefault();
-
-        let details = spListTransactions;
-        if (details === undefined || details === null) details = [];
-
-        details.push({
-            checked: false,
-            productID: 0,
-            id: 0,
-            orderId: 0,
-            itemId: 0,
-            qty: 0,
-            voucherNo: "",
-            remark: "",
-        });
-        setFormData({ ...formData, spListTransactions: details });
-    };
-
-    const handleDelete = (e) => {
-        e.preventDefault();
-
-        let details = spListTransactions;
-        if (details === undefined || details === null) details = [];
-
-        let newDetail = [];
-
-        details.map((item) => {
-            if (!item.checked) newDetail.push(item);
-            return null;
-        });
-
-        setFormData({ ...formData, spListTransactions: newDetail });
-    };
-
     const tabIconStyle = {
         marginRight: '5px',
     };
-
-    console.log("BATCH", data)
 
     let totalInitial = 0;
     let totalIncoming = 0;
@@ -204,8 +132,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         });
     }
 
-    // data.data.spListTransactions?.map((obj) => {
-    // })
+    console.log("ID", id)
 
     const element = () => {
         return (
@@ -343,18 +270,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
                 <hr style={{ borderColor: "gray", opacity: 0.5, marginTop: "50px" }} />
 
-                <div className="d-flex justify-content-end mb-2 mr-3">
-                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-                        <FaPlus className="mr-2" /> <span>Add</span>
-                    </button>
-                    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-                        <FaTimes className="mr-2" /> <span>Delete</span>
-                    </button>
-                </div>
-
                 <div style={{ marginTop: "20px" }}></div>
 
-                <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
+                {/* <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
                             <tr>
@@ -369,28 +287,6 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                             </tr>
                         </thead>
                         <tbody>
-                            
-                            {/* {stockData.map((item, index) => (
-                                <tr>
-                                    <td style={{ textAlign: 'center' }}>{item.no}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.transaction}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.item}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.date}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.initial}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.incoming}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.outgoing}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.balance}</td>
-                                </tr>
-                            ))} */}
-                            {/* <tr>
-                                <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>Total</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "initial")}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "incoming")}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "outgoing")}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{calculateTotal(stockData, "balance")}</td>
-                            </tr> */}
-                            {/* {renderItem()} */}
-
                             {spListTransactions !== undefined &&
                                 spListTransactions !== null &&
                                 spListTransactions.map((details, index) => {
@@ -416,7 +312,12 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                             </tr>
                         </tbody>
                     </RTable>
+                </div> */}
+
+                <div className="mt-5">
+                    <ListTransaction id={id} listType="location" formData={formData} />
                 </div>
+
             </div>
         );
     };

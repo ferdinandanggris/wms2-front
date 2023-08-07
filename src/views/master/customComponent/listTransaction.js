@@ -55,6 +55,7 @@ const ListTransaction = (props) => {
     getData(page - 1);
   };
 
+  console.log("DATA", data)
 
   const renderData = () => {
     if (data.data != null) {
@@ -120,16 +121,43 @@ const ListTransaction = (props) => {
     );
   };
 
-  const renderTotal = () => {
-    if (formData) {
+  // const renderTotal = () => {
+  //   if (formData) {
+  //     return (
+  //       <tr className="table-list">
+  //         <th colSpan={5}>TOTAL</th>
+  //         <th className="text-right">{formData.initial?.toLocaleString()}</th>
+  //         <th className="text-right">{formData.incoming?.toLocaleString()}</th>
+  //         <th className="text-right">{formData.outgoing?.toLocaleString()}</th>
+  //         <th className="text-right">{formData.balance?.toLocaleString()}</th>
+  //       </tr>
+  //     )
+  //   } else {
+  //     return (
+  //       <tr className="table-list">
+  //         <th colSpan={5}>TOTAL</th>
+  //         <th className="text-right">0</th>
+  //         <th className="text-right">0</th>
+  //         <th className="text-right">0</th>
+  //         <th className="text-right">0</th>
+  //       </tr>
+  //     )
+  //   }
+  // }
 
+  const renderTotal = () => {
+    if (data.data != null && data.data.length > 0) {
+      const totalInitial = data.data.reduce((init, item) => init + item.initial, 0);
+      const totalIncoming = data.data.reduce((income, item) => income + item.incoming, 0);
+      const totalOutgoing = data.data.reduce((out, item) => out + item.outgoing, 0);
+      const totalBalance = data.data.reduce((bal, item) => bal + item.balance, 0);
       return (
         <tr className="table-list">
           <th colSpan={5}>TOTAL</th>
-          <th className="text-right">{formData.initial?.toLocaleString()}</th>
-          <th className="text-right">{formData.incoming?.toLocaleString()}</th>
-          <th className="text-right">{formData.outgoing?.toLocaleString()}</th>
-          <th className="text-right">{formData.balance?.toLocaleString()}</th>
+          <th className="text-right">{totalInitial.toLocaleString()}</th>
+          <th className="text-right">{totalIncoming.toLocaleString()}</th>
+          <th className="text-right">{totalOutgoing.toLocaleString()}</th>
+          <th className="text-right">{totalBalance.toLocaleString()}</th>
         </tr>
       )
     } else {
@@ -177,6 +205,5 @@ const ListTransaction = (props) => {
     </Table>
   );
 };
-
 
 export default ListTransaction;

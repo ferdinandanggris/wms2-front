@@ -39,9 +39,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     const [batchList, setBatch] = useState([]);
     const [locationList, setLocation] = useState([]);
     const [palletList, setPallet] = useState([]);
-
+    const [currentPage, setCurrentPage] = useState(1);
     const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
-
+    const PAGE_SIZE = 10;
+    const MAX_VISIBLE_PAGES = 5;
     useEffect(() => {
         loadWarehouse();
         loadVendor();
@@ -216,7 +217,43 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         return batch ? batch.code : "Unknown Batch";
     };
 
+    const paginateData = (data, pageNumber, pageSize) => {
+        const startIndex = (pageNumber - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return data.slice(startIndex, endIndex);
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const getPageNumbers = () => {
+        const totalPages = Math.ceil(itemAdjustmentDetails.length / PAGE_SIZE);
+        const currentPageIndex = currentPage - 1;
+        const halfMaxVisiblePages = Math.floor(MAX_VISIBLE_PAGES / 2);
+
+        if (totalPages <= MAX_VISIBLE_PAGES) {
+            return [...Array(totalPages).keys()].map((index) => index + 1);
+        }
+
+        if (currentPageIndex < halfMaxVisiblePages) {
+            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => index + 1);
+        }
+
+        if (currentPageIndex >= totalPages - halfMaxVisiblePages) {
+            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => totalPages - MAX_VISIBLE_PAGES + index + 1);
+        }
+
+        const middlePage = currentPageIndex + 1;
+        const startPageIndex = middlePage - halfMaxVisiblePages;
+        return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => startPageIndex + index);
+    };
+
+    const totalPages = Math.ceil(itemAdjustmentDetails.length / PAGE_SIZE);
+    const pageNumbers = getPageNumbers();
+
     const element = () => {
+        const paginatedDetails = paginateData(itemAdjustmentDetails, currentPage, PAGE_SIZE);
         return (
             <div className="detail">
                 <div className="subTitle">
@@ -409,26 +446,41 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                             </tr>
                         </thead>
                         <tbody>
-                            {itemAdjustmentDetails !== undefined &&
-                                itemAdjustmentDetails !== null &&
-                                itemAdjustmentDetails.map((details, index) => {
-                                    return (
-                                        <tr>
-                                            <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.stock}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.qty}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.uom}</td>
-                                            <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.remark}</td>
-                                        </tr>
-                                    );
-                                })
-                            }
+                            {paginatedDetails.map((details, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
+                                        <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                        <td style={{ textAlign: 'center' }}>{details.stock}</td>
+                                        <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                        <td style={{ textAlign: 'center' }}>{details.uom}</td>
+                                        <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
+                                        <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
+                                        <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                    </tr>
+                                );
+                            })}
+
                         </tbody>
+
                     </RTable>
+
                 </div>
+
+                <div style={{ marginTop: "20px" }}></div>
+                <ul className="pagination" style={{ marginLeft: "15px" }}>
+                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Sebelumnya</button>
+                    </li>
+                    {pageNumbers.map((pageNumber) => (
+                        <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
+                            <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
+                        </li>
+                    ))}
+                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Berikutnya</button>
+                    </li>
+                </ul>
             </div>
         );
     };

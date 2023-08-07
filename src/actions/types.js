@@ -34,6 +34,8 @@ export const LOAD_PALLET = "LOAD_PALLET";
 export const LOAD_LOCATION = "LOAD_LOCATION";
 export const LOAD_BATCH = "LOAD_BATCH";
 export const LOAD_SHIPPING = "LOAD_SHIPPING";
+export const LOAD_ORDERDETAIL = "LOAD_ORDERDETAIL";
+export const LOAD_ORDER = "LOAD_ORDER";
 
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";

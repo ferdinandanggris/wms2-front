@@ -1,28 +1,26 @@
 import {useEffect} from "react";
 import { FaLayerGroup } from "react-icons/fa";
-
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
-import ListWrapper from "../../components/Wrapper/ListWrapper";
-import { refreshData, deleteData, exportData } from "../../actions/data";
+import ListWrapper from "../../../components/Wrapper/ListWrapper";
+import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Raw Material Receiving List";
   const img = <FaLayerGroup className="module-img" />;
   const path ="/transaction-rm/raw-material-receiving";
-  const url = "RawMaterialBatch";
-  const role = "transaction -RawMaterialBatchReceivingList";
+  const url = "RawMaterialReceiving";
+  const role = "Transaction - Raw Material Receiving";
 
   const columns = [
-    { label: "CODE", key: "code", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VOUCHER#", key: "", width: 100, cardTitle: true },
-    { label: "REFERENCE#", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VENDOR", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED DATE", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED BY", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED Date", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CODE", key: "id", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VOUCHER#", key: "voucherNo", width: 100, cardTitle: true },
+    { label: "REFERENCE#", key: "referenceNo", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VENDOR", key: "vendorId", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED BY", key: "createdBy", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CREATED DATE", key: "dateIn", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED BY", key: "postedBy", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "POSTED Date", key: "postDate", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "LINE", key: "", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "STATUS", key: "status", width: 80, type: "number", align: "right", cardSubTitle: true },
   ];

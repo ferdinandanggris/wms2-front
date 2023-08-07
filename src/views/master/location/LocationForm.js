@@ -10,8 +10,6 @@ import Select2 from "../../../components/Select2";
 import { loadWarehouse, loadGroup } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 
-
-
 const LocationForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadGroup }) => {
     let { id } = useParams();
 
