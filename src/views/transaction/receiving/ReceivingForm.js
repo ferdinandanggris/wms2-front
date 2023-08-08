@@ -9,15 +9,15 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadCategory, loadVendor, loadWarehouse,loadproduction } from "../../../actions/master";
+import { loadCategory, loadLocation, loadPallet, loadVendor, loadWarehouse } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
+import { NumericFormat } from "react-number-format";
 
-const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory,loadproduction }) => {
+const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation }) => {
   let { id } = useParams();
   const navigate = useNavigate();
-  console.log("master", master)
   const [status, setStatus] = useState('');
   const title = " Receiving Form";
   const img = <FaLayerGroup className="module-img" />;
@@ -51,6 +51,8 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
   const { name, vendor, warehouse, vendorId,postedBy, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
   const [warehouseList, setWarehouse] = useState([]);
+  const[locationlist,setlocation] = useState([]);
+   const[palletList,setpallet]=useState([]);
   const [vendorList, setVendor] = useState([]);
   const[tempbatchno,settempbatchno]=useState(0);
   useEffect(() => {
@@ -92,9 +94,11 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     loadWarehouse();
     loadVendor();
     loadCategory();
+    loadLocation();
+    loadPallet();
     
     if (user !== null && id !== undefined) loadData({ url, id });
-  }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory]);
+  }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation]);
 
   useEffect(() => {
     if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -108,6 +112,31 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
         list.sort((a, b) => (a.id > b.id ? 1 : -1));
       }
       setWarehouse(list);
+    }
+    
+    if (master.location !== undefined && master.location !== null) {
+      let list = [...master.location];
+      const obj = list.find((obj) => obj.id === 0);
+      if (obj === undefined || obj === null) {
+        list.push({
+          name: "No location",
+          id: 0,
+        });
+        list.sort((a, b) => (a.id > b.id ? 1 : -1));
+      }
+      setlocation(list);
+    }
+    if (master.pallet !== undefined && master.pallet !== null) {
+      let list = [...master.pallet];
+      const obj = list.find((obj) => obj.id === 0);
+      if (obj === undefined || obj === null) {
+        list.push({
+          name: "No pallet",
+          id: 0,
+        });
+        list.sort((a, b) => (a.id > b.id ? 1 : -1));
+      }
+      setpallet(list);
     }
     if (master.vendor !== undefined && master.vendor !== null) {
       let list = [...master.vendor];
@@ -131,6 +160,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
 };
 
+
   const handleSave = (e) => {
     e.preventDefault();
 
@@ -144,6 +174,19 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       });
     }
   };
+  const onDetailChange = (e, index) => {
+    e.preventDefault();
+
+    let details = receivingDetails;
+    if (details === undefined || details === null) details = [];
+
+    details[index][e.target.name] = e.target.value;
+    if (e.target.name == "qty") {
+        details[index]["qty"] = e.target.value;
+    }
+
+    setFormData({ ...formData, receivingDetails: details });
+};
   const onSelectChange = (e, name) => {
     if (name === "category"){
       e.preventDefault();
@@ -302,10 +345,6 @@ const handleDelete = (e) => {
           </div>
           <hr style={{ borderColor: "gray", opacity: 0.5 }} />
 
-
-
-{console.log("receivingDetails",receivingDetails)}
-
           <RTable bordered style={{ float: 'center', width: "100%" }}>
             <thead>
               <tr>
@@ -320,25 +359,40 @@ const handleDelete = (e) => {
               </tr>
             </thead>
 
-            <tbody>
-    { receivingDetails!== undefined &&
-       receivingDetails !== null &&
-       receivingDetails .map((details , index) => { 
-        return (
-          <tr key={index}>
-               <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.palletId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.locationId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
+<tbody>
+  {receivingDetails !== undefined &&
+    receivingDetails !== null &&
+    receivingDetails.map((details, index) => {
+      const location = locationlist.find((obj) => obj.id === details.locationId);
+      const pallet = palletList.find((obj) => obj.id === details.palletId);
+      return (
+        <tr key={index}>
+          <td style={{ textAlign: 'center' }}>{index + 1}</td>
+          <td style={{ textAlign: 'center' }}>{details.batchId}</td>
+          <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+          <td className="text-center">
+                        <NumericFormat
+                            className="form-control text-center"
+                            name="QTY" value={details.qty}
+                            onChange={(e) => onDetailChange(e, index)}
+                            allowNegative={false} thousandSeparator=","
+                            decimalScale={0}
+                        />
+                    </td>
+          <td style={{ textAlign: 'center' }}>{details.uom}</td>
+          <td style={{ textAlign: 'center' }}>
+            {pallet && `${pallet.code} - ${pallet.name}`}
+          </td>
+          <td style={{ textAlign: 'center' }}>
+            {location && `${location.code} - ${location.name}`}
+          </td>
+          <td style={{ textAlign: 'center' }}>{details.remark}</td>
+        </tr>
+      );
+    })}
+</tbody>
 
-          </tr>
-        );
-      })}
-  </tbody>
+
           </RTable>
         </div>
 
@@ -363,6 +417,8 @@ ReceivingForm.propTypes = {
   loadWarehouse: PropTypes.func,
   loadVendor: PropTypes.func,
   loadCategory: PropTypes.func,
+  loadPallet:propTypes.func,
+  loadLocation:propTypes.func,
   editData: PropTypes.func,
   master: PropTypes.object,
 };
@@ -373,4 +429,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadCategory })(ReceivingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation })(ReceivingForm);

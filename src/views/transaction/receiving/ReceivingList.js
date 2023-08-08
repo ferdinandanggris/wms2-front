@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaCcMastercard, FaLayerGroup } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
+import { loadVendor } from "../../../actions/master";
+import { propTypes } from "react-bootstrap/esm/Image";
 
-const RecivingList = ({ user, data, refreshData, deleteData, exportData }) => {
+const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVendor, master }) => {
   const title = "Reciving List";
   const img = <FaLayerGroup className="module-img" />;
-  const path =  "/transaction/receiving";
+  const path = "/transaction/receiving";
   const url = "Receiving";
   const role = "transaction- RecivingList";
 
@@ -31,18 +33,28 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData }) => {
     if (user !== null) {
       refreshData({ url });
     }
-  }, [user, refreshData]);
+    loadVendor();
+  }, [user, refreshData, loadVendor]);
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "status") {
-        if (value == "Y")
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
-        else
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
-    }
-};
+      if (value == "Y")
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
+      else
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
+    } else if (col.key === "vendors") {
+      if (master.vendor !== null && master.vendor !== undefined) {
+        if(value) {
+          const tempVendor = master.vendor.find((obj) => obj.id === value.id);
+          return tempVendor.name;
+        } else {
+          return "";
+        }
+      }
+    };
+  }
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}  customRenderValue={customRenderValue} />;
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
 };
 
 
@@ -50,13 +62,16 @@ RecivingList.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
   refreshData: PropTypes.func,
+  loadVendor: PropTypes.func,
   deleteData: PropTypes.func,
   exportData: PropTypes.func,
+  master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   data: state.data,
+  master: state.master,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData })(RecivingList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadVendor })(RecivingList);

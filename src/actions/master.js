@@ -181,7 +181,7 @@ export const loadCustomer = () => async (dispatch) => {
 //Load Pallet
 export const loadPallet = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Pallet?limit=10&page=0`);
+    const res = await axios.get(`/Pallet`);
     dispatch({
       type: LOAD_PALLET,
       payload: res.data,

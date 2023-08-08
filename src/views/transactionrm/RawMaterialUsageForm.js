@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaHouseUser,FaPlus,FaTimes } from "react-icons/fa";
 
-import { connect } from "react-redux";
+import { batch, connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { loadData, addData, editData } from "../../actions/data";
 import FormWrapper from "../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-
+import moment from "moment";
 
 const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
@@ -23,26 +23,26 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     const role = "transaction -RawMaterialUsageForm";
 
     const [formData, setFormData] = useState({
-        "id": 2790,
-        "voucherNo": "RMU0002798",
-        "referenceNo": "OUT- RESIN # SA 135 20/03/2023",
-        "status": "N",
-        "transDate": "2023-03-20T13:28:37",
-        "postDate": null,
-        "createdBy": "Junan & RONI",
-        "postedBy": null,
-        "vendorId": null,
-        "warehouseId": 1,
-        "dateIn": null,
-        "dateUp": null,
-        "userIn": null,
-        "userUp": null,
-        "warehouse": null,
-        "rawMaterialUsageDetails": null
+        id: 0,
+        voucherNo: "",
+        referenceNo: "",
+        status: "",
+        transDate: 0,
+        postDate: 0,
+        createdBy: "",
+        postedBy: "",
+        vendorId: 0,
+        warehouseId: 1,
+        dateIn: 0,
+        dateUp: 0,
+        userIn: 0,
+        userUp: 0,
+        warehouse:"",
+        rawMaterialUsageDetails:[]
 
     });
 
-    const { name, type, isActive, code,itemConsumptionDetails, businessEntity, businessEntityName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryName, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP } = formData;
+    const { name,rawMaterialUsageDetails, type,transDate,postDate,referenceNo,createdBy,postedBy,vendorId,voucherNo,warehouse,warehouseId,dateIn,dateUp,userIn,userUp} = formData;
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -54,42 +54,21 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
             if (data.data !== undefined && data.data !== null) {
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
-                    code: data.data.code,
-                    name: data.data.name,
-                    seller: data.data.seller,
-                    country: data.data.country,
-                    deliveryAddress: data.data.deliveryAddress,
-                    deliveryPostalCode: data.data.deliveryPostalCode,
-                    deliveryPhone: data.data.deliveryPhone,
-                    deliveryFax: data.data.deliveryFax,
-                    billingAddress: data.data.billingAddress,
-                    billingPostalCode: data.data.billingPostalCode,
-                    billingPhone: data.data.billingPhone,
-                    billingFax: data.data.billingFax,
-                    pic: data.data.pic,
-                    mobile1: data.data.mobile1,
-                    mobile2: data.data.mobile2,
-                    email: data.data.email,
-                    web: data.data.web,
-                    paymentTerm: data.data.paymentTerm,
-                    currency: data.data.currency,
-                    customerType: data.data.customerType,
-                    nik: data.data.nik,
-                    npwp: data.data.npwp,
-                    taxType: data.data.taxType,
-                    tax1: data.data.tax1,
-                    tax2: data.data.tax2,
-                    virtualAccount: data.data.virtualAccount,
-                    seller: data.data.seller,
-                    deliveryProvince: data.data.deliveryProvince,
-                    deliveryCity: data.data.deliveryCity,
-                    deliveryDistrict: data.data.deliveryDistrict,
-                    deliveryProvince: data.data.deliveryProvince,
-                    billingProvince: data.data.billingProvince,
-                    billingCity: data.data.billingCity,
-                    billingDistrict: data.data.billingDistrict,
-                    isActive: data.data.isActive,
-                    itemConsumptionDetails:data.data.itemConsumptionDetails,
+        voucherNo: data.data.voucherNo,
+        referenceNo: data.data.referenceNo,
+        status: data.data.status,
+        transDate: data.data.transDate,
+        postDate: data.data.postDate,
+        createdBy: data.data.createdBy,
+        postedBy: data.data.postedBy,
+        vendorId: data.data.vendorId,
+        warehouseId: data.data.warehouseId,
+        dateIn: data.data.dateIn,
+        dateUp: data.data.dateUp,
+        userIn: data.data.userIn,
+        userUp: data.data.userUp,
+        warehouse:data.data.warehouse,
+        rawMaterialUsageDetails:data.data.rawMaterialUsageDetails,
                 });
             }
         }
@@ -122,32 +101,35 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     };
     const handleNewRow = (e) => {
         e.preventDefault();
-        let details = data.data. itemConsumptionDetails;
+        let details = data.data.rawMaterialUsageDetails;
         if (details === undefined || details === null) details = [];
   
         details.push({
             id: 0,
-            itemConsumptionId: 0,
-            voucherNo: "",
-            batchId:0,
+            rawMaterialUsageId:0,
+            voucherNo: "0",
+            locationId: 0,
+            palletId: 0,
             itemId: 0,
-            remark: "null",
+            remark: "",
             qty: 0,
-            dateIn:0,
+            batchId:0,
+            dateIn: 0,
             dateUp: 0,
-            userIn: "null",
-            userUp:" null",
-            itemName: "",
-            uom: "",
-            totalPcs: 0
+            userIn: 0,
+            userUp: 0,
+            item: "",
+            batch: "",
+            location: "",
+            pallet: ""
         });
-        setFormData({ ...formData, itemConsumptionDetails: details });
+        setFormData({ ...formData,rawMaterialUsageDetails: details });
     };
   
     const handleDelete = (e) => {
         e.preventDefault();
   
-        let details =itemConsumptionDetails;
+        let details =rawMaterialUsageDetails;
         if (details === undefined || details === null) details = [];
   
         let newDetail = [];
@@ -157,7 +139,7 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
             return null;
         });
   
-        setFormData({ ...formData,itemConsumptionDetails: newDetail });
+        setFormData({ ...formData,rawMaterialUsageDetails: newDetail });
     };
     
     const element = () => {
@@ -168,17 +150,17 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
                 <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Voucher # <span className="text-danger">*</span></label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="voucherNo" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
                         <div className="col">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="referenceNo" value={referenceNo} onChange={(e) => onChange(e)} type="text" />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
             <label className="col-sm-2 col-form-label">WareHouse <span className="text-danger">*</span></label>
-            <div className="col-sm-10">
-              <input name="code" value={code} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
+            <div className="col-3">
+              <input name="warehouseId" value={warehouseId} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
             </div>
                     </div>
                     <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
@@ -190,8 +172,8 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     <div className="col-sm-8"> {/* Increased the column size to make the text box wider */}
         <input
             className="form-control text-left"
-            name="tempo"
-            value={tempo}
+            name="BatchNo"
+            value={batch}
             onChange={(e) => onChange(e)}
             type="text"
         />
@@ -219,6 +201,7 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
               <RTable bordered style={{ float: 'center', width: "100%" }}>
                 <thead>
                   <tr>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Item</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Qty</th>
@@ -257,21 +240,21 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
           <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Created</label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="createdBy" value={createdBy} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Created Date</label>
                         <div className="col">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Posted</label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="postedBy" value={postedBy} onChange={(e) => onChange(e)} type="text" />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Posted Date</label>
                         <div className="col">
-                        <input className="form-control text-left" name="tempo" value={tempo} onChange={(e) => onChange(e)} type="text" />
+                        <input className="form-control text-left" name="postDate" value={postDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
                     </div>
           </Tab>

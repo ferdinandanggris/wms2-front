@@ -9,13 +9,14 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadPallet, loadVendor, loadWarehouse } from "../../../actions/master";
+import { loadPallet, loadVendor, loadWarehouse,loadLocation } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
+import { NumericFormat } from "react-number-format";
 import { te } from "date-fns/locale";
 
-const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadPallet }) => {
+const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadPallet,loadLocation }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
@@ -63,6 +64,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
+    const [locationlist,setLocation] =useState([]);
     const [vendorList, setVendor] = useState([]);
     const [remarks, setRemarks] = useState({});
     const[tempbatchno,settempbatchno]=useState(0);
@@ -119,8 +121,9 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
         loadWarehouse();
         loadVendor();
         loadPallet();
+        loadLocation();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse, loadVendor,loadPallet]);
+    }, [id, user, loadData, loadWarehouse, loadVendor,loadPallet,loadLocation]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -146,6 +149,18 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setVendor(list);
+        }
+        if (master.location !== undefined && master.location !== null) {
+            let list = [...master.location];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Location",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setLocation(list);
         }
         if (master.pallet !== undefined && master.pallet !== null) {
             let list = [...master.pallet];
@@ -182,9 +197,28 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
           });
         }
       };
-    const onSelectChange = (e, name) => {
-        setFormData({ ...formData, [name]: e.id });
+      const onDetailChange = (e, index) => {
+        e.preventDefault();
+
+        let details = itemConsumptionDetails;
+        if (details === undefined || details === null) details = [];
+
+        details[index][e.target.name] = e.target.value;
+        if (e.target.name == "qty") {
+            details[index]["qty"] = e.target.value;
+        }
+
+        setFormData({ ...formData, itemConsumptionDetails: details });
     };
+
+    const onSelectChange = (e, name) => {
+        if (name === "location") {
+      setFormData({ ...formData, [name]: e.code });
+    }else{
+        setFormData({ ...formData, [name]: e.id });
+      }
+    }
+    
     const handleNewRow = (e) => {
         e.preventDefault();
         let details =itemConsumptionDetails;
@@ -208,6 +242,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
         });
         setFormData({ ...formData, itemConsumptionDetails: details });
     };
+    
 
     const handleDelete = (e) => {
         e.preventDefault();
@@ -231,7 +266,85 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const tabIconStyle = {
         marginRight: '5px',
     };
-     
+    const renderItem = () =>
+    itemConsumptionDetails!== undefined &&
+    itemConsumptionDetails !== null &&
+    itemConsumptionDetails .map((details , index) => {
+        return (
+            <tr key={index}>
+                    <td className="text-center">{index + 1}</td>
+                 <td className="text-center" >
+                    <input
+                        className="form-control"
+                        type="text" style={{ textAlign: "center" }}
+                        name="BATCH No"
+                        readOnly={true}
+                        value={details.batchId}
+                    />
+                </td>
+
+                <td className="text-center" >
+                    <input
+                        className="form-control"
+                        type="text" style={{ textAlign: "center" }}
+                        name="ITEM"
+                        readOnly={true}
+                        value={details.itemName}
+                    />
+                </td>
+
+                <td className="text-right">
+                        <NumericFormat
+                            className="form-control text-right"
+                            name="QTY" value={details.qty}
+                            onChange={(e) => onDetailChange(e, index)}
+                            allowNegative={false} thousandSeparator=","
+                            decimalScale={0}
+                        />
+                    </td>
+
+                <td className="text-center" >
+                    <input
+                        className="form-control"
+                        type="text" style={{ textAlign: "center" }}
+                        name="UOM"
+                        readOnly={true}
+                        value={details.uom}
+                    />
+                </td>
+                <td className="text-center" >
+                    <input
+                        className="form-control"
+                        type="text" style={{ textAlign: "center" }}
+                        name="PCS"
+                        readOnly={true}
+                        value={details.totalPcs}
+                    />
+                </td>
+                <td className="text-center" >
+                    <input
+                        className="form-control"
+                        type="text" style={{ textAlign: "center" }}
+                        name="TOTAL PCS"
+                        readOnly={true}
+                        value={details.totalPcs}
+                    />
+                </td>
+        
+                    <td className="text-right">
+                        <input
+                            className="form-control text-left"
+                            name="REMARK"
+                            value={details.remarkk || undefined}
+                            type="text"
+                            placeholder="Remark"
+                            onChange={(e) => onDetailChange(e, index)}
+                        />
+                    </td>
+            </tr >
+        );
+    });
+
     const element = () => {
         return (
             <div className="detail">
@@ -268,9 +381,14 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Location</label>
                         <div className="col-sm-3">
-                            <input className="form-control text-left" name="location" value={location} onChange={(e) => onChange(e)} type="text" />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">Pallet </label>
+              <Select2
+                options={locationlist}
+                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                placeholder={"Pick Location"}
+                value={locationlist === null ? null : locationlist.filter((option) => option.id === parseInt(locationId))}
+                handleChange={(e) => onSelectChange(e, "locationId")} />
+            </div>
+         <label className="col-sm-1 text-left col-form-label">Pallet </label>
             <div className="col">
               <Select2
        options={palletList}
@@ -386,7 +504,8 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                         </tr>
                                     </thead>
                                     <tbody>
-    {  itemConsumptionDetails!== undefined &&
+                                              {renderItem()}
+    {/* {  itemConsumptionDetails!== undefined &&
        itemConsumptionDetails !== null &&
        itemConsumptionDetails .map((details , index) => { 
         return (
@@ -407,7 +526,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                 </td>
           </tr>
         );
-      })}
+      })} */}
   </tbody>
                                 </RTable>
                             </div>
@@ -491,6 +610,7 @@ TransactionItemConsumptionForm.propTypes = {
     addData: PropTypes.func,
     loadWarehouse: PropTypes.func,
     loadVendor: PropTypes.func,
+    loadLocation:propTypes.func,
     loadPallet:PropTypes.func,
     editData: PropTypes.func,
     master: PropTypes.object,
@@ -502,4 +622,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadPallet })(TransactionItemConsumptionForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadPallet,loadLocation })(TransactionItemConsumptionForm);

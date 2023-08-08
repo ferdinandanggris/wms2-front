@@ -12,7 +12,7 @@ import FormWrapper from "../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../components/Select2";
-
+import moment from "moment";
 
 const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadItem,master }) => {
     let { id } = useParams();
@@ -45,7 +45,6 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
     dateUp: 0,
     userIn:"",
     userUp: "",
-    itemConsumptionDetails: "",
 
     });
     const [itemList, setItem] = useState([]);
@@ -195,7 +194,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch Date</label>
                         <div className="col-sm-10">
-                            <input name="transDate" value={transDate} type="text" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" />
+                        <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
                     </div>
                     

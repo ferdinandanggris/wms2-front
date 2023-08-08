@@ -37,9 +37,9 @@ const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, ex
   const customRenderValue = (col, value, item) => {
     if (col.key == "status") {
         if (value == 0)
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">In Active</div></h6 >);
+            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Posted</div></h6 >);
         else
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
+            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Waiting</div></h6 >);
     }
 };
 
