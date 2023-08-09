@@ -24,7 +24,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
     const role = "Transaction - SPK";
 
     const dispatch = useDispatch();
-
     const [searchParams] = useSearchParams();
     const [returnUrl, setReturnUrl] = useState(path);
 
@@ -58,23 +57,18 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
     const [showModal, setShowModal] = useState(false);
     const handleClose = () => setShowModal(false);
     const handleCekStock = () => setShowModal(true);
+
     const {
         customerId,
         warehouseId,
         transDate,
         shippingDate,
-        closedDate,
-        flag,
         voucherNo,
         referenceNo,
         createdBy,
-        status,
         truckNo,
         expedition,
-        print,
-        closedBy,
         orderDetails,
-        warehouse,
     } = formData;
 
     useEffect(() => {
@@ -144,9 +138,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             }
         }
     }, [id, data, setFormData]);
-
-    console.log("ORDER", orderDetails)
-
+    
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });

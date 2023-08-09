@@ -15,7 +15,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData }) => {
     let { id } = useParams();
 
     const navigate = useNavigate();
-    const title = "Add Customer";
+    const title = "Customer";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/master/customer/:id?/:customer";
     const url = "Customer";

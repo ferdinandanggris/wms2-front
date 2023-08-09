@@ -19,7 +19,7 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
         { label: "Customer", key: "customerId", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "Warehouse", key: "warehouseId", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "Created By", key: "createdBy", width: 40, type: "text", align: "left", cardSubTitle: true },
-        { label: "Created Date", key: "createDate", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "Created Date", key: "dateIn", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "Shipping Date", key: "shippingDate", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
         { label: "Status", key: "status", width: 40, type: "text", align: "Center", cardSubTitle: true },

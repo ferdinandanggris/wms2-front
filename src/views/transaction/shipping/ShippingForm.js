@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap, FaTrashAlt } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -8,12 +8,13 @@ import PropTypes from "prop-types";
 import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
 import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
+import "../style.css";
 import moment from "moment";
 
 const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer }) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const title = "Add Shipping";
+    const title = "Shipping";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/transaction/shipping/:id?/:type";
     const url = "Shipping";
@@ -24,7 +25,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         voucherNo: "",
         referenceNo: "",
         orderNo: "",
-        status: "",
+        status: 0,
         transDate: "",
         postDate: "",
         createdBy: "",
@@ -58,8 +59,9 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const [batchList, setBatch] = useState([]);
     const [customerList, setCustomer] = useState([]);
     const [orderList, setOrder] = useState([]);
-
-    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, qty, palletId, warehouseId, locationId, remark, createdBy, dateIn, postedBy, postDate, batchId, shippingDetails, warehouse } = formData;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [status, setStatus] = useState('');
+    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, warehouseId, remark, createdBy, dateIn, postedBy, postDate, shippingDetails, batch } = formData;
 
     useEffect(() => {
         loadWarehouse();
@@ -70,7 +72,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         if (user !== null && id !== undefined) {
             loadData({ url, id });
         }
-    }, [id, user, loadData, loadWarehouse, loadPallet, loadLocation, loadCustomer]);
+    }, [id, user, loadData, loadWarehouse, loadPallet, loadBatch, loadLocation, loadCustomer]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -114,7 +116,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "No Batch",
+                    code: "No Batch",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -163,7 +165,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
                     referenceNo: data.data.referenceNo,
-                    status: data.data.status,
                     transDate: data.data.transDate,
                     postDate: data.data.postdate,
                     createdBy: data.data.createdBy,
@@ -184,9 +185,9 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     dateUp: data.data.dateUp,
                     userIn: data.data.userIn,
                     userUp: data.data.userUp,
-
                     palletId: data.data.palletId,
                     batchId: data.data.batchId,
+                    batch: data.data.batchId,
                     locationId: data.data.locationId,
                     shippingDetails: data.data.shippingDetails,
                     warehouse: data.data.warehouse,
@@ -194,6 +195,16 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             }
         }
     }, [id, data, setFormData]);
+
+    const onDetailCheck = (e, index) => {
+        let details = shippingDetails;
+        if (details === undefined || details === null) details = [];
+
+        let checked = details[index]["checked"];
+        details[index]["checked"] = checked ? false : true;
+
+        setFormData({ ...formData, shippingDetails: details });
+    };
 
     const onChange = (e) => {
         e.preventDefault();
@@ -218,11 +229,60 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         }
     };
 
+    const handleDelete = (e, index) => {
+        e.preventDefault();
+
+        let updatedDetails = [...shippingDetails];
+        updatedDetails.splice(index, 1);
+
+        setFormData({ ...formData, shippingDetails: updatedDetails });
+    };
+
+    const PAGE_SIZE = 10;
+    const MAX_VISIBLE_PAGES = 5;
+
+    const getPaginatedDetails = () => {
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
+        const endIndex = startIndex + PAGE_SIZE;
+        return shippingDetails.slice(startIndex, endIndex);
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const getPageNumbers = () => {
+        const totalPages = Math.ceil(shippingDetails.length / PAGE_SIZE);
+        const currentPageIndex = currentPage - 1;
+        const halfMaxVisiblePages = Math.floor(MAX_VISIBLE_PAGES / 2);
+
+        if (totalPages <= MAX_VISIBLE_PAGES) {
+            return [...Array(totalPages).keys()].map((index) => index + 1);
+        }
+
+        if (currentPageIndex < halfMaxVisiblePages) {
+            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => index + 1);
+        }
+
+        if (currentPageIndex >= totalPages - halfMaxVisiblePages) {
+            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => totalPages - MAX_VISIBLE_PAGES + index + 1);
+        }
+
+        const middlePage = currentPageIndex + 1;
+        const startPageIndex = middlePage - halfMaxVisiblePages;
+        return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => startPageIndex + index);
+    };
+
+    const totalPages = Math.ceil(shippingDetails.length / PAGE_SIZE);
+
     const tabIconStyle = {
         marginRight: '5px',
     };
 
     const element = () => {
+        const paginatedDetails = getPaginatedDetails();
+        const pageNumbers = getPageNumbers();
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
         return (
             <div className="detail">
                 <div className="subTitle">
@@ -336,7 +396,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             />
                         </div>
                     </div>
-
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">PIC Expedisi</label>
                         <div className="col">
@@ -361,7 +420,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             />
                         </div>
                     </div>
-
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">Picker</label>
                         <div className="col">
@@ -386,16 +444,16 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
                     </div>
-
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-1 col-form-label">Batch No</label>
                         <div className="col-sm-5">
-                            <Select2
-                                options={batchList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
-                                placeholder={"Pick Batch"}
-                                value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(batchId))}
-                                handleChange={(e) => onSelectChange(e, "batchId")}
+                            <input
+                                name="batchNo"
+                                value={batch}
+                                type="text"
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                                placeholder=""
                             />
                         </div>
                         <div className="col-sm-1 col-form-label">
@@ -404,6 +462,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                     id="newItemCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
+                                    name="status"
+                                    value={0} checked={status == 0} onChange={(e) => onChange(e)}
                                 />
                             </div>
                             <button className="btn btn-primary ml-4" >
@@ -446,6 +506,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             <RTable bordered style={{ float: 'center', width: "100%" }}>
                                 <thead>
                                     <tr>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NAME</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
@@ -453,21 +515,42 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TOTAL PCS</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>SHIPPING</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DIFF</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {shippingDetails !== undefined &&
-                                        shippingDetails !== null &&
-                                        shippingDetails.map((details, index) => {
+                                    {paginatedDetails !== undefined &&
+                                        paginatedDetails !== null &&
+                                        paginatedDetails.map((details, index) => {
+                                            const actualIndex = startIndex + index + 1;
                                             return (
                                                 <tr key={index}>
-                                                    <td style={{ textAlign: 'center' }}>{details.batchId}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.itemName}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.shippingId}</td> { }
-                                                    <td style={{ textAlign: 'center' }}>{details.diff}</td> { }
+                                                    <td className="text-center">
+                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
+                                                    </td>
+                                                    <td className="text-center">{actualIndex}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <Select2
+                                                            options={batchList}
+                                                            optionValue={(option) => option.id.toString()}
+                                                            optionLabel={(option) => option.code}
+                                                            placeholder={"Pick Batch"}
+                                                            value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(details.batchId))}
+                                                            handleChange={(e) => onSelectChange(e, "batchId")}
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.voucherNo}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.diff}</td>
+                                                    <td className="text-center">
+                                                        <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
+                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             );
                                         })
@@ -475,12 +558,29 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 </tbody>
                             </RTable>
                         </div>
+                        <div style={{ marginTop: "20px" }}></div>
+                        <ul className="pagination" style={{ marginLeft: "15px" }}>
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+                            </li>
+                        </ul>
                     </Tab>
+
                     <Tab eventKey="BillingDetail" title={<span><FaSitemap style={tabIconStyle} />Item Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <RTable bordered style={{ float: 'center', width: "100%" }}>
                                 <thead>
                                     <tr>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
@@ -490,67 +590,97 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLET</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATION</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REMARK</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <input
-                                                type="text"
-                                                value={qty}
-                                                placeholder="Enter QTY"
-                                                onChange={(e) => onChange(e)}
-                                                style={{
-                                                    textAlign: "center",
-                                                    color: "rgba(0, 0, 0, 0.3)",
-                                                    border: "1px solid rgba(0, 0, 0, 0.3)",
-                                                    borderRadius: "5px",
-                                                    fontSize: "14px"
-                                                }}
-                                            />
-                                        </td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}></td>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <Select2
-                                                options={palletList}
-                                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                                placeholder={"Pick Pallet"}
-                                                value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(palletId))}
-                                                handleChange={(e) => onSelectChange(e, "palletId")}
-                                            />
-                                        </td>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <Select2
-                                                options={locationList}
-                                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                                placeholder={"Pick Location"}
-                                                value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(locationId))}
-                                                handleChange={(e) => onSelectChange(e, "locationId")} />
-                                        </td>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <input
-                                                type="text"
-                                                value={remark}
-                                                placeholder="Remark"
-                                                onChange={(e) => onChange(e)}
-                                                style={{
-                                                    textAlign: "center",
-                                                    color: "rgba(0, 0, 0, 0.3)",
-                                                    border: "1px solid rgba(0, 0, 0, 0.3)",
-                                                    borderRadius: "5px",
-                                                    fontSize: "14px"
-                                                }}
-                                            />
-                                        </td>
-                                    </tr>
+                                    {paginatedDetails !== undefined &&
+                                        paginatedDetails !== null &&
+                                        paginatedDetails.map((details, index) => {
+                                            const actualIndex = startIndex + index + 1;
+                                            return (
+                                                <tr>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>{actualIndex}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <Select2
+                                                            options={batchList}
+                                                            optionValue={(option) => option.id.toString()}
+                                                            optionLabel={(option) => option.code}
+                                                            placeholder={"Pick Batch"}
+                                                            value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(details.batchId))}
+                                                            handleChange={(e) => onSelectChange(e, "batchId")}
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.itemName}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.uom}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <Select2
+                                                            options={palletList}
+                                                            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                                            placeholder={"Pick Pallet"}
+                                                            value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(details.palletId))}
+                                                            handleChange={(e) => onSelectChange(e, "palletId")}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <Select2
+                                                            options={locationList}
+                                                            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                                            placeholder={"Pick Location"}
+                                                            value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
+                                                            handleChange={(e) => onSelectChange(e, "locationId")} />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={remark}
+                                                            placeholder="Remark"
+                                                            onChange={(e) => onChange(e)}
+                                                            style={{
+                                                                width: "70px",
+                                                                textAlign: "center",
+                                                                color: "rgba(0, 0, 0, 0.3)",
+                                                                border: "1px solid rgba(0, 0, 0, 0.3)",
+                                                                borderRadius: "5px",
+                                                                fontSize: "14px"
+                                                            }}
+                                                        />
+                                                    </td>
+                                                    <td className="text-center">
+                                                        <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
+                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    }
                                 </tbody>
                             </RTable>
                         </div>
+                        <div style={{ marginTop: "20px" }}></div>
+                        <ul className="pagination" style={{ marginLeft: "15px" }}>
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
+                            </li>
+                            {pageNumbers.map((pageNumber) => (
+                                <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+                            </li>
+                        </ul>
                     </Tab>
+
                     <Tab eventKey="DeliveryDetail" title={<span><FaUsers style={tabIconStyle} />Change Logs</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
@@ -569,7 +699,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 <div className="col">
                                     <input
                                         name="dateIn"
-                                        vvalue={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder=""
+                                        value={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")}
+                                        onChange={(e) => onChange(e)}
+                                        type="date"
+                                        placeholder=""
                                         className="form-control text-left"
                                     />
                                 </div>
@@ -600,6 +733,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             </div>
                         </div>
                     </Tab>
+
                     <Tab eventKey="Document" title={<span><FaFile style={tabIconStyle} />Reference Detail</span>}>
                         <div className="form-group col-md-12 col-lg-5 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
@@ -614,7 +748,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         className="form-control text-left"
                                     />
                                 </div>
-                                <div className="col-sm- text-left col-form-label">
+                                <div className="col-sm-0 text-left col-form-label">
                                     <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
                                 </div>
                             </div>
@@ -649,10 +783,11 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
 ShippingForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
+    master: PropTypes.object,
     addData: PropTypes.func,
     editData: PropTypes.func,
-    master: PropTypes.object,
     loadData: PropTypes.func,
+    loadBatch: PropTypes.func,
     loadPallet: PropTypes.func,
     loadLocation: PropTypes.func,
     loadWarehouse: PropTypes.func,

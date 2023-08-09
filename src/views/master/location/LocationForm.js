@@ -14,7 +14,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
     let { id } = useParams();
 
     const navigate = useNavigate();
-    const title = "Add Location";
+    const title = "Location";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/master/location/:id?/:location";
     const url = "Location";

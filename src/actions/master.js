@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION  } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -181,7 +181,8 @@ export const loadCustomer = () => async (dispatch) => {
 //Load Pallet
 export const loadPallet = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Pallet`);
+    // const res = await axios.get(`/Pallet`);
+    const res = await axios.get(`/Pallet?limit=0&page=0`);
     dispatch({
       type: LOAD_PALLET,
       payload: res.data,
@@ -213,7 +214,7 @@ export const loadLocation = () => async (dispatch) => {
 //Load Batch
 export const loadBatch = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Batch?limit=10&page=0`);
+    const res = await axios.get(`/Batch?limit=0&page=0`);
     dispatch({
       type: LOAD_BATCH,
       payload: res.data,
@@ -290,7 +291,7 @@ export const loadOrderDetail = ({ id }) => async (dispatch) => {
 }
 
 //Load oRDER
-export const loadOrder = ( ) => async (dispatch) => {
+export const loadOrder = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Order`);
     dispatch({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaSearch, FaFile, FaPlus, FaTimes } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle, FaSearch, FaFile, FaTrashAlt } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -8,12 +8,13 @@ import PropTypes from "prop-types";
 import { Table as RTable } from "react-bootstrap";
 import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
+import "../style.css";
 import moment from "moment";
 
 const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch }) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const title = "Add Item Adjustment";
+    const title = "Item Adjustment";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/transaction/item-adjustment/:id?/:type";
     const url = "ItemAdjustment";
@@ -29,8 +30,9 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         postDate: "",
         vendor: "",
         warehouse: "",
-        batch: "",
+        batchNo: "",
         file: "",
+        status: 0,
         itemAdjustmentDetails: []
     });
 
@@ -40,9 +42,9 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     const [locationList, setLocation] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
-    const PAGE_SIZE = 10;
-    const MAX_VISIBLE_PAGES = 5;
+    const [status, setStatus] = useState('');
+    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, batchNo, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
+
     useEffect(() => {
         loadWarehouse();
         loadVendor();
@@ -139,8 +141,9 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     locationId: data.data.locationId,
                     palletId: data.data.palletId,
                     batchId: data.data.batchId,
+                    batchNo: data.data.batchNo,
                     file: data.data.file,
-                    itemAdjustmentDetails: data.data.itemAdjustmentDetails
+                    itemAdjustmentDetails: details
                 });
             }
         }
@@ -153,23 +156,6 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
-    };
-
-    const handleNewRow = (e) => {
-        e.preventDefault();
-        let details = itemAdjustmentDetails;
-        if (details === undefined || details === null) details = [];
-        details.push({
-            checked: false,
-            productID: 0,
-            id: 0,
-            orderId: 0,
-            itemId: 0,
-            qty: 0,
-            voucherNo: "",
-            remark: "",
-        });
-        setFormData({ ...formData, itemAdjustmentDetails: details });
     };
 
     const handleSave = (e) => {
@@ -186,16 +172,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         }
     };
 
-    const handleDelete = (e) => {
+    const handleDelete = (e, index) => {
         e.preventDefault();
+
+        let updatedDetails = [...itemAdjustmentDetails];
+        updatedDetails.splice(index, 1); // Menghapus item pada index yang diberikan
+
+        setFormData({ ...formData, itemAdjustmentDetails: updatedDetails });
+    };
+
+    const onDetailCheck = (e, index) => {
         let details = itemAdjustmentDetails;
         if (details === undefined || details === null) details = [];
-        let newDetail = [];
-        details.map((item) => {
-            if (!item.checked) newDetail.push(item);
-            return null;
-        });
-        setFormData({ ...formData, itemAdjustmentDetails: newDetail });
+
+        let checked = details[index]["checked"];
+        details[index]["checked"] = checked ? false : true;
+
+        setFormData({ ...formData, itemAdjustmentDetails: details });
     };
 
     const tabIconStyle = {
@@ -217,10 +210,13 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         return batch ? batch.code : "Unknown Batch";
     };
 
-    const paginateData = (data, pageNumber, pageSize) => {
-        const startIndex = (pageNumber - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        return data.slice(startIndex, endIndex);
+    const PAGE_SIZE = 10;
+    const MAX_VISIBLE_PAGES = 5;
+
+    const getPaginatedDetails = () => {
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
+        const endIndex = startIndex + PAGE_SIZE;
+        return itemAdjustmentDetails.slice(startIndex, endIndex);
     };
 
     const handlePageChange = (pageNumber) => {
@@ -250,10 +246,11 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     };
 
     const totalPages = Math.ceil(itemAdjustmentDetails.length / PAGE_SIZE);
-    const pageNumbers = getPageNumbers();
 
     const element = () => {
-        const paginatedDetails = paginateData(itemAdjustmentDetails, currentPage, PAGE_SIZE);
+        const paginatedDetails = getPaginatedDetails();
+        const pageNumbers = getPageNumbers();
+        const startIndex = (currentPage - 1) * PAGE_SIZE;
         return (
             <div className="detail">
                 <div className="subTitle">
@@ -367,12 +364,14 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-1 col-form-label">Batch No</label>
                         <div className="col-sm-5">
-                            <Select2
-                                options={batchList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
-                                placeholder={"Pick Batch"}
-                                value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(batchId))}
-                                handleChange={(e) => onSelectChange(e, "bacthId")} />
+                            <input
+                                name="batchNo"
+                                value={batchNo}
+                                type="text"
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                                placeholder=""
+                            />
                         </div>
                         <div className="input-group-append col-sm-1 col-form-label">
                             <button className="btn btn-primary" >
@@ -385,6 +384,8 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                     id="newItemCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
+                                    name="status"
+                                    value={0} checked={status == 0} onChange={(e) => onChange(e)}
                                 />
                                 <label
                                     className="form-check-label"
@@ -420,21 +421,14 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
                 <hr style={{ borderColor: "gray", opacity: 0.5, marginTop: "50px" }} />
 
-                <div className="d-flex justify-content-end mb-2 mr-3">
-                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
-                        <FaPlus className="mr-2" /> <span>Add</span>
-                    </button>
-                    <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>
-                        <FaTimes className="mr-2" /> <span>Delete</span>
-                    </button>
-                </div>
-
                 <div style={{ marginTop: "20px" }}></div>
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
                             <tr>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>STOCK</th>
@@ -443,34 +437,43 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLET</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATION</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REMARK</th>
+                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {paginatedDetails.map((details, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
-                                        <td style={{ textAlign: 'center' }}>{details.itemName}</td>
-                                        <td style={{ textAlign: 'center' }}>{details.stock}</td>
-                                        <td style={{ textAlign: 'center' }}>{details.qty}</td>
-                                        <td style={{ textAlign: 'center' }}>{details.uom}</td>
-                                        <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
-                                        <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
-                                        <td style={{ textAlign: 'center' }}>{details.remark}</td>
-                                    </tr>
-                                );
-                            })}
-
+                            {paginatedDetails !== undefined &&
+                                paginatedDetails !== null &&
+                                paginatedDetails.map((details, index) => {
+                                    const actualIndex = startIndex + index + 1;
+                                    return (
+                                        <tr key={index}>
+                                            <td className="text-center">
+                                                <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
+                                            </td>
+                                            <td className="text-center">{actualIndex}</td>
+                                            <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.stock}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.uom}</td>
+                                            <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                            <td className="text-center">
+                                                <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
+                                                    <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                         </tbody>
-
                     </RTable>
-
                 </div>
-
                 <div style={{ marginTop: "20px" }}></div>
                 <ul className="pagination" style={{ marginLeft: "15px" }}>
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Sebelumnya</button>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
                     </li>
                     {pageNumbers.map((pageNumber) => (
                         <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
@@ -478,7 +481,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         </li>
                     ))}
                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Berikutnya</button>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
                     </li>
                 </ul>
             </div>
