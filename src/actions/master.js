@@ -259,13 +259,14 @@ export const loadShippingDetail = ({ id }) => async (dispatch) => {
   }
 }
 
-export const loadproduction = ({ id }) => async (dispatch) => {
+export const loadproduction = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Production/${id}`);
+    const res = await axios.get(`/Production`);
     dispatch({
       type: LOAD_PRODUCTION,
       payload: res.data,
     });
+    
   } catch (err) {
     let errMessage = "";
     if (err.message) errMessage = err.message;

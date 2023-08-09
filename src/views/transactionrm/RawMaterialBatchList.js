@@ -15,14 +15,14 @@ const RawMaterialBatchList = ({ user, data, refreshData, deleteData, exportData,
   const role = "transaction -RawMaterialBatchList";
 
   const columns = [
-    { label: "CODE", key: "code", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "CODE", key: "code", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "Item#", key: "itemId", label: "itemCode", width: 100, cardTitle: true },
-    { label: "Item", key: "itemId", label: "itemName", width: 80, align: "right", cardSubTitle: true },
-    { label: "Status", key: "status", width: 80, type: "custom", align: "right", cardSubTitle: true },
-    { label: "INITIAL", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "BALANCE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "Item", key: "itemId", label: "itemName", width: 80, align: "left", cardSubTitle: true },
+    { label: "Status", key: "status", width: 80, type: "custom", align: "left", cardSubTitle: true },
+    { label: "INITIAL", key: "initial", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "BALANCE", key: "balance", width: 80, type: "number", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";

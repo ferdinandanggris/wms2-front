@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
-import { loadVendor } from "../../../actions/master";
+import { loadUom, loadUser, loadVendor } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
-const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVendor, master }) => {
+const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVendor, loadUser, master }) => {
   const title = "Reciving List";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/transaction/receiving";
@@ -34,7 +34,8 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
       refreshData({ url });
     }
     loadVendor();
-  }, [user, refreshData, loadVendor]);
+    loadUser();
+  }, [user, refreshData, loadVendor,loadUser]);
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "status") {
@@ -51,6 +52,15 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
           return "";
         }
       }
+    } else if (col.key === "userIn") {
+      if (master.user !== null && master.user !== undefined) {
+        if(value) {
+          const tempUser = master.user.find((obj) => obj.id === value);
+          return tempUser.fullName;
+        } else {
+          return "";
+        }
+      }
     };
   }
 
@@ -63,6 +73,7 @@ RecivingList.propTypes = {
   data: PropTypes.object,
   refreshData: PropTypes.func,
   loadVendor: PropTypes.func,
+  loadUser:PropTypes.func,
   deleteData: PropTypes.func,
   exportData: PropTypes.func,
   master: PropTypes.object,
@@ -74,4 +85,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadVendor })(RecivingList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadVendor, loadUser })(RecivingList);
