@@ -9,13 +9,13 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadCategory, loadLocation, loadPallet, loadVendor, loadWarehouse } from "../../../actions/master";
+import { loadCategory, loadLocation, loadPallet, loadVendor, loadWarehouse,loadproduction } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
 
-const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation }) => {
+const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse,loadproduction, loadVendor,loadCategory,loadPallet,loadLocation }) => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
@@ -54,6 +54,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const[locationlist,setlocation] = useState([]);
    const[palletList,setpallet]=useState([]);
   const [vendorList, setVendor] = useState([]);
+  const[productionList, setproduction] = useState([]);
   const[tempbatchno,settempbatchno]=useState(0);
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
@@ -89,16 +90,17 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       }
     }
   }, [id, data, setFormData]);
-
+console.log(master)
   useEffect(() => {
     loadWarehouse();
     loadVendor();
     loadCategory();
     loadLocation();
     loadPallet();
+    loadproduction();
     
     if (user !== null && id !== undefined) loadData({ url, id });
-  }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation]);
+  }, [id, user, loadData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation,loadproduction]);
 
   useEffect(() => {
     if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -125,6 +127,18 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
         list.sort((a, b) => (a.id > b.id ? 1 : -1));
       }
       setlocation(list);
+    }
+    if (master.production !== undefined && master.production !== null) {
+      let list = [...master.production];
+      const obj = list.find((obj) => obj.id === 0);
+      if (obj === undefined || obj === null) {
+        list.push({
+          name: "No production",
+          id: 0,
+        });
+        list.sort((a, b) => (a.id > b.id ? 1 : -1));
+      }
+      setproduction(list);
     }
     if (master.pallet !== undefined && master.pallet !== null) {
       let list = [...master.pallet];
@@ -201,20 +215,21 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     if (details === undefined || details === null) details = [];
 
     details.push({
-        id: 0,
-        itemConsumptionId: 0,
-        voucherNo: "",
-        batchId:0,
-        itemId: 0,
-        remark: "",
-        qty: 0,
-        dateIn:0,
-        dateUp: 0,
-        userIn: "",
-        userUp:"",
-        itemName: "",
-        uom: "",
-        totalPcs: 0
+      id: 0,
+      receivingId:0,
+      voucherNo: "",
+      locationId: 0,
+      palletId: 0,
+      batchId: 0,
+      itemId: 0,
+      remark: "",
+      qty: 0,
+      dateIn: 0,
+      dateUp: 0,
+      userIn: "",
+      userUp: "",
+      itemName: "",
+      uom: ""
     });
     setFormData({ ...formData, receivingDetails: details });
 };
@@ -281,12 +296,12 @@ const handleDelete = (e) => {
           <div className="row align-items-center mb-3">
             <label className="col-sm-2 col-form-label">Production Order</label>
             <div className="col-sm-3">
-              <select className="form-control" name="productionNo" value={productionNo} onChange={(e) => onChange(e)}>
-                <option value="">** Please select</option>
-                <option value="1">Type 1</option>
-                <option value="2">Type 2</option>
-                <option value="3">Type 3</option>
-              </select>
+            <Select2
+                options={productionList}
+                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.voucherNo}
+                placeholder={"Pick Production order"}
+                value={productionList === null ? null : productionList.filter((option) => option.id === parseInt(productionNo))}
+                handleChange={(e) => onSelectChange(e, "productionNo")} />
             </div>
             <label className="col-sm-1 col-form-label">
               Vendor<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
@@ -417,8 +432,9 @@ ReceivingForm.propTypes = {
   loadWarehouse: PropTypes.func,
   loadVendor: PropTypes.func,
   loadCategory: PropTypes.func,
-  loadPallet:propTypes.func,
-  loadLocation:propTypes.func,
+  loadPallet:PropTypes.func,
+  loadLocation:PropTypes.func,
+  loadproduction:PropTypes.func,
   editData: PropTypes.func,
   master: PropTypes.object,
 };
@@ -429,4 +445,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation })(ReceivingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadCategory,loadPallet,loadLocation,loadproduction })(ReceivingForm);

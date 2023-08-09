@@ -6,6 +6,7 @@ import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,F
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loadItem } from "../../actions/master";
+import ListTransaction from "../../views/master/customComponent/listTransaction";
 
 import { loadData, addData, editData } from "../../actions/data";
 import FormWrapper from "../../components/Wrapper/FormWrapper";
@@ -45,10 +46,36 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
     dateUp: 0,
     userIn:"",
     userUp: "",
+    item: {
+        id: 0,
+        code: "",
+        itemId: 0,
+        status: "",
+        expired: 0,
+        initial: 0,
+        incoming: 0,
+        outgoing: 0,
+        balance: 0,
+       exclusive:"",
+      category: "",
+      type: "",
+      qtyPerPacking: 0,
+      isActive: true,
+      dateIn: 0,
+      dateUp: 0,
+      userIn: "",
+      userUp: "",
+      spWarehouseDetails: [],
+      spLocationDetails:[],
+      spPalletDetails: [],
+      batches: [],
+      itemGroupDetails: [],
+      uom: []
+    }
 
     });
     const [itemList, setItem] = useState([]);
-    const { name, type, isActive,status, itemConsumptionDetails, code, businessEntity,itemId,expired,initial,incoming,outgoing,balance,color,qty,visual,qc,number,description,transDate,dateIn,dateUp,userIn,userUp } = formData;
+    const { name, type,item, isActive,status, code, businessEntity,itemId,expired,initial,incoming,outgoing,balance,color,qty,visual,qc,number,description,transDate,dateIn,dateUp,userIn,userUp } = formData;
 
     useEffect(() => {
         loadItem();
@@ -74,6 +101,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
+                console.log('output', data.data)
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
@@ -95,7 +123,33 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
                     dateUp:data.data.dateUp,
                     userIn:data.data.userIn,
                     userUp:data.data.userUp,
-                    itemConsumptionDetails:data.data.itemConsumptionDetails,
+                    item : {
+                      id: data.data.item.id,
+                      code: data.data.item.code,
+                      itemId: data.data.item.itemId,
+                      status: data.data.item.state,
+                      expired:data.data.item.expired,
+                      initial:data.data.item.initial,
+                      incoming:data.data.item.incoming,
+                      outgoing:data.data.item.outgoing,
+                      balance:data.data.item.balance,
+                      exclusive:data.data.item.exclusive,
+                      category: data.data.item.category,
+                      type: data.data.item.type,
+                      qtyPerPacking: data.data.item.qtyPerPacking,
+                      isActive: data.data.item.isActive,
+                      dateIn:data.data.item.dateIn,
+                      dateUp:data.data.item.dateUp,
+                      userIn:data.data.item.userIn,
+                      userUp:data.data.item.userUp,
+                      spWarehouseDetails: data.data.item.spWarehouseDetails,
+                      spLocationDetails:data.data.item.spLocationDetails,
+                      spPalletDetails: data.data.item.spPalletDetails,
+                      batches: data.data.item.batches,
+                      itemGroupDetails: data.data.item.itemGroupDetails,
+                      uom: data.data.item.uom,
+
+                    }
 
                 });
             }
@@ -131,7 +185,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
     };
     const handleNewRow = (e) => {
       e.preventDefault();
-      let details = data.data. itemConsumptionDetails;
+      let details = data.data.item;
       if (details === undefined || details === null) details = [];
 
       details.push({
@@ -150,13 +204,13 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
           uom: "",
           totalPcs: 0
       });
-      setFormData({ ...formData, itemConsumptionDetails: details });
+      setFormData({ ...formData, item: details });
   };
 
   const handleDelete = (e) => {
       e.preventDefault();
 
-      let details =itemConsumptionDetails;
+      let details =item;
       if (details === undefined || details === null) details = [];
 
       let newDetail = [];
@@ -166,7 +220,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
           return null;
       });
 
-      setFormData({ ...formData,itemConsumptionDetails: newDetail });
+      setFormData({ ...formData,item: newDetail });
   };
     const element = () => {
         return (
@@ -261,9 +315,12 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadIte
          />
         </div>
       </div>
-                </div>
-                
+     </div>
+     <div className="mt-5">
+    <ListTransaction id={id} listType="RawMaterialBatch" formData={formData} />
+     </div>
             </div>
+            
 
         );
 

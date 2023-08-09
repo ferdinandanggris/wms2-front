@@ -11,15 +11,14 @@ const ProductionList = ({ user, data, refreshData, deleteData, exportData }) => 
   const title = "Production List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/transaction/production";
-  const url = "Item";
+  const url = "Production";
   const role = "transaction-ProductionList";
 
   const columns = [
-    { label: "VOUCHER #", key: "code", width: 100, cardTitle: true },
-    { label: "RECEIVING DATE", key: "uomId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY ", key: "qtyPerPacking", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "LINE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "maxTemp", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "VOUCHER #", key: "voucherNo", width: 100, cardTitle: true },
+    { label: "RECEIVING DATE", key: "receivingDate", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "CREATED BY ", key: "createdBy", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "number", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";

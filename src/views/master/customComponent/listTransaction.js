@@ -37,6 +37,7 @@ const ListTransaction = (props) => {
 
   async function fetchData(page, limit) {
     try {
+      console.log(listType)
       const res = await axios.get(`/${listType}/transaction/${id}?page=${page}&limit=${limit}`);
       return res.data;
     } catch (err) {
