@@ -39,16 +39,11 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     category: "",
     type: "",
     qtyPerPacking: 0,
-    isActive: 1,
-    dateIn: "",
-    dateUp: "",
+    isActive: true,
+    dateIn: null,
+    dateUp:null,
     userIn: "",
-    userUp: "",
-    spWarehouseDetails: [],
-    spLocationDetails: [],
-    spPalletDetails: [],
-    batches: [],
-    uom: {}
+    userUp: ""
   });
 
   const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails,spLocationDetails, 
@@ -143,9 +138,6 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     }
     
   }
-  console.log(formData, 'formdata')
-  console.log(master, 'master')
-
   const element = () => {
     return (
       <div className="detail">
@@ -175,6 +167,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 optionValue={(option) => option.id.toString()}
                 optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
+                required
                 value={master.uom === null ? null : master.uom?.filter((option) =>
                   option.id === formData.uomId
                 )}
@@ -191,6 +184,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 optionValue={(option) => option.id.toString()}
                 optionLabel={(option) => option.name}
                 placeholder={"** Please select"}
+                required
                 value={master.packing === null ? null : master.packing?.filter((option) =>
                   option.id === formData.packingId
                 )}

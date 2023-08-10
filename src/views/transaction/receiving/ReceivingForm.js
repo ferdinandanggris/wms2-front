@@ -379,6 +379,7 @@ const handleDelete = (e) => {
     receivingDetails !== null &&
     receivingDetails.map((details, index) => {
       const location = locationlist.find((obj) => obj.id === details.locationId);
+      console.log(details.locationId)
       const pallet = palletList.find((obj) => obj.id === details.palletId);
       return (
         <tr key={index}>

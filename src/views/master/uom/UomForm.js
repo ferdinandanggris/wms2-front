@@ -24,7 +24,7 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
   const [formData, setFormData] = useState({
     id: 0,
     name: "",
-    action: "Kali"
+    action: ""
   });
 
   const { name, action } = formData;
@@ -85,9 +85,9 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
             </div>
           </div>
           <div className="row form-group align-items-center">
-            <label className="col-sm-2 col-form-label">Action</label>
+            <label className="col-sm-2 col-form-label">Action <span className="required-star">*</span></label>
             <div className="col-sm-10">
-              <Select2 options={actionList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Action"} value={actionList === null ? null : actionList.filter((option) => option.id === action)} handleChange={(e) => onSelectChange(e, 'action')} isDisabled={false} />
+              <Select2 options={actionList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Action"} value={actionList === null ? null : actionList.filter((option) => option.id === action)} handleChange={(e) => onSelectChange(e, 'action')} isDisabled={false} required/>
             </div>
           </div>
         </div>

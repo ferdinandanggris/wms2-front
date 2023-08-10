@@ -29,7 +29,7 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
   });
 
   const { code, name, type, isActive } = formData;
-
+  const [selectedType, setSelectedType] = useState('');
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
   }, [id, user, loadData]);
@@ -51,8 +51,13 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
 
   const onChange = (e) => {
     e.preventDefault();
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === 'type') {
+      setSelectedType(e.target.value);
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
+  
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -89,20 +94,22 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
           </div>
 
           <div className="row form-group align-items-center">
-            <label className="col-sm-2 col-form-label">
-              Type <span className="required-star">*</span>
-            </label>
-            <div className="col-sm-10">
-              <select
-                class="form-control"
-                name="type"
-                onChange={(e) => onChange(e)}
-                value={type}
-              >
-                <option value="finish goods">Finish Goods</option>
-                <option value="raw material">Raw Material</option>
-              </select>
-            </div>
+          <label className="col-sm-2 col-form-label">
+            Type <span className="required-star">*</span>
+          </label>
+          <div className="col-sm-10">
+            <select
+              className="form-control"
+              name="type"
+              onChange={(e) => onChange(e)}
+              required
+              value={selectedType}
+            >
+              <option value="" disabled>Select an option</option>
+              <option value="finish goods">Finish Goods</option>
+              <option value="raw material">Raw Material</option>
+            </select>
+          </div>
           </div>
 
           <div className="row form-group align-items-center">

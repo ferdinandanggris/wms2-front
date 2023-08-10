@@ -3,7 +3,7 @@ import Select from "react-select";
 
 
 
-const Select2 = ({ options, className, placeholder, optionLabel, optionValue, value, handleChange, required, isDisabled, maxLength }) => {
+const Select2 = ({ options, className,isMulti, placeholder, optionLabel, optionValue, value, handleChange, required, isDisabled, maxLength }) => {
   if (maxLength > 0)
     console.log(maxLength);
 
@@ -46,7 +46,7 @@ const Select2 = ({ options, className, placeholder, optionLabel, optionValue, va
 
   return (
     <Fragment>
-      <Select menuPosition="fixed" options={options} className={className} getOptionValue={optionValue} getOptionLabel={optionLabel} placeholder={placeholder} styles={selectStyle} value={value} onChange={handleChange} isDisabled={isDisabled} maxLength={maxLength} />
+      <Select menuPosition="fixed" isMulti ={isMulti} options={options} className={className} getOptionValue={optionValue} getOptionLabel={optionLabel} placeholder={placeholder} styles={selectStyle} value={value} onChange={handleChange} isDisabled={isDisabled} maxLength={maxLength} />
       {value === undefined ||
         ((value === null || value.length === 0) && required !== false && (
           <input

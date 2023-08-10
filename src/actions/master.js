@@ -53,7 +53,7 @@ export const loadModule = () => async (dispatch) => {
 // Load Warehouse
 export const loadWarehouse = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/warehouse?sort=name`);
+    const res = await axios.get(`/warehouse`);
     dispatch({
       type: LOAD_WAREHOUSE,
       payload: res.data,

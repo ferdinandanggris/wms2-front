@@ -55,7 +55,7 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
     } else if (col.key === "userIn") {
       if (master.user !== null && master.user !== undefined) {
         if(value) {
-          const tempUser = master.user.find((obj) => obj.id === value);
+          const tempUser = master.user.find((obj) => obj.id === value.id);
           return tempUser.fullName;
         } else {
           return "";

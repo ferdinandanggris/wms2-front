@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
-import { loadUom } from "../../../actions/master";
+import { loadUom, loadPacking } from "../../../actions/master";
 
-const RawMaterialList = ({ user, data, refreshData, deleteData, exportData,loadUom, master }) => {
+const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, loadUom, loadPacking, master }) => {
   const title = "Raw Material List";
   const img = <FaLayerGroup className="module-img" />;
   const path =  "/master/raw-material";
@@ -17,10 +17,10 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData,loadU
 
   const columns = [
     { label: "CODE", key: "code", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "Name", key: "name", width: 100, align: "left", cardTitle: true },
+    { label: "Name", key: "name", width: 580, align: "left", cardTitle: true },
     { label: "UOM", key: "uom", width: 80,  align: "left", cardSubTitle: true },
-    { label: "PACKING", key: "packingId", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "QTY PER PACKING", key: "qtyPerPacking", width: 80, type: "number", align: "left", cardSubTitle: true },
+    { label: "PACKING", key: "packingId", width: 80, align: "left", cardSubTitle: true },
+    // { label: "QTY PER PACKING", key: "qtyPerPacking", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "INITIAL", key: "initial", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "left", cardSubTitle: true },
@@ -35,7 +35,8 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData,loadU
       refreshData({ url });
     }
     loadUom();
-  }, [user, refreshData, loadUom]);
+    loadPacking();
+  }, [user, refreshData, loadUom, loadPacking]);
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "isActive") {
@@ -54,6 +55,16 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData,loadU
           return "";
         }
       }
+    }else if (col.key === "packingId") {
+      if (master.packing !== null && master.packing !== undefined) {
+        if(value) {
+          const tempPacking = master.packing.find((obj) => obj.id === value);
+          console.log(tempPacking)
+          return tempPacking.name;
+        } else {
+          return "";
+        }
+      }
     };
   };
 
@@ -66,6 +77,7 @@ RawMaterialList.propTypes = {
   deleteData: PropTypes.func,
   exportData: PropTypes.func,
   loadUom: PropTypes.func,
+  loadPacking:PropTypes.func,
   master: PropTypes.object,
 };
 
@@ -75,4 +87,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData,loadUom })(RawMaterialList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData,loadUom,loadPacking })(RawMaterialList);
