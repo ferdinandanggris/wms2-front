@@ -1,4 +1,4 @@
-import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_UOM, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPING, LOAD_SHIPPINGDETAIL, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION} from "../actions/types";
+import { LOAD_MODULE, LOAD_ROLE, LOAD_USER, LOAD_FLEETTYPE, LOAD_FLEETCATEGORY, LOAD_CATEGORY, LOAD_UOM, LOAD_INDUSTRY, LOAD_CUSTOMER, LOAD_ADDRESS, ORDER_STATUS, LOAD_PRODUCT, LOAD_POOL, LOAD_ITEMTYPE, LOAD_ROUTE, SYNC_DATE, LOAD_DRIVER, LOAD_FLEET, LOAD_OUTSTANDING_SHIPMENT, LOAD_SECTOR, LOAD_LOANTYPE, LOAD_TERMOFPAYMENT, LOAD_READY_ORDER, LOAD_ACCOUNT, LOAD_UNPAID_INVOICE, LOAD_COST_CENTER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPING, LOAD_SHIPPINGDETAIL, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_COUNTRY, LOAD_DISTRICT, LOAD_PROVINCE } from "../actions/types";
 
 const initialState = {
   user: null,
@@ -34,11 +34,14 @@ const initialState = {
   pallet: null,
   location: null,
   batch: null,
-  production:null,
+  production: null,
   shipping: null,
   shippingDetail: null,
   order: null,
   orderDetail: null,
+  country: null,
+  district: null,
+  province: null,
 };
 
 export default function master(state = initialState, action) {
@@ -74,6 +77,12 @@ export default function master(state = initialState, action) {
       return { ...state, orderDetail: payload.data };
     case LOAD_ORDER:
       return { ...state, order: payload.data };
+    case LOAD_COUNTRY:
+      return { ...state, country: payload.data };
+    case LOAD_DISTRICT:
+      return { ...state, district: payload.data };
+    case LOAD_PROVINCE:
+      return { ...state, province: payload.data };
 
     // ICE
     case LOAD_FLEETCATEGORY:
@@ -94,8 +103,8 @@ export default function master(state = initialState, action) {
       return { ...state, address: payload.data };
     case LOAD_PRODUCT:
       return { ...state, product: payload.data };
-      case LOAD_PRODUCTION:
-        return { ...state, production: payload.data };
+    case LOAD_PRODUCTION:
+      return { ...state, production: payload.data };
     case LOAD_TERMOFPAYMENT:
       return { ...state, termOfPayment: payload.data };
     case LOAD_ACCOUNT:

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus, FaCheck, FaCubes } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -17,10 +17,10 @@ import { useDispatch } from "react-redux";
 const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadItem, loadCustomer }) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const title = "Add SPK";
+    const title = "SPK";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/transaction/spk";
-    const url = "order";
+    const url = "Order";
     const role = "Transaction - SPK";
 
     const dispatch = useDispatch();
@@ -42,12 +42,11 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         voucherNo: "",
         referenceNo: "",
         createdBy: "",
-        status: "",
+        status: "Approve",
         truckNo: "",
         expedition: "",
         print: "",
         closedBy: "",
-        warehouse: "",
         orderDetails: []
     });
 
@@ -68,6 +67,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         createdBy,
         truckNo,
         expedition,
+        itemId,
         orderDetails,
     } = formData;
 
@@ -132,13 +132,13 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                     expedition: data.data.expedition,
                     print: data.data.print,
                     closedBy: data.data.closedBy,
-                    warehouse: data.data.warehouse,
+                    itemId: data.data.itemId,
                     orderDetails: data.data.orderDetails,
                 });
             }
         }
     }, [id, data, setFormData]);
-    
+
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -153,7 +153,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                navigate(`${path}/${formData.id}/edit`);
+                // navigate(`${path}/${formData.id}/edit`);
+                navigate(`${path}`);
             });
         } else {
             editData({ url, body: formData }).then(() => {
@@ -412,7 +413,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         setFormData({ ...formData, orderDetails: newDetail });
     };
 
-
+    console.log("ID", id)
 
     const element = () => {
         return (
@@ -427,35 +428,72 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                             Voucher #<span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="voucherNo"
+                                value={voucherNo}
+                                onChange={(e) => onChange(e)}
+                                type="text"
+                                placeholder=""
+                            />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">
                             Reference #  <span className="required" style={{ color: "red", marginLeft: "5px" }}>*</span>
                         </label>
                         <div className="col">
-                            <input className="form-control text-left" name="reference" value={referenceNo} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="referenceNo"
+                                value={referenceNo}
+                                onChange={(e) => onChange(e)}
+                                type="text"
+                                placeholder=""
+                            />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Created</label>
                         <div className="col">
-                            <input className="form-control text-left" name="created" value={createdBy} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="createdBy" value={createdBy}
+                                onChange={(e) => onChange(e)}
+                                type="text"
+                                placeholder="" />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="transdate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="transDate"
+                                value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")}
+                                onChange={(e) => onChange(e)}
+                                type="date"
+                                placeholder="" />
                         </div>
                     </div>
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Expedition</label>
                         <div className="col">
-                            <input className="form-control text-left" name="expedition" value={expedition} onChange={(e) => onChange(e)} type="text" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="expedition"
+                                value={expedition}
+                                onChange={(e) => onChange(e)}
+                                type="text"
+                                placeholder="" />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Shipping Date</label>
                         <div className="col">
-                            <input className="form-control text-left" name="shippingdate" value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="shippingDate"
+                                value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")}
+                                onChange={(e) => onChange(e)}
+                                type="date"
+                                placeholder="" />
                         </div>
                     </div>
 
@@ -471,7 +509,13 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Truck No</label>
                         <div className="col">
-                            <input className="form-control text-right" name="truckno" value={truckNo} onChange={(e) => onChange(e)} type="number" placeholder="" />
+                            <input
+                                className="form-control text-left"
+                                name="truckNo"
+                                value={truckNo}
+                                onChange={(e) => onChange(e)}
+                                type="text"
+                                placeholder="" />
                         </div>
                     </div>
 
@@ -485,14 +529,55 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Warehouse"}
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                                handleChange={(e) => onSelectChange(e, "warehouseId")}
+                            />
                         </div>
                     </div>
+
+                    <div style={{ marginTop: "30px" }}></div>
+                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+
+                    <div className="row align-items-center mt-4 mb-4">
+                        <label className="col-sm-2 col-form-label">Item No</label>
+                        <div className="col-sm-4">
+                            <Select2
+                                options={itemList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Item"}
+                                value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
+                                handleChange={(e) => onSelectChange(e, "itemId")}
+                            />
+                        </div>
+                        <div className="col-sm-1 col-form-label">
+                            <button className="btn btn-primary ml-4" >
+                                <FaCheck /> Select
+                            </button>
+                        </div>
+                        <div className="col-sm-1 col-form-label">
+                            <button className="btn btn-primary ml-5" >
+                                <FaCubes /> Select
+                            </button>
+                        </div>
+                        <div className="col-sm-0" style={{ marginLeft: "70px" }}>
+                            <div className="form-check">
+                                <input
+                                    id="newItemCheckbox"
+                                    type="checkbox"
+                                    className="form-check-input"
+                                />
+                                <label className="form-check-label" htmlFor="newItemCheckbox">
+                                    New Item
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+                    <div style={{ marginBottom: "40px" }}></div>
                 </div>
-                <hr style={{ borderColor: "gray", opacity: 0.5 }} />
 
                 <div className="d-flex justify-content-end mb-2">
-                    <button className="btn btn-primary mr-2" onClick={(e) => handleNewRow(e)}>
+                    <button className="btn btn-primary mr-3" onClick={(e) => handleNewRow(e)}>
                         <FaPlus className="mr-2" /> <span>Add</span>
                     </button>
                     <button className="btn btn-delete" onClick={(e) => handleDelete(e)}>

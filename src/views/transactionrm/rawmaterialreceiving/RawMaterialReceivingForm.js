@@ -17,7 +17,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
     const navigate = useNavigate();
     const title = "Raw Material Receiving";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction-rm/raw-material-receiving/:id?/:type";
+    const path = "/transaction-rm/raw-material-receiving";
     const url = "RawMaterialReceiving";
     const role = "Transaction - Raw Material Receiving";
 
@@ -25,20 +25,20 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         id: 0,
         voucherNo: "",
         referenceNo: "",
-        status: 0,
-        transDate: "",
-        postDate: "",
+        status: "Approve",
+        transDate: null,
+        postDate: null,
         createdBy: "",
         postedBy: "",
-        vendorId: "",
-        warehouseId: "",
-        dateIn: "",
-        dateUp: "",
+        vendorId: 0,
+        warehouseId: 0,
+        dateIn: null,
+        dateUp: null,
         userIn: "",
         userUp: "",
         batchNo: "",
-        palletId: "",
-        locationId: "",
+        palletId: 0,
+        locationId: 0,
         batchNo: "",
         batch: "",
         rawMaterialReceivingDetails: []
@@ -52,7 +52,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
     const [batchList, setBatch] = useState([]);
     const dispatch = useDispatch();
 
-    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, rawMaterialReceivingDetails} = formData;
+    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, rawMaterialReceivingDetails } = formData;
 
     useEffect(() => {
         loadVendor();
@@ -230,16 +230,19 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 className="form-control text-left"
                                 name="voucherNo"
                                 value={voucherNo}
+                                type="text"
                                 onChange={(e) => onChange(e)}
-                                type="text" />
+                            />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Reference#</label>
                         <div className="col-sm-3 ">
                             <input
-                                className="form-control text-left" name="referenceNo"
+                                className="form-control text-left"
+                                name="referenceNo"
                                 value={referenceNo}
                                 onChange={(e) => onChange(e)}
-                                type="text" />
+                                type="text"
+                            />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
@@ -250,7 +253,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 name="createdBy"
                                 value={createdBy}
                                 onChange={(e) => onChange(e)}
-                                type="text" />
+                                type="text"
+                            />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
                         <div className="col-sm-3">
@@ -260,7 +264,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")}
                                 onChange={(e) => onChange(e)}
                                 type="date"
-                                placeholder="" />
+                                placeholder=""
+                            />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
@@ -271,7 +276,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 name="postedBy"
                                 value={postedBy}
                                 onChange={(e) => onChange(e)}
-                                type="text" />
+                                type="text"
+                            />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
                         <div className="col-sm-3">
@@ -281,7 +287,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
                                 onChange={(e) => onChange(e)}
                                 type="date"
-                                placeholder="" />
+                                placeholder=""
+                            />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
@@ -313,7 +320,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 type="text"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder="" />
+                                placeholder=""
+                            />
                         </div>
                         <div className="col-sm-2 col-form-label">
                             <div className="form-check">
@@ -322,7 +330,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                     type="checkbox"
                                     className="form-check-input"
                                     name="status"
-                                    value={0} checked={status == 0} onChange={(e) => onChange(e)}
+                                    value={0} checked={status == 0}
+                                    onChange={(e) => onChange(e)}
                                 />
                             </div>
                             <button className="btn btn-primary ml-4" >

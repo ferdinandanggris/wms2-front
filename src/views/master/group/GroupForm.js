@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import { FaLayerGroup } from "react-icons/fa";
-
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
 
 import { loadWarehouse } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
@@ -132,10 +129,10 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
 GroupForm.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
+  master: PropTypes.object,
   loadData: PropTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
-  master: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

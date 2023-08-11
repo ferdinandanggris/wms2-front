@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { FaLayerGroup, FaInfoCircle, FaPlus, FaTimes } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { loadItem } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
-import { Table as RTable } from "react-bootstrap";
 import moment from "moment";
-import { NumericFormat } from "react-number-format";
 import ListTransaction from "../../master/customComponent/listTransaction";
 
 const BatchNumberForm = ({ user, data, loadData, addData, editData, master, loadItem }) => {
@@ -18,7 +16,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
     const navigate = useNavigate();
     const title = "Add Batch Number";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/batch-number/:id?/:type";
+    const path = "/transaction/batch-number";
     const url = "Batch";
     const role = "Transaction - Batch Number";
     const dispatch = useDispatch();
@@ -29,7 +27,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         id: 0,
         code: "",
         item: "",
-        transDate: "",
+        transDate: null,
         status: "",
         color: "",
         qc: "",
@@ -143,7 +141,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">Code</label>
+                        <label className="col-sm-2 col-form-label">
+                            Code <span className="required-star">*</span>
+                        </label>
                         <div className="col-sm-4">
                             <input
                                 name="code"
@@ -182,7 +182,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                         </div>
                     </div>
                     <div className="row form-group align-items-center">
-                        <label className="col-sm-2 col-form-label">Status</label>
+                        <label className="col-sm-2 col-form-label">
+                            Status <span className="required-star">*</span>
+                        </label>
                         <div className="col-sm-10">
                             <div class="form-check form-check-inline">
                                 <input
@@ -271,48 +273,6 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                 <hr style={{ borderColor: "gray", opacity: 0.5, marginTop: "50px" }} />
 
                 <div style={{ marginTop: "20px" }}></div>
-
-                {/* <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
-                    <RTable bordered style={{ float: 'center', width: "100%" }}>
-                        <thead>
-                            <tr>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NO</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TRANSACTION NO</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DATE</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INITIAL</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>INCOMING</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OUTGOING</th>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {spListTransactions !== undefined &&
-                                spListTransactions !== null &&
-                                spListTransactions.map((details, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td style={{ textAlign: 'center' }}>{details.transactionId}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.transDate}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.initial}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.incoming}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.outgoing}</td> { }
-                                            <td style={{ textAlign: 'center' }}>{details.balance}</td> { }
-                                        </tr>
-                                    );
-                                })
-                            }
-                            <tr>
-                                <td colSpan="4" style={{ textAlign: 'center', fontWeight: 'bold' }}>Total</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalInitial}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalIncoming}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalOutgoing}</td>
-                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{totalBalance}</td>
-                            </tr>
-                        </tbody>
-                    </RTable>
-                </div> */}
 
                 <div className="mt-5">
                     <ListTransaction id={id} listType="location" formData={formData} />

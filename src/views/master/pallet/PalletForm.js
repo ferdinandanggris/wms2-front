@@ -16,7 +16,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
     const navigate = useNavigate();
     const title = "Pallet";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/pallet/:id?/:pallet";
+    const path = "/master/pallet";
     const url = "Pallet";
     const role = "Master - Pallet";
 
@@ -85,7 +85,9 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">Code</label>
+                        <label className="col-sm-2 col-form-label">
+                            Code <span className="required-star">*</span>
+                        </label>
                         <div className="col-sm-4">
                             <input
                                 name="code"
@@ -94,6 +96,7 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder=""
+                                required
                             />
                         </div>
                     </div>

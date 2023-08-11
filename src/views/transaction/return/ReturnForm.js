@@ -5,49 +5,47 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
-import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer } from "../../../actions/master";
+import { Table as RTable, Tab, Tabs} from "react-bootstrap";
+import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadShipping } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import "../style.css";
 import moment from "moment";
 
-const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer }) => {
+const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer, loadShipping }) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const title = "Shipping";
+    const title = "Return";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/shipping/:id?/:type";
-    const url = "Shipping";
-    const role = "Transaction - Shipping";
+    const path = "/transaction/return/:id?/:type";
+    const url = "Return";
+    const role = "Transaction - Return";
 
     const [formData, setFormData] = useState({
         id: 0,
         voucherNo: "",
         referenceNo: "",
-        orderNo: "",
-        status: "Y",
+        status: "Approve",
         transDate: null,
         postDate: null,
+        locationId: 0,
+        palletId: "",
         createdBy: "",
         postedBy: "",
+        remark: "",
         customerId: 0,
         orderId: 0,
-        orderNo: "",
+        shippingNo: "",
         truckNo: "",
         picker: "",
         deliveryOrderNo: "",
         warehouseId: 0,
-        picQc: "",
-        picWarehouse: "",
-        picExpedisi: "",
-        security: "",
-        shippingDate: null,
         dateIn: null,
         dateUp: null,
         userIn: "",
         userUp: "",
+        shipping: "",
         batchNo: "",
-        shippingDetails: [],
+        returnDetails: [],
     });
 
     const [warehouseList, setWarehouse] = useState([]);
@@ -56,9 +54,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const [batchList, setBatch] = useState([]);
     const [customerList, setCustomer] = useState([]);
     const [orderList, setOrder] = useState([]);
+    const [shippingList, setShipping] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState('');
-    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, warehouseId, remark, createdBy, dateIn, postedBy, postDate, shippingDetails, batchNo } = formData;
+    const { voucherNo, referenceNo, transDate, postDate, locationId, palletId, createdBy, postedBy, remark, customerId, orderId, shippingNo, truckNo, picker, deliveryOrderNo, warehouseId, dateIn, dateUp, userIn, userUp, warehouse, customer, location, pallet, shippingId, batchNo, returnDetails } = formData;
 
     useEffect(() => {
         loadWarehouse();
@@ -66,10 +65,11 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         loadPallet();
         loadBatch();
         loadCustomer();
+        loadShipping();
         if (user !== null && id !== undefined) {
             loadData({ url, id });
         }
-    }, [id, user, loadData, loadWarehouse, loadPallet, loadBatch, loadLocation, loadCustomer]);
+    }, [id, user, loadData, loadWarehouse, loadPallet, loadBatch, loadLocation, loadCustomer, loadShipping]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -144,16 +144,26 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             }
             setOrder(list);
         }
+        if (master.shipping !== undefined && master.shipping !== null) {
+            let list = [...master.shipping];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Shipping",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setShipping(list);
+        }
     }, [master]);
 
     useEffect(() => {
         if (data !== undefined && data !== null && id !== undefined) {
             if (data.module !== url) return;
             if (data.data !== undefined && data.data !== null) {
-                let details = data.data.shippingDetails;
+                let details = data.data.returnDetails;
                 if (details === undefined || details === null) details = [];
-                let warehouse = data.data.warehouse;
-                if (warehouse === undefined || warehouse === null) warehouse = [];
                 details.map((item) => {
                     item.checked = false;
                     return null;
@@ -164,43 +174,42 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     referenceNo: data.data.referenceNo,
                     transDate: data.data.transDate,
                     postDate: data.data.postdate,
+                    locationId: data.data.locationId,
+                    palletId: data.data.palletId,
                     createdBy: data.data.createdBy,
                     postedBy: data.data.postedBy,
+                    remark: data.data.remark,
                     customerId: data.data.customerId,
                     orderId: data.data.orderId,
-                    orderNo: data.data.orderNo,
-                    batchNo: data.data.batchNo,
+                    shippingNo: data.data.shippingNo,
                     truckNo: data.data.truckNo,
                     picker: data.data.picker,
                     deliveryOrderNo: data.data.deliveryOrderNo,
                     warehouseId: data.data.warehouseId,
-                    picQc: data.data.picQc,
-                    picWarehouse: data.data.picWarehouse,
-                    picExpedisi: data.data.picExpedisi,
-                    security: data.data.security,
-                    shippingDate: data.data.shippingDate,
                     dateIn: data.data.dateIn,
                     dateUp: data.data.dateUp,
                     userIn: data.data.userIn,
                     userUp: data.data.userUp,
-                    palletId: data.data.palletId,
-                    batchId: data.data.batchId,
-                    locationId: data.data.locationId,
-                    shippingDetails: data.data.shippingDetails,
                     warehouse: data.data.warehouse,
+                    customer: data.data.customer,
+                    location: data.data.location,
+                    pallet: data.data.pallet,
+                    shippingId: data.data.shippingId,
+                    batchNo: data.data.batchNo,
+                    returnDetails: data.data.returnDetails,
                 });
             }
         }
     }, [id, data, setFormData]);
 
     const onDetailCheck = (e, index) => {
-        let details = shippingDetails;
+        let details = returnDetails;
         if (details === undefined || details === null) details = [];
 
         let checked = details[index]["checked"];
         details[index]["checked"] = checked ? false : true;
 
-        setFormData({ ...formData, shippingDetails: details });
+        setFormData({ ...formData, returnDetails: details });
     };
 
     const onChange = (e) => {
@@ -229,57 +238,17 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const handleDelete = (e, index) => {
         e.preventDefault();
 
-        let updatedDetails = [...shippingDetails];
+        let updatedDetails = [...returnDetails];
         updatedDetails.splice(index, 1);
 
-        setFormData({ ...formData, shippingDetails: updatedDetails });
+        setFormData({ ...formData, returnDetails: updatedDetails });
     };
-
-    const PAGE_SIZE = 10;
-    const MAX_VISIBLE_PAGES = 5;
-
-    const getPaginatedDetails = () => {
-        const startIndex = (currentPage - 1) * PAGE_SIZE;
-        const endIndex = startIndex + PAGE_SIZE;
-        return shippingDetails.slice(startIndex, endIndex);
-    };
-
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const getPageNumbers = () => {
-        const totalPages = Math.ceil(shippingDetails.length / PAGE_SIZE);
-        const currentPageIndex = currentPage - 1;
-        const halfMaxVisiblePages = Math.floor(MAX_VISIBLE_PAGES / 2);
-
-        if (totalPages <= MAX_VISIBLE_PAGES) {
-            return [...Array(totalPages).keys()].map((index) => index + 1);
-        }
-
-        if (currentPageIndex < halfMaxVisiblePages) {
-            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => index + 1);
-        }
-
-        if (currentPageIndex >= totalPages - halfMaxVisiblePages) {
-            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => totalPages - MAX_VISIBLE_PAGES + index + 1);
-        }
-
-        const middlePage = currentPageIndex + 1;
-        const startPageIndex = middlePage - halfMaxVisiblePages;
-        return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => startPageIndex + index);
-    };
-
-    const totalPages = Math.ceil(shippingDetails.length / PAGE_SIZE);
 
     const tabIconStyle = {
         marginRight: '5px',
     };
 
     const element = () => {
-        const paginatedDetails = getPaginatedDetails();
-        const pageNumbers = getPageNumbers();
-        const startIndex = (currentPage - 1) * PAGE_SIZE;
         return (
             <div className="detail">
                 <div className="subTitle">
@@ -316,26 +285,25 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">
-                            Orders #<span className="required-star">*</span>
+                            Shipping  #
                         </label>
                         <div className="col">
-                            <input
-                                name="orderNo"
-                                value={orderNo}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
+                            <Select2
+                                options={shippingList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Shipping"}
+                                value={shippingList === null ? null : shippingList.filter((option) => option.id === parseInt(shippingId))}
+                                handleChange={(e) => onSelectChange(e, "shippingId")}
                             />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">
-                            Shipping Date
+                            Truck No
                         </label>
                         <div className="col">
                             <input
-                                name="shippingDate"
-                                value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")}
-                                type="date"
+                                name="truckNo"
+                                value={truckNo}
+                                type="text"
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
@@ -356,69 +324,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">
-                            Truck No
+                            Picker
                         </label>
-                        <div className="col">
-                            <input
-                                name="truckNo"
-                                value={truckNo}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                            />
-                        </div>
-                    </div>
-                    <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">PIC QC</label>
-                        <div className="col">
-                            <input
-                                name="picQc"
-                                value={picQc}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                            />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">PIC Warehouse</label>
-                        <div className="col">
-                            <input
-                                name="picWarehouse"
-                                value={picWarehouse}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                            />
-                        </div>
-                    </div>
-                    <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">PIC Expedisi</label>
-                        <div className="col">
-                            <input
-                                name="picExpedisi"
-                                value={picExpedisi}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                            />
-                        </div>
-                        <label className="col-sm-1 text-left col-form-label">Security</label>
-                        <div className="col">
-                            <input
-                                name="security"
-                                value={security}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                            />
-                        </div>
-                    </div>
-                    <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">Picker</label>
                         <div className="col">
                             <input
                                 name="picker"
@@ -429,16 +336,27 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 className="form-control text-left"
                             />
                         </div>
-                        <label className="col-sm-1 col-form-label">
-                            Warehouse<span className="required-star">*</span>
-                        </label>
-                        <div className="col-sm-5">
+                    </div>
+                    <div className="row align-items-center mb-3">
+                        <label className="col-sm-1 col-form-label">Location</label>
+                        <div className="col">
                             <Select2
-                                options={warehouseList}
+                                options={locationList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                placeholder={"Pick Warehouse"}
-                                value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                                placeholder={"Pick Location"}
+                                value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(locationId))}
+                                handleChange={(e) => onSelectChange(e, "locationId")}
+                            />
+                        </div>
+                        <label className="col-sm-1 text-left col-form-label">Pallet</label>
+                        <div className="col">
+                            <Select2
+                                options={palletList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Pallet"}
+                                value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(palletId))}
+                                handleChange={(e) => onSelectChange(e, "palletId")}
+                            />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
@@ -459,9 +377,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                     id="newItemCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
-                                    name=""
-                                    value=""
-                                // value={0} checked={status == 0} onChange={(e) => onChange(e)}
+                                    name="status"
+                                    value={0} checked={status == 0} onChange={(e) => onChange(e)}
                                 />
                             </div>
                             <button className="btn btn-primary ml-4" >
@@ -480,18 +397,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 </label>
                             </div>
                         </div>
-                        <div className="col-sm-0" style={{ marginLeft: "20px" }}>
-                            <div className="form-check">
-                                <input
-                                    id="newItemCheckbox"
-                                    type="checkbox"
-                                    className="form-check-input"
-                                />
-                                <label className="form-check-label" htmlFor="newItemCheckbox">
-                                    Full Pallet
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -499,7 +404,71 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                 <div style={{ marginTop: "50px" }}></div>
 
                 <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
-                    <Tab eventKey="ContactDetail" title={<span><FaFile style={tabIconStyle} />Order Detail</span>}>
+                    <Tab eventKey="ContactDetail" title={<span><FaFile style={tabIconStyle} />Item Detail</span>}>
+                        <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
+                            <RTable bordered style={{ float: 'center', width: "100%" }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>RETURN</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QC</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>OK</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REJECT</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BALANCE</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>UOM</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REMARK</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WAREHOUSE</th>
+                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {returnDetails !== undefined &&
+                                        returnDetails !== null &&
+                                        returnDetails.map((details, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td className="text-center">
+                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
+                                                    </td>
+                                                    <td className="text-center"></td>
+                                                    <td style={{ textAlign: 'center' }}>{details.batchId}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.itemId}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.return}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.qc}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.ok}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.reject}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.balance}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.uom}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <Select2
+                                                            options={warehouseList}
+                                                            optionValue={(option) => option.id.toString()}
+                                                            optionLabel={(option) => option.code}
+                                                            placeholder={"Pick Warehouse"}
+                                                            value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(details.warehouseId))}
+                                                            handleChange={(e) => onSelectChange(e, "warehouseId")}
+                                                            disabled={true}
+                                                        />
+                                                    </td>
+                                                    <td className="text-center">
+                                                        <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
+                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
+                                    }
+                                </tbody>
+                            </RTable>
+                        </div>
+                    </Tab>
+
+                    <Tab eventKey="BillingDetail" title={<span><FaSitemap style={tabIconStyle} />Item Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <RTable bordered style={{ float: 'center', width: "100%" }}>
                                 <thead>
@@ -509,40 +478,25 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NAME</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PCS</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TOTAL PCS</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>SHIPPING</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>DIFF</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {paginatedDetails !== undefined &&
-                                        paginatedDetails !== null &&
-                                        paginatedDetails.map((details, index) => {
-                                            const actualIndex = startIndex + index + 1;
+                                    {returnDetails !== undefined &&
+                                        returnDetails !== null &&
+                                        returnDetails.map((details, index) => {
                                             return (
-                                                <tr key={index}>
-                                                    <td className="text-center">
+                                                <tr>
+                                                    <td style={{ textAlign: 'center' }}>
                                                         <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
                                                     </td>
-                                                    <td className="text-center">{actualIndex}</td>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <Select2
-                                                            options={batchList}
-                                                            optionValue={(option) => option.id.toString()}
-                                                            optionLabel={(option) => option.code}
-                                                            placeholder={"Pick Batch"}
-                                                            value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(details.batchId))}
-                                                            handleChange={(e) => onSelectChange(e, "batchId")}
-                                                            disabled={true}
-                                                        />
-                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}></td>
+                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.code}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.itemName}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.qty}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.voucherNo}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.shipping}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.diff}</td>
                                                     <td className="text-center">
                                                         <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
@@ -556,127 +510,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 </tbody>
                             </RTable>
                         </div>
-                        <div style={{ marginTop: "20px" }}></div>
-                        <ul className="pagination" style={{ marginLeft: "15px" }}>
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
-                            </li>
-                            {pageNumbers.map((pageNumber) => (
-                                <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
-                                    <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
-                                </li>
-                            ))}
-                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
-                            </li>
-                        </ul>
-                    </Tab>
-
-                    <Tab eventKey="BillingDetail" title={<span><FaSitemap style={tabIconStyle} />Item Detail</span>}>
-                        <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
-                            <RTable bordered style={{ float: 'center', width: "100%" }}>
-                                <thead>
-                                    <tr>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>UOM</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PCS</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>TOTAL PCS</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLET</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATION</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REMARK</th>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {paginatedDetails !== undefined &&
-                                        paginatedDetails !== null &&
-                                        paginatedDetails.map((details, index) => {
-                                            const actualIndex = startIndex + index + 1;
-                                            return (
-                                                <tr>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
-                                                    </td>
-                                                    <td style={{ textAlign: 'center' }}>{actualIndex}</td>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <Select2
-                                                            options={batchList}
-                                                            optionValue={(option) => option.id.toString()}
-                                                            optionLabel={(option) => option.code}
-                                                            placeholder={"Pick Batch"}
-                                                            value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(details.batchId))}
-                                                            handleChange={(e) => onSelectChange(e, "batchId")}
-                                                            disabled={true}
-                                                        />
-                                                    </td>
-                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.itemName}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.uom}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.pcs}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <Select2
-                                                            options={palletList}
-                                                            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                                            placeholder={"Pick Pallet"}
-                                                            value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(details.palletId))}
-                                                            handleChange={(e) => onSelectChange(e, "palletId")}
-                                                        />
-                                                    </td>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <Select2
-                                                            options={locationList}
-                                                            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                                            placeholder={"Pick Location"}
-                                                            value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
-                                                            handleChange={(e) => onSelectChange(e, "locationId")} />
-                                                    </td>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <input
-                                                            type="text"
-                                                            value={remark}
-                                                            placeholder="Remark"
-                                                            onChange={(e) => onChange(e)}
-                                                            style={{
-                                                                width: "70px",
-                                                                textAlign: "center",
-                                                                color: "rgba(0, 0, 0, 0.3)",
-                                                                border: "1px solid rgba(0, 0, 0, 0.3)",
-                                                                borderRadius: "5px",
-                                                                fontSize: "14px"
-                                                            }}
-                                                        />
-                                                    </td>
-                                                    <td className="text-center">
-                                                        <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
-                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
-                                    }
-                                </tbody>
-                            </RTable>
-                        </div>
-                        <div style={{ marginTop: "20px" }}></div>
-                        <ul className="pagination" style={{ marginLeft: "15px" }}>
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
-                            </li>
-                            {pageNumbers.map((pageNumber) => (
-                                <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
-                                    <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
-                                </li>
-                            ))}
-                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
-                            </li>
-                        </ul>
                     </Tab>
 
                     <Tab eventKey="DeliveryDetail" title={<span><FaUsers style={tabIconStyle} />Change Logs</span>}>
@@ -731,43 +564,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             </div>
                         </div>
                     </Tab>
-
-                    <Tab eventKey="Document" title={<span><FaFile style={tabIconStyle} />Reference Detail</span>}>
-                        <div className="form-group col-md-12 col-lg-5 order-1 order-md-2 order-lg-2">
-                            <div className="row align-items-center mb-3">
-                                <label className="col-sm-3 col-form-label">Reference No</label>
-                                <div className="col mr-5">
-                                    <input
-                                        name="referenceNo"
-                                        value={referenceNo}
-                                        type="text"
-                                        placeholder=""
-                                        onChange={(e) => onChange(e)}
-                                        className="form-control text-left"
-                                    />
-                                </div>
-                                <div className="col-sm-0 text-left col-form-label">
-                                    <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group col-md-5 col-lg-5 order-1 order-md-2 order-lg-2">
-                            <RTable bordered style={{ float: 'center', width: "100%" }}>
-                                <thead>
-                                    <tr>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>REFERENCE NO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={{ textAlign: 'center' }}>{formData.referenceNo}</td>
-                                    </tr>
-                                </tbody>
-                            </RTable>
-                        </div>
-                    </Tab>
                 </Tabs>
-            </div>
+            </div >
         );
     };
 
@@ -778,7 +576,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     );
 };
 
-ShippingForm.propTypes = {
+ReturnForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     master: PropTypes.object,
@@ -790,6 +588,7 @@ ShippingForm.propTypes = {
     loadLocation: PropTypes.func,
     loadWarehouse: PropTypes.func,
     loadCustomer: PropTypes.func,
+    loadShipping: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -798,4 +597,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer })(ShippingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadShipping })(ReturnForm);

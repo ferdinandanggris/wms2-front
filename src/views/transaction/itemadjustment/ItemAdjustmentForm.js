@@ -16,7 +16,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     const navigate = useNavigate();
     const title = "Item Adjustment";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/item-adjustment/:id?/:type";
+    const path = "/transaction/item-adjustment";
     const url = "ItemAdjustment";
     const role = "Transaction - Item Adjustment";
 
@@ -25,14 +25,14 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         voucherNo: "",
         referenceNo: "",
         createdBy: "",
-        transDate: "",
+        transDate: null,
         postedBy: "",
-        postDate: "",
+        postDate: null,
         vendor: "",
         warehouse: "",
         batchNo: "",
         file: "",
-        status: 0,
+        status: "Approve",
         itemAdjustmentDetails: []
     });
 
@@ -339,7 +339,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-1 col-form-label">
-                            Vendor<span className="required-star">*</span>
+                            Vendor
                         </label>
                         <div className="col-sm-5">
                             <Select2

@@ -11,7 +11,6 @@ const CustomerForm = lazy(() => import("../../views/master/customer/CustomerForm
 const RawMaterialList = lazy(() => import("../../views/master/rawmaterial/RawMaterialList"));
 const RawMaterialForm = lazy(() => import("../../views/master/rawmaterial/RawMaterialForm"));
 
-
 const LocationList = lazy(() => import("../../views/master/location/LocationList"));
 const LocationForm = lazy(() => import("../../views/master/location/LocationForm"));
 
@@ -44,6 +43,7 @@ const ProductionList = lazy(() => import("../../views/transaction/product/Produc
 const ProductionForm = lazy(() => import("../../views/transaction/product/ProductionForm"));
 const TransactionItemConsumptionList = lazy(() => import("../../views/transaction/transactionitemconsumption/TransactionItemConsumptionList"));
 const TransactionItemConsumptionForm = lazy(() => import("../../views/transaction/transactionitemconsumption/TransactionItemConsumptionForm"));
+
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
 // const RouteList = lazy(() => import("../../views/master/route/RouteList"));
@@ -135,6 +135,8 @@ const SpkList = lazy(() => import("../../views/transaction/spk/SpkList"));
 const SpkForm = lazy(() => import("../../views/transaction/spk/SpkForm"));
 const ShippingList = lazy(() => import("../../views/transaction/shipping/ShippingList"));
 const ShippingForm = lazy(() => import("../../views/transaction/shipping/ShippingForm"));
+const ReturnList = lazy(() => import("../../views/transaction/return/ReturnList"));
+const ReturnForm = lazy(() => import("../../views/transaction/return/ReturnForm"));
 
 //ADMIN
 const UserList = lazy(() => import("../../views/admin/user/UserList"));
@@ -184,6 +186,8 @@ const AdminRoutes = [
   { path: "/transaction/shipping/:id?/:type", element: <ShippingForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/spk", element: <SpkList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/spk/:id?/:type", element: <SpkForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/return", element: <ReturnList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/return/:id?/:type", element: <ReturnForm />, meta: { layout: "full", publicRoute: false } },
 
   { path: "/transaction/production", element: <ProductionList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/production/:id?/:type", element: <ProductionForm />, meta: { layout: "full", publicRoute: false } },

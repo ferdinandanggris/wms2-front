@@ -70,7 +70,7 @@ const ListWrapper = (props) => {
   // Card Show
   const [showCard, setShowCard] = useState(0);
 
-  const { handleDeleteItem, handleRefresh } = props;
+  // const { handleDeleteItem, handleRefresh } = props;
 
   // useEffect(() => {
   //   if (exportedData !== null) {
@@ -441,9 +441,16 @@ const ListWrapper = (props) => {
     } else return value;
   };
 
-  const handleDelete = (e, id) => {
+  const handleDeleteItem = (e, id) => {
     e.preventDefault();
 
+    deleteData({ url, id }).then(() => {
+      refreshData({ url, search, page, limit, sort, filterSearch });
+    });
+  }
+
+  const handleDelete = (e, id) => {
+    e.preventDefault();
     swal({
       title: "Are you sure you want to delete these selected items ?",
       text: "Click OK to confirm",

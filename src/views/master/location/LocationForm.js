@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import ListTransaction from "../customComponent/listTransaction";
 import Select2 from "../../../components/Select2";
-
 import { loadWarehouse, loadGroup } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 
@@ -16,7 +15,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
     const navigate = useNavigate();
     const title = "Location";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/master/location/:id?/:location";
+    const path = "/master/location";
     const url = "Location";
     const role = "Master - Location";
 
@@ -120,7 +119,9 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2 ">
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">Code</label>
+                        <label className="col-sm-2 col-form-label">
+                            Code <span className="required-star">*</span>
+                        </label>
                         <div className="col-sm-4">
                             <input
                                 name="code"
@@ -129,6 +130,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder="Enter Code"
+                                required
                             />
                         </div>
                     </div>
