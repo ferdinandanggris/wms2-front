@@ -16,15 +16,14 @@ const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
 
     const columns = [
         { label: "VOUCHER #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
-        { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CUSTOMER", key: "customerId", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "SPK#", key: "orderId", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED DATE", key: "creatDate", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED DATE", key: "postDate", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CUSTOMER", key: "customerId", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "SPK#", key: "orderId", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CREATED DATE", key: "creatDate", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "POSTED DATE", key: "postDate", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "STATUS", key: "status", width: 40, type: "badge", align: "left", cardSubTitle: true },
     ];
 
     const exportFilename = "Shipping.csv";
@@ -42,12 +41,23 @@ const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
             else
                 return "";
         }
+        else if (col.key == "status") {
+            if (value == "Y")
+                return "Completed";
+            else if (value == "N")
+                return "Incomplete";
+            else if (value == "C")
+                return "Closed";
+            else
+                return "";
+
+        }
     };
 
     return (
         <ListWrapper
             img={img}
-            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}
+            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}
         />
     )
 };

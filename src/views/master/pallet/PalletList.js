@@ -15,9 +15,9 @@ const PalletList = ({ user, data, refreshData, deleteData, exportData }) => {
     const role = "Master - Pallet";
 
     const columns = [
-        { label: "CODE", key: "code", width: 40,  type: "number", align: "left", cardTitle: true },
-        { label: "NAME", key: "name", width: 40, type: "number", align: "left", cardSubTitle: true },
-        { label: "TYPE", key: "type", width: 40, type: "number", align: "center", cardSubTitle: true },
+        { label: "CODE", key: "code", width: 40, align: "left", cardTitle: true },
+        { label: "NAME", key: "name", width: 40, align: "left", cardSubTitle: true },
+        { label: "TYPE", key: "type", width: 40, align: "center", cardSubTitle: true },
         { label: "CAPACITY", key: "capacity", width: 40, type: "number", align: "right", cardSubTitle: true },
         { label: "TARE", key: "tare", width: 40, type: "number", align: "right", cardSubTitle: true },
     ];

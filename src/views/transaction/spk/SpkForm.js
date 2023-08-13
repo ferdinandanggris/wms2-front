@@ -42,7 +42,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         voucherNo: "",
         referenceNo: "",
         createdBy: "",
-        status: "Approve",
+        status: "N",
         truckNo: "",
         expedition: "",
         print: "",
@@ -413,8 +413,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         setFormData({ ...formData, orderDetails: newDetail });
     };
 
-    console.log("ID", id)
-
     const element = () => {
         return (
             <div className="detail">
@@ -434,7 +432,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 value={voucherNo}
                                 onChange={(e) => onChange(e)}
                                 type="text"
-                                placeholder=""
+                                placeholder="[AUTO]"
+                                readOnly
                             />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">
@@ -448,6 +447,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 onChange={(e) => onChange(e)}
                                 type="text"
                                 placeholder=""
+                                required
                             />
                         </div>
                     </div>
@@ -460,7 +460,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 name="createdBy" value={createdBy}
                                 onChange={(e) => onChange(e)}
                                 type="text"
-                                placeholder="" />
+                                placeholder=""
+                                readOnly />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
                         <div className="col">
@@ -470,7 +471,8 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")}
                                 onChange={(e) => onChange(e)}
                                 type="date"
-                                placeholder="" />
+                                placeholder=""
+                                readOnly />
                         </div>
                     </div>
 
@@ -530,14 +532,15 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 placeholder={"Pick Warehouse"}
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
                                 handleChange={(e) => onSelectChange(e, "warehouseId")}
+                                required={true}
                             />
                         </div>
                     </div>
 
                     <div style={{ marginTop: "30px" }}></div>
-                    <hr style={{ borderColor: "gray", opacity: 0.5 }} />
+                    {/* <hr style={{ borderColor: "gray", opacity: 0.5 }} /> */}
 
-                    <div className="row align-items-center mt-4 mb-4">
+                    {/* <div className="row align-items-center mt-4 mb-4">
                         <label className="col-sm-2 col-form-label">Item No</label>
                         <div className="col-sm-4">
                             <Select2
@@ -570,10 +573,10 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <hr style={{ borderColor: "gray", opacity: 0.5 }} />
-                    <div style={{ marginBottom: "40px" }}></div>
+                    {/* <div style={{ marginBottom: "40px" }}></div> */}
                 </div>
 
                 <div className="d-flex justify-content-end mb-2">

@@ -18,9 +18,9 @@ const BatchNumberList = ({ user, data, refreshData, deleteData, exportData, mast
 
     const columns = [
         { label: "CODE", key: "code", width: 40, align: "left", cardTitle: true },
-        { label: "ITEM #", key: "itemId", width: 40, align: "right", cardSubTitle: true },
-        { label: "ITEM", key: "itemName", width: 40, type: "string", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 40, align: "right", cardSubTitle: true },
+        { label: "ITEM #", key: "itemId", width: 40, align: "left", cardSubTitle: true },
+        { label: "ITEM", key: "itemName", width: 40, type: "string", align: "left", cardSubTitle: true },
+        { label: "STATUS", key: "status", width: 40, type: "badge", align: "left", cardSubTitle: true },
         { label: "INITIAL", key: "initial", width: 40, align: "right", cardSubTitle: true },
         { label: "INCOMING", key: "incoming", width: 40, align: "right", cardSubTitle: true },
         { label: "OUTGOING", key: "outgoing", width: 40, align: "right", cardSubTitle: true },
@@ -52,6 +52,15 @@ const BatchNumberList = ({ user, data, refreshData, deleteData, exportData, mast
                 const tempItem = master.item.find((obj) => obj.id === item.itemId);
                 return tempItem ? tempItem.name : "";
             }
+        } else if (col.key == "status") {
+            if (value == "Y")
+                return "Completed";
+            else if (value == "N")
+                return "Incomplete";
+            else if (value == "C")
+                return "Closed";
+            else
+                return "";
         }
     };
 

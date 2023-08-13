@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Table as RTable, Tab, Tabs,Button  } from "react-bootstrap";
-import { FaLayerGroup,FaPlus,FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, } from "react-icons/fa";
+import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
+import { FaLayerGroup, FaPlus, FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,23 +9,23 @@ import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadPallet, loadVendor, loadWarehouse,loadLocation } from "../../../actions/master";
+import { loadPallet, loadVendor, loadWarehouse, loadLocation } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
 import { te } from "date-fns/locale";
 
-const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor,loadPallet,loadLocation }) => {
+const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor, loadPallet, loadLocation }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
-    const title = " Transaction Item ConsumptionForm";
+    const title = "  Item Consumption Form";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     const path = "/transaction/non-komersil";
     const url = "ItemConsumption";
-    const role = "transaction -TransactionItemConsumptionForm";
+    const role = "transaction -ItemConsumptionForm";
 
     const [formData, setFormData] = useState({
         id: 0,
@@ -64,10 +64,10 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
-    const [locationlist,setLocation] =useState([]);
+    const [locationlist, setLocation] = useState([]);
     const [vendorList, setVendor] = useState([]);
     const [remarks, setRemarks] = useState({});
-    const[tempbatchno,settempbatchno]=useState(0);
+    const [tempbatchno, settempbatchno] = useState(0);
 
     useEffect(() => {
         if (user !== null && id !== undefined) loadData({ url, id });
@@ -108,7 +108,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     location: data.data.location,
                     pallet: data.data.pallet,
                     warehouse: data.data.warehouse,
-                    itemConsumptionDetails:data.data.itemConsumptionDetails,
+                    itemConsumptionDetails: data.data.itemConsumptionDetails,
 
 
 
@@ -123,7 +123,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
         loadPallet();
         loadLocation();
         if (user !== null && id !== undefined) loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse, loadVendor,loadPallet,loadLocation]);
+    }, [id, user, loadData, loadWarehouse, loadVendor, loadPallet, loadLocation]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -178,7 +178,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        if(e.target.name === "batchno"){
+        if (e.target.name === "batchno") {
             settempbatchno(e.target.value)
         }
 
@@ -186,18 +186,18 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
 
     const handleSave = (e) => {
         e.preventDefault();
-    
+
         if (id === undefined) {
-          addData({ url, body: formData }).then(() => {
-            navigate(`${path}/create?`);
-          });
+            addData({ url, body: formData }).then(() => {
+                navigate(`${path}/create?`);
+            });
         } else {
-          editData({ url, body: formData }).then(() => {
-            navigate(`${path}/${id}/edit?`);
-          });
+            editData({ url, body: formData }).then(() => {
+                navigate(`${path}/${id}/edit?`);
+            });
         }
-      };
-      const onDetailChange = (e, index) => {
+    };
+    const onDetailChange = (e, index) => {
         e.preventDefault();
 
         let details = itemConsumptionDetails;
@@ -213,41 +213,41 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
 
     const onSelectChange = (e, name) => {
         if (name === "location") {
-      setFormData({ ...formData, [name]: e.code });
-    }else{
-        setFormData({ ...formData, [name]: e.id });
-      }
+            setFormData({ ...formData, [name]: e.code });
+        } else {
+            setFormData({ ...formData, [name]: e.id });
+        }
     }
-    
+
     const handleNewRow = (e) => {
         e.preventDefault();
-        let details =itemConsumptionDetails;
+        let details = itemConsumptionDetails;
         if (details === undefined || details === null) details = [];
 
         details.push({
             id: 0,
             itemConsumptionId: 0,
             voucherNo: "",
-            batchId:0,
+            batchId: 0,
             itemId: 0,
             remark: "null",
             qty: 0,
-            dateIn:0,
+            dateIn: 0,
             dateUp: 0,
             userIn: "null",
-            userUp:" null",
+            userUp: " null",
             itemName: "",
             uom: "",
             totalPcs: 0
         });
         setFormData({ ...formData, itemConsumptionDetails: details });
     };
-    
+
 
     const handleDelete = (e) => {
         e.preventDefault();
 
-        let details =itemConsumptionDetails;
+        let details = itemConsumptionDetails;
         if (details === undefined || details === null) details = [];
 
         let newDetail = [];
@@ -257,7 +257,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
             return null;
         });
 
-        setFormData({ ...formData,itemConsumptionDetails: newDetail });
+        setFormData({ ...formData, itemConsumptionDetails: newDetail });
     };
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
@@ -267,33 +267,33 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
         marginRight: '5px',
     };
     const renderItem = () =>
-    itemConsumptionDetails!== undefined &&
-    itemConsumptionDetails !== null &&
-    itemConsumptionDetails .map((details , index) => {
-        return (
-            <tr key={index}>
+        itemConsumptionDetails !== undefined &&
+        itemConsumptionDetails !== null &&
+        itemConsumptionDetails.map((details, index) => {
+            return (
+                <tr key={index}>
                     <td className="text-center">{index + 1}</td>
-                 <td className="text-center" >
-                    <input
-                        className="form-control"
-                        type="text" style={{ textAlign: "center" }}
-                        name="BATCH No"
-                        readOnly={true}
-                        value={details.batchId}
-                    />
-                </td>
+                    <td className="text-center" >
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="BATCH No"
+                            readOnly={true}
+                            value={details.batchId}
+                        />
+                    </td>
 
-                <td className="text-center" >
-                    <input
-                        className="form-control"
-                        type="text" style={{ textAlign: "center" }}
-                        name="ITEM"
-                        readOnly={true}
-                        value={details.itemName}
-                    />
-                </td>
+                    <td className="text-center" >
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="ITEM"
+                            readOnly={true}
+                            value={details.itemName}
+                        />
+                    </td>
 
-                <td className="text-right">
+                    <td className="text-right">
                         <NumericFormat
                             className="form-control text-right"
                             name="QTY" value={details.qty}
@@ -303,34 +303,34 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                         />
                     </td>
 
-                <td className="text-center" >
-                    <input
-                        className="form-control"
-                        type="text" style={{ textAlign: "center" }}
-                        name="UOM"
-                        readOnly={true}
-                        value={details.uom}
-                    />
-                </td>
-                <td className="text-center" >
-                    <input
-                        className="form-control"
-                        type="text" style={{ textAlign: "center" }}
-                        name="PCS"
-                        readOnly={true}
-                        value={details.totalPcs}
-                    />
-                </td>
-                <td className="text-center" >
-                    <input
-                        className="form-control"
-                        type="text" style={{ textAlign: "center" }}
-                        name="TOTAL PCS"
-                        readOnly={true}
-                        value={details.totalPcs}
-                    />
-                </td>
-        
+                    <td className="text-center" >
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="UOM"
+                            readOnly={true}
+                            value={details.uom}
+                        />
+                    </td>
+                    <td className="text-center" >
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="PCS"
+                            readOnly={true}
+                            value={details.totalPcs}
+                        />
+                    </td>
+                    <td className="text-center" >
+                        <input
+                            className="form-control"
+                            type="text" style={{ textAlign: "center" }}
+                            name="TOTAL PCS"
+                            readOnly={true}
+                            value={details.totalPcs}
+                        />
+                    </td>
+
                     <td className="text-right">
                         <input
                             className="form-control text-left"
@@ -341,9 +341,9 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                             onChange={(e) => onDetailChange(e, index)}
                         />
                     </td>
-            </tr >
-        );
-    });
+                </tr >
+            );
+        });
 
     const element = () => {
         return (
@@ -353,21 +353,22 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>
                         <div className="col-sm-3">
-                            <input readOnly className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)} type="text" />
+                            <input readOnly className="form-control text-left" name="voucher" value={voucherNo} onChange={(e) => onChange(e)}
+                                type="text" placeholder="[AUTO]" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
+                        <label className="col-sm-2 text-left col-form-label">Reference# <span className="text-danger">*</span></label>
                         <div className="col">
-                            <input className="form-control text-left" name="referenceNo" value={referenceNo} onChange={(e) => onChange(e)} type="text" />
+                            <input className="form-control text-left" name="referenceNo" value={referenceNo} onChange={(e) => onChange(e)} type="text" required />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">shippingDate</label>
                         <div className="col-sm-3">
-                        <input className="form-control text-left" name="shippingdate" value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                            <input className="form-control text-left" name="shippingdate" value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Type <span className="text-danger">*</span></label>
+                        <label className="col-sm-2 text-left col-form-label">Type <span className="text-danger">*</span></label>
                         <div className="col">
-                            <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)}>
+                            <select className="form-control" name="type" value={type} onChange={(e) => onChange(e)} required>
                                 <option value="">** Please Select</option>
                                 <option value="Sample">Sample</option>
                                 <option value="Pengganti / Tukar Guling">Pengganti / Tukar Guling</option>
@@ -381,29 +382,29 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Location</label>
                         <div className="col-sm-3">
-              <Select2
-                options={locationlist}
-                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
-                placeholder={"Pick Location"}
-                value={locationlist === null ? null : locationlist.filter((option) => option.id === parseInt(locationId))}
-                handleChange={(e) => onSelectChange(e, "locationId")} />
-            </div>
-         <label className="col-sm-1 text-left col-form-label">Pallet </label>
-            <div className="col">
-              <Select2
-       options={palletList}
-       optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-       placeholder={"** Please Select"}
-       value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(palletId))}
-       handleChange={(e) => onSelectChange(e, "palletId")} />
-            </div>
+                            <Select2
+                                options={locationlist}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                                placeholder={"Pick Location"}
+                                value={locationlist === null ? null : locationlist.filter((option) => option.id === parseInt(locationId))}
+                                handleChange={(e) => onSelectChange(e, "locationId")} />
+                        </div>
+                        <label className="col-sm-2 text-left col-form-label">Pallet </label>
+                        <div className="col">
+                            <Select2
+                                options={palletList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"** Please Select"}
+                                value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(palletId))}
+                                handleChange={(e) => onSelectChange(e, "palletId")} />
+                        </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">PIC QC</label>
                         <div className="col-sm-3">
                             <input className="form-control text-left" name="picQc" value={picQc} onChange={(e) => onChange(e)} type="text" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">PIC WareHouse</label>
+                        <label className="col-sm-2 text-left col-form-label">PIC WareHouse</label>
                         <div className="col">
                             <input className="form-control text-left" name="picWarehouse" value={picWarehouse} onChange={(e) => onChange(e)} type="text" />
                         </div>
@@ -413,7 +414,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                         <div className="col-sm-3">
                             <input className="form-control text-left" name="picExpedisi" value={picExpedisi} onChange={(e) => onChange(e)} type="text" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Security</label>
+                        <label className="col-sm-2 text-left col-form-label">Security</label>
                         <div className="col">
                             <input className="form-control text-left" name="securityt" value={security} onChange={(e) => onChange(e)} type="text" />
                         </div>
@@ -423,22 +424,22 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                         <div className="col-sm-3">
                             <input className="form-control text-left" name="picker" value={picker} onChange={(e) => onChange(e)} type="text" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">WareHouse <span className="text-danger">*</span></label>
-            <div className="col">
-              <Select2
-       options={warehouseList}
-       optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-       placeholder={"** Please Select"}
-       value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-       handleChange={(e) => onSelectChange(e, "warehouseId")} />
-            </div>
+                        <label className="col-sm-2 text-left col-form-label">WareHouse <span className="text-danger">*</span></label>
+                        <div className="col">
+                            <Select2
+                                options={warehouseList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"** Please Select"}
+                                value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
+                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                        </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Customer</label>
                         <div className="col-sm-3">
                             <input className="form-control text-left" name="customerName" value={customerName} onChange={(e) => onChange(e)} type="text" />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">TruckNo</label>
+                        <label className="col-sm-2 text-left col-form-label">TruckNo</label>
                         <div className="col">
                             <input className="form-control text-left" name="truckNo" value={truckNo} onChange={(e) => onChange(e)} type="text" />
                         </div>
@@ -458,7 +459,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                             ></textarea>
                         </div>
                     </div>
-                  
+
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
@@ -469,10 +470,9 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder="Search..."
-                                required
                             />
                         </div>
-                        <div className="col-sm-1 text-left col-form-label">
+                        <div className="col-sm-2 text-left col-form-label">
                             <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
                         </div>
                         <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
@@ -480,7 +480,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 <input type="checkbox" /> New Item
                             </label>
                         </div>
-                          <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
+                        <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
                             <label style={{ marginLeft: "5px" }}>
                                 <input type="checkbox" /> Full Pallet
                             </label>
@@ -492,7 +492,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                 <RTable bordered style={{ float: 'center', width: "100%" }}>
                                     <thead>
                                         <tr>
-                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                                            <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
                                             <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>QTY</th>
@@ -504,8 +504,8 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                         </tr>
                                     </thead>
                                     <tbody>
-                                              {renderItem()}
-    {/* {  itemConsumptionDetails!== undefined &&
+                                        {renderItem()}
+                                        {/* {  itemConsumptionDetails!== undefined &&
        itemConsumptionDetails !== null &&
        itemConsumptionDetails .map((details , index) => { 
         return (
@@ -527,7 +527,7 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
           </tr>
         );
       })} */}
-  </tbody>
+                                    </tbody>
                                 </RTable>
                             </div>
                         </Tab>
@@ -536,21 +536,21 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">Created</label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="createdBy" value={createdBy} onChange={(e) => onChange(e)} type="text" />
+                                    <input className="form-control text-left" name="createdBy" value={createdBy} onChange={(e) => onChange(e)} type="text" readOnly />
                                 </div>
-                                <label className="col-sm-1 text-left col-form-label">Created Date</label>
+                                <label className="col-sm-2 text-left col-form-label">Created Date</label>
                                 <div className="col">
-                                <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                                    <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" readOnly />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">Posted</label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="postedBy" value={postedBy} onChange={(e) => onChange(e)} type="text" />
+                                    <input className="form-control text-left" name="postedBy" value={postedBy} onChange={(e) => onChange(e)} type="text" readOnly />
                                 </div>
-                                <label className="col-sm-1 text-left col-form-label">Posted Date</label>
+                                <label className="col-sm-2 text-left col-form-label">Posted Date</label>
                                 <div className="col">
-                                <input className="form-control text-left" name="postDate" value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
+                                    <input className="form-control text-left" name="postDate" value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" readOnly />
                                 </div>
                             </div>
                         </Tab>
@@ -570,9 +570,9 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
                                         required
                                     />
                                 </div>
-                                <div className="col-sm-1 text-left col-form-label">
-                            <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
-                        </div>
+                                <div className="col-sm-2 text-left col-form-label">
+                                    <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
+                                </div>
                             </div>
                             <RTable bordered style={{ float: 'center', width: "40%" }}>
                                 <thead>
@@ -603,15 +603,15 @@ const TransactionItemConsumptionForm = ({ user, data, loadData, addData, master,
     );
 };
 
-TransactionItemConsumptionForm.propTypes = {
+ItemConsumptionForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     loadData: PropTypes.func,
     addData: PropTypes.func,
     loadWarehouse: PropTypes.func,
     loadVendor: PropTypes.func,
-    loadLocation:propTypes.func,
-    loadPallet:PropTypes.func,
+    loadLocation: propTypes.func,
+    loadPallet: PropTypes.func,
     editData: PropTypes.func,
     master: PropTypes.object,
 };
@@ -622,4 +622,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor,loadPallet,loadLocation })(TransactionItemConsumptionForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor, loadPallet, loadLocation })(ItemConsumptionForm);

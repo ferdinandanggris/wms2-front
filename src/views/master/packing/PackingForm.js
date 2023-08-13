@@ -73,45 +73,43 @@ const PackingForm = ({ user, data, loadData, addData, editData }) => {
         <div className="subTitle">Detail Information</div>
         <div className="col-sm-12 mb-5">
           <div className="row form-group align-items-center">
-          <label className="col-sm-2 col-form-label">
-         Name <span className="text-danger">*</span>
-        </label>
-        <div className="col-sm-10">
-        <textarea
-         name="name"
-        value={name}
-        type="text"
-        placeholder=""
-        required
-        style={{ width: "360px", minHeight: "80px" }}
-        onChange={(e) => onChange(e)}
-        className="form-control text-left"
-         />
-        </div>
+            <label className="col-sm-2 col-form-label">
+              Name <span className="text-danger">*</span>
+            </label>
+            <div className="col-sm-10">
+              <input
+                name="name"
+                value={name}
+                type="text"
+                placeholder=""
+                required
+                onChange={(e) => onChange(e)}
+                className="form-control text-left"
+              />
+            </div>
           </div>
-  
+
           <div className="row form-group align-items-center">
-          <label className="col-sm-2 col-form-label">
-         Remark 
-        </label>
-        <div className="col-sm-10">
-        <textarea
-         name="remark"
-        value={remark}
-        type="number"
-        placeholder=""
-        style={{ width: "360px", minHeight: "80px" }}
-        onChange={(e) => onChange(e)}
-        className="form-control text-left"
-         />
-        </div>
+            <label className="col-sm-2 col-form-label">
+              Remark
+            </label>
+            <div className="col-sm-10">
+              <input
+                name="remark"
+                value={remark}
+                type="number"
+                placeholder=""
+                onChange={(e) => onChange(e)}
+                className="form-control text-left"
+              />
+            </div>
           </div>
         </div>
       </div>
     );
   };
-  
-  
+
+
   return (
     <FormWrapper img={img} title={title} path={path} type={type} role={role} id={id} handleSave={handleSave}>
       {element}

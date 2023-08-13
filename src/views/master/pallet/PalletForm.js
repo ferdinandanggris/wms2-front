@@ -127,7 +127,9 @@ const PalletForm = ({ user, data, loadData, addData, editData }) => {
                                 name="type"
                                 onChange={(e) => onChange(e)}
                                 value={type}
+                                required
                             >
+                                <option value="">** Please Select</option>
                                 <option value="Glass">Glass</option>
                                 <option value="Plastic">Plastic</option>
                             </select>

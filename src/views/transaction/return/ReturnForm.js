@@ -5,7 +5,7 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Table as RTable, Tab, Tabs} from "react-bootstrap";
+import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadShipping } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import "../style.css";
@@ -16,7 +16,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
     const navigate = useNavigate();
     const title = "Return";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/return/:id?/:type";
+    const path = "/transaction/return";
     const url = "Return";
     const role = "Transaction - Return";
 
@@ -24,11 +24,11 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
         id: 0,
         voucherNo: "",
         referenceNo: "",
-        status: "Approve",
+        status: "N",
         transDate: null,
         postDate: null,
         locationId: 0,
-        palletId: "",
+        palletId: 0,
         createdBy: "",
         postedBy: "",
         remark: "",
@@ -256,7 +256,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                 </div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Voucher #<span className="required-star">*</span>
                         </label>
                         <div className="col">
@@ -264,12 +264,13 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 name="voucherNo"
                                 value={voucherNo}
                                 type="text"
-                                placeholder=""
+                                placeholder="[AUTO]"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                readOnly
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Reference #  <span className="required-star">*</span>
                         </label>
                         <div className="col">
@@ -280,23 +281,24 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                required
                             />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Shipping  #
                         </label>
                         <div className="col">
                             <Select2
                                 options={shippingList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.voucherNo}
                                 placeholder={"Pick Shipping"}
                                 value={shippingList === null ? null : shippingList.filter((option) => option.id === parseInt(shippingId))}
                                 handleChange={(e) => onSelectChange(e, "shippingId")}
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Truck No
                         </label>
                         <div className="col">
@@ -311,7 +313,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Customer
                         </label>
                         <div className="col">
@@ -323,7 +325,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 handleChange={(e) => onSelectChange(e, "customerId")}
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Picker
                         </label>
                         <div className="col">
@@ -338,7 +340,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">Location</label>
+                        <label className="col-sm-2 col-form-label">Location</label>
                         <div className="col">
                             <Select2
                                 options={locationList}
@@ -348,7 +350,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 handleChange={(e) => onSelectChange(e, "locationId")}
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Pallet</label>
+                        <label className="col-sm-2 text-left col-form-label">Pallet</label>
                         <div className="col">
                             <Select2
                                 options={palletList}
@@ -360,8 +362,8 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-1 col-form-label">Batch No</label>
-                        <div className="col-sm-5">
+                        <label className="col-sm-2 col-form-label">Batch No</label>
+                        <div className="col-sm-4">
                             <input
                                 name="batchNo"
                                 value={batchNo}
@@ -371,7 +373,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 placeholder=""
                             />
                         </div>
-                        <div className="col-sm-1 col-form-label">
+                        <div className="col-sm-2 col-form-label">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -515,7 +517,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                     <Tab eventKey="DeliveryDetail" title={<span><FaUsers style={tabIconStyle} />Change Logs</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-1 col-form-label">Created</label>
+                                <label className="col-sm-2 col-form-label">Created</label>
                                 <div className="col mr-5">
                                     <input
                                         name="createdBy"
@@ -539,7 +541,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-1 col-form-label">Posted</label>
+                                <label className="col-sm-2 col-form-label">Posted</label>
                                 <div className="col mr-5">
                                     <input
                                         name="postedBy"

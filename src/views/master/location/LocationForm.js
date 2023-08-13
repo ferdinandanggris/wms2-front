@@ -162,7 +162,6 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 className="form-control text-left"
                                 onChange={(e) => onChange(e)}
                                 placeholder=""
-                                required
                             />
                         </div>
                     </div>
@@ -190,7 +189,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Warehouse"}
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                                handleChange={(e) => onSelectChange(e, "warehouseId")} required />
                         </div>
                     </div>
 
@@ -204,7 +203,7 @@ const LocationForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Group"}
                                 value={groupList === null ? null : groupList.filter((option) => option.id === parseInt(groupId))}
-                                handleChange={(e) => onSelectChange(e, "groupId")} />
+                                handleChange={(e) => onSelectChange(e, "groupId")} required />
                         </div>
                     </div>
                 </div>

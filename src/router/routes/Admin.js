@@ -1,4 +1,5 @@
 import { lazy } from "react";
+
 const Admin = lazy(() => import("../../views/Home3"));
 
 // MASTER
@@ -41,8 +42,8 @@ const ReceivingList = lazy(() => import("../../views/transaction/receiving/Recei
 const ReceivingForm = lazy(() => import("../../views/transaction/receiving/ReceivingForm"));
 const ProductionList = lazy(() => import("../../views/transaction/product/ProductionList"));
 const ProductionForm = lazy(() => import("../../views/transaction/product/ProductionForm"));
-const TransactionItemConsumptionList = lazy(() => import("../../views/transaction/transactionitemconsumption/TransactionItemConsumptionList"));
-const TransactionItemConsumptionForm = lazy(() => import("../../views/transaction/transactionitemconsumption/TransactionItemConsumptionForm"));
+const ItemConsumptionList = lazy(() => import("../../views/transaction/transactionitemconsumption/ItemConsumptionList"));
+const ItemConsumptionForm = lazy(() => import("../../views/transaction/transactionitemconsumption/ItemConsumptionForm"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -193,8 +194,8 @@ const AdminRoutes = [
   { path: "/transaction/production/:id?/:type", element: <ProductionForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving", element: <ReceivingList />, meta: { layout: "full", publicRoute: false } },
   { path: "/transaction/receiving/:id?/:type", element: <ReceivingForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/non-komersil", element: <TransactionItemConsumptionList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/transaction/non-komersil/:id?/:type", element: <TransactionItemConsumptionForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/non-komersil", element: <ItemConsumptionList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/transaction/non-komersil/:id?/:type", element: <ItemConsumptionForm />, meta: { layout: "full", publicRoute: false } },
 
   // TRANSAKSI RM
   { path: "/transaction-rm/raw-material-batch", element: < RawMaterialBatchList />, meta: { layout: "full", publicRoute: false } },

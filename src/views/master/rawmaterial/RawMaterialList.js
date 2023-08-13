@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { FaLayerGroup } from "react-icons/fa";
 
 import { connect } from "react-redux";
@@ -11,22 +11,22 @@ import { loadUom, loadPacking } from "../../../actions/master";
 const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, loadUom, loadPacking, master }) => {
   const title = "Raw Material List";
   const img = <FaLayerGroup className="module-img" />;
-  const path =  "/master/raw-material";
+  const path = "/master/raw-material";
   const url = "RawMaterial";
   const role = "Master - rawMaterial";
 
   const columns = [
     { label: "CODE", key: "code", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "Name", key: "name", width: 580, align: "left", cardTitle: true },
-    { label: "UOM", key: "uom", width: 80,  align: "left", cardSubTitle: true },
-    { label: "PACKING", key: "packingId", width: 80, align: "left", cardSubTitle: true },
+    { label: "Name", key: "name", width: 480, align: "left", cardTitle: true },
+    { label: "UOM", key: "uom", width: 80, align: "left", cardSubTitle: true },
+    { label: "PACKING", key: "packingId", width: 130, align: "left", cardSubTitle: true },
     // { label: "QTY PER PACKING", key: "qtyPerPacking", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "INITIAL", key: "initial", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "BALANCE", key: "balance", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "STATUS", key: "isActive", width: 80, type: "custom", align: "left", cardSubTitle: true },
-];
+    { label: "INITIAL", key: "initial", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "BALANCE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
+    { label: "STATUS", key: "isActive", width: 80, type: "custom", align: "right", cardSubTitle: true },
+  ];
 
   const exportFilename = "item-type.csv";
 
@@ -49,15 +49,15 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, load
         console.log(value)
         if (value) {
           const tempUom = master.uom.find((obj) => obj.id === value.id);
-          console.log(tempUom)
+          // console.log(tempUom)
           return tempUom.name;
         } else {
           return "";
         }
       }
-    }else if (col.key === "packingId") {
+    } else if (col.key === "packingId") {
       if (master.packing !== null && master.packing !== undefined) {
-        if(value) {
+        if (value) {
           const tempPacking = master.packing.find((obj) => obj.id === value);
           console.log(tempPacking)
           return tempPacking.name;
@@ -77,7 +77,7 @@ RawMaterialList.propTypes = {
   deleteData: PropTypes.func,
   exportData: PropTypes.func,
   loadUom: PropTypes.func,
-  loadPacking:PropTypes.func,
+  loadPacking: PropTypes.func,
   master: PropTypes.object,
 };
 
@@ -87,4 +87,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData,loadUom,loadPacking })(RawMaterialList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadUom, loadPacking })(RawMaterialList);

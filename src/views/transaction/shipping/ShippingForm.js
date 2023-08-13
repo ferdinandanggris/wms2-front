@@ -16,7 +16,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const navigate = useNavigate();
     const title = "Shipping";
     const img = <FaLayerGroup className="module-img" />;
-    const path = "/transaction/shipping/:id?/:type";
+    const path = "/transaction/shipping";
     const url = "Shipping";
     const role = "Transaction - Shipping";
 
@@ -25,7 +25,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         voucherNo: "",
         referenceNo: "",
         orderNo: "",
-        status: "Y",
+        status: "N",
         transDate: null,
         postDate: null,
         createdBy: "",
@@ -166,6 +166,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     postDate: data.data.postdate,
                     createdBy: data.data.createdBy,
                     postedBy: data.data.postedBy,
+                    status: data.data.status,
                     customerId: data.data.customerId,
                     orderId: data.data.orderId,
                     orderNo: data.data.orderNo,
@@ -287,23 +288,25 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                 </div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Voucher #<span className="required-star">*</span>
                         </label>
-                        <div className="col">
+                        <div className="col-3">
                             <input
                                 name="voucherNo"
                                 value={voucherNo}
                                 type="text"
-                                placeholder=""
+                                placeholder="[AUTO]"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                readOnly
+                                required
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Reference #  <span className="required-star">*</span>
                         </label>
-                        <div className="col">
+                        <div className="col-5">
                             <input
                                 name="referenceNo"
                                 value={referenceNo}
@@ -311,14 +314,15 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                required
                             />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Orders #<span className="required-star">*</span>
                         </label>
-                        <div className="col">
+                        <div className="col-3">
                             <input
                                 name="orderNo"
                                 value={orderNo}
@@ -326,12 +330,13 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                required
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Shipping Date
                         </label>
-                        <div className="col">
+                        <div className="col-3">
                             <input
                                 name="shippingDate"
                                 value={shippingDate === null ? "" : moment(shippingDate).format("YYYY-MM-DD")}
@@ -343,10 +348,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Customer
                         </label>
-                        <div className="col">
+                        <div className="col-3">
                             <Select2
                                 options={customerList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
@@ -355,10 +360,10 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 handleChange={(e) => onSelectChange(e, "customerId")}
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Truck No
                         </label>
-                        <div className="col">
+                        <div className="col-5">
                             <input
                                 name="truckNo"
                                 value={truckNo}
@@ -370,8 +375,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">PIC QC</label>
-                        <div className="col">
+                        <label className="col-sm-2 col-form-label">PIC QC</label>
+                        <div className="col-3">
                             <input
                                 name="picQc"
                                 value={picQc}
@@ -381,8 +386,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 className="form-control text-left"
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">PIC Warehouse</label>
-                        <div className="col">
+                        <label className="col-sm-2 text-left col-form-label">PIC Warehouse</label>
+                        <div className="col-5">
                             <input
                                 name="picWarehouse"
                                 value={picWarehouse}
@@ -394,8 +399,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">PIC Expedisi</label>
-                        <div className="col">
+                        <label className="col-sm-2 col-form-label">PIC Expedisi</label>
+                        <div className="col-3">
                             <input
                                 name="picExpedisi"
                                 value={picExpedisi}
@@ -405,8 +410,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 className="form-control text-left"
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Security</label>
-                        <div className="col">
+                        <label className="col-sm-2 text-left col-form-label">Security</label>
+                        <div className="col-5">
                             <input
                                 name="security"
                                 value={security}
@@ -418,8 +423,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">Picker</label>
-                        <div className="col">
+                        <label className="col-sm-2 col-form-label">Picker</label>
+                        <div className="col-3">
                             <input
                                 name="picker"
                                 value={picker}
@@ -429,7 +434,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 className="form-control text-left"
                             />
                         </div>
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Warehouse<span className="required-star">*</span>
                         </label>
                         <div className="col-sm-5">
@@ -438,12 +443,13 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Warehouse"}
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                                handleChange={(e) => onSelectChange(e, "warehouseId")}
+                                required={true} />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-1 col-form-label">Batch No</label>
-                        <div className="col-sm-5">
+                        <label className="col-sm-2 col-form-label">Batch No</label>
+                        <div className="col-sm-3">
                             <input
                                 name="batchNo"
                                 value={batchNo}
@@ -453,7 +459,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 placeholder=""
                             />
                         </div>
-                        <div className="col-sm-1 col-form-label">
+                        <div className="col-sm-2 col-form-label">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -682,8 +688,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     <Tab eventKey="DeliveryDetail" title={<span><FaUsers style={tabIconStyle} />Change Logs</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-1 col-form-label">Created</label>
-                                <div className="col mr-5">
+                                <label className="col-sm-2 col-form-label">Created</label>
+                                <div className="col-4 mr-5">
                                     <input
                                         name="createdBy"
                                         value={createdBy}
@@ -691,10 +697,11 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         placeholder=""
                                         onChange={(e) => onChange(e)}
                                         className="form-control text-left"
+                                        readOnly
                                     />
                                 </div>
-                                <label className="col-sm-0 text-left col-form-label">Created Date</label>
-                                <div className="col">
+                                <label className="col-sm-2 text-left col-form-label">Created Date</label>
+                                <div className="col-3">
                                     <input
                                         name="dateIn"
                                         value={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")}
@@ -702,12 +709,13 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         type="date"
                                         placeholder=""
                                         className="form-control text-left"
+                                        readOnly
                                     />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-1 col-form-label">Posted</label>
-                                <div className="col mr-5">
+                                <label className="col-sm-2 col-form-label">Posted</label>
+                                <div className="col-4 mr-5">
                                     <input
                                         name="postedBy"
                                         value={postedBy}
@@ -715,10 +723,11 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         placeholder=""
                                         onChange={(e) => onChange(e)}
                                         className="form-control text-left"
+                                        readOnly
                                     />
                                 </div>
-                                <label className="col-sm-0 text-left col-form-label">Posted Date</label>
-                                <div className="col">
+                                <label className="col-sm-2 text-left col-form-label">Posted Date</label>
+                                <div className="col-3">
                                     <input
                                         name="postDate"
                                         value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
@@ -726,6 +735,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         type="date"
                                         placeholder=""
                                         className="form-control text-left"
+                                        readOnly
                                     />
                                 </div>
                             </div>

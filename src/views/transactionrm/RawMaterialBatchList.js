@@ -16,8 +16,8 @@ const RawMaterialBatchList = ({ user, data, refreshData, deleteData, exportData,
 
   const columns = [
     { label: "CODE", key: "code", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "Item#", key: "itemId", label: "itemCode", width: 100, cardTitle: true },
-    { label: "Item", key: "itemId", label: "itemName", width: 80, align: "left", cardSubTitle: true },
+    { label: "Item#", key: "itemId", label: "Item Code", width: 100, cardTitle: true },
+    { label: "Item", key: "itemId", label: "Item Name", width: 80, align: "left", cardSubTitle: true },
     { label: "Status", key: "status", width: 80, type: "custom", align: "left", cardSubTitle: true },
     { label: "INITIAL", key: "initial", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "left", cardSubTitle: true },
@@ -53,7 +53,7 @@ const RawMaterialBatchList = ({ user, data, refreshData, deleteData, exportData,
           return "";
         }
       }
-    }else if (col.key === "itemId" && col.label === "itemName") {
+    } else if (col.key === "itemId" && col.label === "itemName") {
       if (master.item !== null && master.item !== undefined) {
         if (value) {
           const tempItem = master.item.find((obj) => obj.id === value);

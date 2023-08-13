@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 import { loadWarehouse } from "../../../actions/master";
 
 const LocationList = ({ user, data, refreshData, deleteData, exportData, master, loadWarehouse }) => {
-    
+
     const title = "Location";
     const img = <FaLayerGroup className="module-img" />;
     const path = "/master/location";
@@ -19,7 +19,7 @@ const LocationList = ({ user, data, refreshData, deleteData, exportData, master,
     const columns = [
         { label: "CODE", key: "code", width: 40, type: "number", align: "left", cardTitle: true },
         { label: "NAME", key: "name", width: 40, type: "number", align: "left", cardSubTitle: true },
-        { label: "WAREHOUSES", key: "warehouseId", width: 40, align: "right", cardSubTitle: true },
+        { label: "WAREHOUSES", key: "warehouseId", width: 40, align: "left", cardSubTitle: true },
         { label: "REMARK", key: "remark", width: 40, type: "number", align: "left", cardSubTitle: true },
         { label: "CAPACITY", key: "capacity", width: 40, type: "number", align: "right", cardSubTitle: true },
         { label: "INITIAL", key: "initial", width: 40, type: "number", align: "right", cardSubTitle: true },

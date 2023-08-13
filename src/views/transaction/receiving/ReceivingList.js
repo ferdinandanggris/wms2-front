@@ -21,10 +21,10 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
     { label: "REFERENCE #", key: "referenceNo", width: 80, type: "number", align: "left", cardSubTitle: true },
     { label: "VENDOR", key: "vendors", width: 80, align: "left", cardSubTitle: true },
     { label: "CREATED BY ", key: "userIn", width: 80, align: "left", cardSubTitle: true },
-    { label: "CREATED DATE ", key: "dateIn", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "POSTED BY", key: "postedBy", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "POSTED DATE", key: "postDate", width: 80, type: "number", align: "left", cardSubTitle: true },
-    { label: "STATUS", key: "status", width: 80, type: "custom", align: "left", cardSubTitle: true },
+    { label: "CREATED DATE ", key: "dateIn", width: 80, type: "datetime", align: "left", cardSubTitle: true },
+    { label: "POSTED BY", key: "postedBy", width: 80, type: "text", align: "left", cardSubTitle: true },
+    { label: "POSTED DATE", key: "postDate", width: 80, type: "datetime", align: "left", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "badge", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";
@@ -35,17 +35,17 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
     }
     loadVendor();
     loadUser();
-  }, [user, refreshData, loadVendor,loadUser]);
+  }, [user, refreshData, loadVendor, loadUser]);
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "status") {
       if (value == "Y")
-        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
+        return "POSTED";
       else
-        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
+        return "WAITING";
     } else if (col.key === "vendors") {
       if (master.vendor !== null && master.vendor !== undefined) {
-        if(value) {
+        if (value) {
           const tempVendor = master.vendor.find((obj) => obj.id === value.id);
           return tempVendor.name;
         } else {
@@ -54,7 +54,7 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
       }
     } else if (col.key === "userIn") {
       if (master.user !== null && master.user !== undefined) {
-        if(value) {
+        if (value) {
           const tempUser = master.user.find((obj) => obj.id === value.id);
           return tempUser.fullName;
         } else {
@@ -73,7 +73,7 @@ RecivingList.propTypes = {
   data: PropTypes.object,
   refreshData: PropTypes.func,
   loadVendor: PropTypes.func,
-  loadUser:PropTypes.func,
+  loadUser: PropTypes.func,
   deleteData: PropTypes.func,
   exportData: PropTypes.func,
   master: PropTypes.object,

@@ -18,11 +18,11 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
         { label: "Voucher #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
         { label: "Customer", key: "customerId", width: 40, type: "text", align: "left", cardSubTitle: true },
         { label: "Warehouse", key: "warehouseId", width: 40, type: "text", align: "left", cardSubTitle: true },
-        { label: "Created By", key: "createdBy", width: 40, type: "text", align: "left", cardSubTitle: true },
-        { label: "Created Date", key: "dateIn", width: 40, type: "text", align: "left", cardSubTitle: true },
-        { label: "Shipping Date", key: "shippingDate", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "Created By", key: "createdBy", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "Created Date", key: "dateIn", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "Shipping Date", key: "shippingDate", width: 40, type: "datetime", align: "left", cardSubTitle: true },
         { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "Status", key: "status", width: 40, type: "text", align: "Center", cardSubTitle: true },
+        { label: "Status", key: "status", width: 40, type: "badge", align: "Center", cardSubTitle: true },
         { label: "Print", key: "print", width: 40, type: "text", align: "Center", cardSubTitle: true },
     ];
 
@@ -41,12 +41,24 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
             else
                 return "";
         }
+        else if (col.key == "status") {
+            if (value == "Y")
+                return "Completed";
+            else if (value == "N")
+                return "Incomplete";
+            else if (value == "C")
+                return "Closed";
+            else
+                return "";
+
+        }
         else if (col.key == "warehouseId") {
             if (item.warehouse != null)
                 return item.warehouse.name;
             else
                 return "";
         }
+
     };
 
     return (

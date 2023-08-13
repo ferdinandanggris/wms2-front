@@ -259,7 +259,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
 
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Voucher #<span className="required-star" >*</span>
                         </label>
                         <div className="col">
@@ -267,12 +267,13 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 name="voucherNo"
                                 value={voucherNo}
                                 type="text"
-                                placeholder=""
+                                placeholder="[AUTO]"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                readOnly
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">
+                        <label className="col-sm-2 text-left col-form-label">
                             Reference #  <span className="required-star">*</span>
                         </label>
                         <div className="col">
@@ -288,7 +289,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">Created</label>
+                        <label className="col-sm-2 col-form-label">Created</label>
                         <div className="col">
                             <input
                                 name="createdBy"
@@ -297,9 +298,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                readOnly
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Trans Date</label>
+                        <label className="col-sm-2 text-left col-form-label">Trans Date</label>
                         <div className="col">
                             <input
                                 className="form-control text-left"
@@ -313,7 +315,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">Posted</label>
+                        <label className="col-sm-2 col-form-label">Posted</label>
                         <div className="col">
                             <input
                                 name="postedBy"
@@ -322,9 +324,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                readOnly
                             />
                         </div>
-                        <label className="col-sm-1 text-left col-form-label">Post Date</label>
+                        <label className="col-sm-2 text-left col-form-label">Post Date</label>
                         <div className="col">
                             <input
                                 name="postDate"
@@ -338,10 +341,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Vendor
                         </label>
-                        <div className="col-sm-5">
+                        <div className="col-sm-4">
                             <Select2
                                 options={vendorList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
@@ -349,10 +352,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 value={vendorList === null ? null : vendorList.filter((option) => option.id === parseInt(vendorId))}
                                 handleChange={(e) => onSelectChange(e, "vendorId")} />
                         </div>
-                        <label className="col-sm-1 col-form-label">
+                        <label className="col-sm-2 col-form-label">
                             Warehouse<span className="required-star">*</span>
                         </label>
-                        <div className="col-sm-5">
+                        <div className="col-sm-4">
                             <Select2
                                 options={warehouseList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
@@ -362,7 +365,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-1 col-form-label">Batch No</label>
+                        <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-5">
                             <input
                                 name="batchNo"
@@ -373,7 +376,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 placeholder=""
                             />
                         </div>
-                        <div className="input-group-append col-sm-1 col-form-label">
+                        <div className="input-group-append col-sm-2 col-form-label">
                             <button className="btn btn-primary" >
                                 <FaSearch /> Search
                             </button>
@@ -397,7 +400,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-1 col-form-label">Import</label>
+                        <label className="col-sm-2 col-form-label">Import</label>
                         <div className="col-sm-5">
                             <div className="input-group">
                                 <input

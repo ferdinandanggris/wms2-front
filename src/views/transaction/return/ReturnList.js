@@ -8,7 +8,7 @@ import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 import { loadCustomer } from "../../../actions/master";
 
-const ReturnList = ({ user, data, refreshData, deleteData, exportData, master, loadCustomer }) => {
+const ReturnList = ({ user, data, refreshData, deleteData, exportData }) => {
 
     const title = "Return Module";
     const img = <FaLayerGroup className="module-img" />;
@@ -18,14 +18,13 @@ const ReturnList = ({ user, data, refreshData, deleteData, exportData, master, l
 
     const columns = [
         { label: "VOUCHER #", key: "voucherNo", width: 40, type: "text", align: "left", cardTitle: true },
-        { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CUSTOMER", key: "customerId", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "CREATED DATE", key: "dateIn", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "POSTED DATE", key: "postDate", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "LINE", key: "line", width: 40, type: "text", align: "right", cardSubTitle: true },
-        { label: "STATUS", key: "status", width: 40, type: "text", align: "right", cardSubTitle: true },
+        { label: "REFERENCE #", key: "referenceNo", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CUSTOMER", key: "customerId", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CREATED BY", key: "createdBy", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "CREATED DATE", key: "dateIn", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "POSTED BY", key: "postedBy", width: 40, type: "text", align: "left", cardSubTitle: true },
+        { label: "POSTED DATE", key: "postDate", width: 40, type: "datetime", align: "left", cardSubTitle: true },
+        { label: "STATUS", key: "status", width: 40, type: "badge", align: "center", cardSubTitle: true },
     ];
 
     const exportFilename = "Return.csv";
@@ -34,20 +33,25 @@ const ReturnList = ({ user, data, refreshData, deleteData, exportData, master, l
         if (user !== null) {
             refreshData({ url });
         }
-        loadCustomer();
-    }, [user, refreshData, loadCustomer]);
+    }, [user, refreshData]);
 
     const customRenderValue = (col, value, item) => {
         if (col.key === "customerId") {
-            if (master.customer !== null && master.customer !== undefined) {
-                if (value) {
-                    const tempCustomer = master.customer.find((obj) => obj.id === value);
-                    return tempCustomer.name;
-                } else {
-                    return "";
-                }
-            }
-        };
+            if (item.customer != null)
+                return item.customer.name;
+            else
+                return "";
+        } else if (col.key == "status") {
+            if (value == "Y")
+                return "Completed";
+            else if (value == "N")
+                return "Incomplete";
+            else if (value == "C")
+                return "Closed";
+            else
+                return "";
+
+        }
     };
 
     return (
@@ -65,13 +69,11 @@ ReturnList.propTypes = {
     refreshData: PropTypes.func,
     deleteData: PropTypes.func,
     exportData: PropTypes.func,
-    loadCustomer: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
     user: state.auth.user,
     data: state.data,
-    master: state.master
 });
 
 export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadCustomer })(ReturnList);

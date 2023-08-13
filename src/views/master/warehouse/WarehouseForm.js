@@ -80,28 +80,34 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
       <div className="detail">
         <div className="subTitle">Detail Information</div>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Code</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
+        <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2 ">
+          <div className="row align-items-center mt-4 mb-3">
+            <label className="col-sm-2 col-form-label">
+              Code <span className="required-star">*</span>
+            </label>
+            <div className="col-sm-4">
+              <input className="form-control" type="text" name="code" value={code} onChange={(e) => onChange(e)} placeholder="Enter Code" required />
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Name</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+          <div className="row align-items-center mt-4 mb-3">
+            <label className="col-sm-2 col-form-label">
+              Name <span className="required-star">*</span>
+            </label>
+            <div className="col-sm-4">
+              <input className="form-control" type="text" name="name" value={name} onChange={(e) => onChange(e)} placeholder="Enter Name" required />
+            </div>
           </div>
+          <div className="row align-items-center mt-4 mb-3">
+            <label className="col-sm-2 col-form-label">
+              Occupancy <span className="required-star">*</span>
+            </label>
+            <div className="col-sm-4">
+              <input className="form-control" type="text" name="occupancy" value={occupancy} onChange={(e) => onChange(e)} placeholder="Enter Occupancy" required />
+            </div>
+          </div>
+
         </div>
 
-        <div className="row">
-          <div className="form-group col-sm-12">
-            <label>Occupancy</label>
-            <span className="required-star">*</span>
-            <input className="form-control" type="text" name="occupancy" value={occupancy} onChange={(e) => onChange(e)} placeholder="Enter Occupancy" required />
-          </div>
-        </div>
         <div className="mt-5">
           <ListTransaction id={id} listType="warehouse" formData={formData} />
         </div>

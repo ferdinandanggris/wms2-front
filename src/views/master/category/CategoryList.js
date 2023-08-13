@@ -23,21 +23,27 @@ const CategoryList = ({ user, data, refreshData, deleteData, exportData }) => {
 
   const exportFilename = "category.csv";
 
- const customRenderValue = (col, value, item) => {
-        if (col.key == "isActive") {
-            if (value == 0)
-                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
-            else
-                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">In Active</div></h6 >);
-        }
-    };
+  useEffect(() => {
+    if (user !== null) {
+      refreshData({ url });
+    }
+  }, [user, refreshData]);
 
-    return (
-        <ListWrapper
-            img={img}
-            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}
-        />
-    )
+  const customRenderValue = (col, value, item) => {
+    if (col.key == "isActive") {
+      if (value == 0)
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
+      else
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">In Active</div></h6 >);
+    }
+  };
+
+  return (
+    <ListWrapper
+      img={img}
+      title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}
+    />
+  )
 };
 
 CategoryList.propTypes = {

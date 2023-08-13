@@ -592,7 +592,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                         className="form-control text-left memo-like-textarea"
                                         placeholder="Enter delivery address here..."
                                         onChange={(e) => onChange(e)}
-                                        style={{ width: "230px", minHeight: "150px" }}
+                                        style={{ width: "500px", minHeight: "150px" }}
                                     />
                                 </div>
                             </div>
@@ -720,7 +720,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                             className="form-control text-left memo-like-textarea"
                                             placeholder="Enter delivery address here..."
                                             onChange={(e) => onChange(e)}
-                                            style={{ width: "230px", minHeight: "150px" }}
+                                            style={{ width: "500px", minHeight: "150px" }}
                                         />
                                     </div>
                                 </div>

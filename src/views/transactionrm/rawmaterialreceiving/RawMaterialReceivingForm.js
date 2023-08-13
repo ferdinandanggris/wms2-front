@@ -232,9 +232,11 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={voucherNo}
                                 type="text"
                                 onChange={(e) => onChange(e)}
+                                placeholder="[AUTO]"
+                                readOnly
                             />
                         </div>
-                        <label className="col-sm-2 text-left col-form-label">Reference#</label>
+                        <label className="col-sm-2 text-left col-form-label">Reference #<span className="text-danger">*</span></label>
                         <div className="col-sm-3 ">
                             <input
                                 className="form-control text-left"
@@ -242,11 +244,12 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={referenceNo}
                                 onChange={(e) => onChange(e)}
                                 type="text"
+                                required
                             />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Created <span className="text-danger">*</span></label>
+                        <label className="col-sm-2 col-form-label">Created</label>
                         <div className="col-sm-3 mr-4">
                             <input
                                 className="form-control text-left"
@@ -254,6 +257,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={createdBy}
                                 onChange={(e) => onChange(e)}
                                 type="text"
+                                readOnly
                             />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
@@ -277,6 +281,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 value={postedBy}
                                 onChange={(e) => onChange(e)}
                                 type="text"
+                                readOnly
                             />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>

@@ -7,12 +7,12 @@ import PropTypes from "prop-types";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 
-const TransactionItemConsumptionList = ({ user, data, refreshData, deleteData, exportData }) => {
+const ItemConsumptionList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Transaction ItemConsumption List";
   const img = <FaLayerGroup className="module-img" />;
-  const path =  "/transaction/non-komersil";
+  const path = "/transaction/non-komersil";
   const url = "ItemConsumption";
-  const role = "transaction- TransactionItemConsumptionList";
+  const role = "transaction- TItemConsumptionList";
 
   const columns = [
     { label: "VOUCHER #", key: "voucherNo", width: 100, cardTitle: true },
@@ -36,16 +36,16 @@ const TransactionItemConsumptionList = ({ user, data, refreshData, deleteData, e
   const customRenderValue = (col, value, item) => {
     if (col.key == "status") {
       if (value == "Y")
-          return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">POSTED</div></h6 >);
       else
-          return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
-  }
+        return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">WAITING</div></h6 >);
+    }
+  };
+
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
 };
 
-return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}  customRenderValue={customRenderValue} />;
-};
-
-TransactionItemConsumptionList.propTypes = {
+ItemConsumptionList.propTypes = {
   user: PropTypes.object,
   data: PropTypes.object,
   refreshData: PropTypes.func,
@@ -58,4 +58,4 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData })(TransactionItemConsumptionList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData })(ItemConsumptionList);

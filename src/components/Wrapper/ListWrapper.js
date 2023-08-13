@@ -434,8 +434,11 @@ const ListWrapper = (props) => {
       );
     } else if (customRenderValue !== undefined) {
       var returnValue = customRenderValue(col, value, item);
-      if (returnValue === undefined)
-        returnValue = value;
+      if (col.type === "badge")
+        returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">{returnValue}</div></h6 >);
+      else
+        if (returnValue === undefined)
+          returnValue = value;
 
       return returnValue;
     } else return value;

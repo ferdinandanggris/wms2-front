@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { FaLayerGroup } from "react-icons/fa";
 
 import { connect } from "react-redux";
@@ -15,15 +15,15 @@ const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, ex
   const role = "transaction -RawMaterialUsageList";
 
   const columns = [
-    { label: "CODE", key: "code", width: 80, type: "number", align: "right", cardSubTitle: true },
+
     { label: "VOUCHER#", key: "voucherNo", width: 100, cardTitle: true },
-    { label: "REFERENCE#", key: "referenceNo", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "VENDOR", key: "vendorId", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED BY", key: "createdBy", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "CREATED DATE", key: "dateIn", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED BY", key: "postedBy", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "POSTED Date", key: "postDate", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "status", width: 80, type: "custom", align: "right", cardSubTitle: true },
+    { label: "REFERENCE#", key: "referenceNo", width: 80, type: "text", align: "left", cardSubTitle: true },
+    { label: "VENDOR", key: "vendorId", width: 80, type: "text", align: "left", cardSubTitle: true },
+    { label: "CREATED BY", key: "createdBy", width: 80, type: "text", align: "left", cardSubTitle: true },
+    { label: "CREATED DATE", key: "dateIn", width: 80, type: "datetime", align: "left", cardSubTitle: true },
+    { label: "POSTED BY", key: "postedBy", width: 80, type: "text", align: "left", cardSubTitle: true },
+    { label: "POSTED Date", key: "postDate", width: 80, type: "datetime", align: "left", cardSubTitle: true },
+    { label: "STATUS", key: "status", width: 80, type: "badge", align: "left", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";
@@ -35,15 +35,25 @@ const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, ex
   }, [user, refreshData]);
 
   const customRenderValue = (col, value, item) => {
-    if (col.key == "status") {
-        if (value == 0)
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Posted</div></h6 >);
-        else
-            return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Waiting</div></h6 >);
-    }
-};
+    if (col.key == "vendorId") {
+      if (item.vendor != null)
+        return item.vendor.name;
+      else
+        return "";
+    } else if (col.key == "status") {
+      if (value == "Y")
+        return "Completed";
+      else if (value == "N")
+        return "Incomplete";
+      else if (value == "C")
+        return "Closed";
+      else
+        return "";
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}  customRenderValue={customRenderValue} />;
+    }
+  };
+
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
 };
 RawMaterialBatchReceivingList.propTypes = {
   user: PropTypes.object,
