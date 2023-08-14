@@ -1,4 +1,4 @@
-import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends, FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt, FaCubes } from "react-icons/fa";
+import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends,FaChartBar , FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt, FaCubes, FaUndo, FaDesktop, FaList, FaBoxOpen, FaPallet, FaSearch, FaChalkboardTeacher, FaBalanceScaleRight, FaCube, FaSteam, FaStream } from "react-icons/fa";
 
 const AdminMenu = [
   {
@@ -19,12 +19,12 @@ const AdminMenu = [
       },
       {
         path: "/master/lead-customer",
-        icon: <FaMapMarkedAlt className="sidebar-icon" />,
+        icon: <FaBox className="sidebar-icon" />,
         title: "Lead Customer",
       },
       {
         path: "/master/uom",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaBalanceScaleRight className="sidebar-icon" />,
         title: "Unit Of Measurement",
       },
       {
@@ -34,17 +34,17 @@ const AdminMenu = [
       },
       {
         path: "/master/gate",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaDesktop className="sidebar-icon" />,
         title: "Gate",
       },
       {
         path: "/master/category",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaList className="sidebar-icon" />,
         title: "Categories",
       },
       {
         path: "/master/packing",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaBoxOpen className="sidebar-icon" />,
         title: "Packings",
       },
       {
@@ -54,39 +54,39 @@ const AdminMenu = [
       },
       {
         path: "/master/pallet",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaPallet className="sidebar-icon" />,
         title: "Pallet",
       },
       {
         path: "/master/location",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaSearch className="sidebar-icon" />,
         title: "Locations",
       },
       {
         path: "/master/warehouse",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaHome className="sidebar-icon" />,
         title: "Warehouses",
       },
       {
         path: "/master/customer",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaUserFriends className="sidebar-icon" />,
         title: "Customer",
       },
       {
         path: "/master/vendor",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChalkboardTeacher className="sidebar-icon" />,
         title: "Vendor",
       },
     ],
   },
   {
     group: "transaction",
-    icon: <FaThList className="sidebar-icon" />,
+    icon: <FaStream className="sidebar-icon" />,
     title: "Transaction",
     subMenus: [
       {
         path: "/transaction/spk",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaFile className="sidebar-icon" />,
         title: "SPK",
       },
       {
@@ -96,12 +96,12 @@ const AdminMenu = [
       },
       {
         path: "/transaction/batch-number",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaLayerGroup className="sidebar-icon" />,
         title: "Batch Number",
       },
       {
         path: "/transaction/item-adjustment",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "Item Adjustment",
       },
       {
@@ -111,29 +111,29 @@ const AdminMenu = [
       },
       {
         path: "/transaction/shipping",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaTruckLoading className="sidebar-icon" />,
         title: "Shipping",
       },
       {
         path: "/transaction/return",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaUndo className="sidebar-icon" />,
         title: "Return",
       },
       {
         path: "/transaction/non-komersil",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaTruckLoading className="sidebar-icon" />,
         title: "Non Komersil",
       },
     ],
   },
   {
     group: "transaction-rm",
-    icon: <FaThList className="sidebar-icon" />,
+    icon: <FaCubes className="sidebar-icon" />,
     title: "Transaction RM",
     subMenus: [
       {
         path: "/transaction-rm/raw-material-batch",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaLayerGroup className="sidebar-icon" />,
         title: "Raw Material Batch",
       },
       {
@@ -143,7 +143,7 @@ const AdminMenu = [
       },
       {
         path:  "/transaction-rm/raw-material-usage",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaTruckLoading className="sidebar-icon" />,
         title: "Raw Material Usage",
       },
 

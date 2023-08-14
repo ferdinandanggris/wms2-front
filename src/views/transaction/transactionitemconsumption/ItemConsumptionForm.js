@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
-import { FaLayerGroup, FaPlus, FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, } from "react-icons/fa";
+import { FaLayerGroup, FaPlus, FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -20,12 +20,13 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     let { id } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
-    const title = "  Item Consumption Form";
+    const title = " Non Komersil";
     const img = <FaLayerGroup className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     const path = "/transaction/non-komersil";
     const url = "ItemConsumption";
     const role = "transaction -ItemConsumptionForm";
+    const [itemConsumptionDetails, setItemConsumptionDetails] = useState([]);
 
     const [formData, setFormData] = useState({
         id: 0,
@@ -61,7 +62,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
 
     });
 
-    const { name, vendor, locationId, location, itemConsumptionDetails, pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
+    const { name, vendor, locationId, location,pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [locationlist, setLocation] = useState([]);
@@ -177,12 +178,22 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     }, [master]);
     const onChange = (e) => {
         e.preventDefault();
-        setFormData({ ...formData, [e.target.name]: e.target.value });
         if (e.target.name === "batchno") {
-            settempbatchno(e.target.value)
+          const newBatchId = e.target.value;
+          const newDetail = {
+            batchId: newBatchId,
+            itemName: "",
+            qty: 0,
+            uom: "",
+            totalPcs: 0,
+            remarkk: "",
+          };
+          setItemConsumptionDetails([...itemConsumptionDetails, newDetail]);
+          setFormData({ ...formData, [e.target.name]: newBatchId });
+        } else {
+          setFormData({ ...formData, [e.target.name]: e.target.value });
         }
-
-    };
+      };
 
     const handleSave = (e) => {
         e.preventDefault();
@@ -348,7 +359,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const element = () => {
         return (
             <div className="detail">
-                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Receiving</div>
+                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Non Komersil</div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>
@@ -463,14 +474,15 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
-                            <input
-                                name="batchno"
-                                value={itemConsumptionDetails.batchId}
-                                type="text"
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                                placeholder="Search..."
-                            />
+                        <input
+                     name="batchno"
+                     value={formData.batchId}
+                    type="text"
+                    onChange={(e) => onChange(e)}
+                    className="form-control text-left"
+                    placeholder="Search..."
+                    required
+                    />
                         </div>
                         <div className="col-sm-2 text-left col-form-label">
                             <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
@@ -486,6 +498,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                             </label>
                         </div>
                     </div>
+                  
                     <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
                         <Tab eventKey="ContactDetail" title={<span><FaLayerGroup style={tabIconStyle} /> Item Detail</span>}>
                             <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
@@ -505,28 +518,6 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                                     </thead>
                                     <tbody>
                                         {renderItem()}
-                                        {/* {  itemConsumptionDetails!== undefined &&
-       itemConsumptionDetails !== null &&
-       itemConsumptionDetails .map((details , index) => { 
-        return (
-          <tr key={index}>
-               <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{details.batchId}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.itemName}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.qty}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.uom}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.remark}</td> {}
-            <td style={{ textAlign: 'center' }}>{details.totalPcs}</td> {}
-            <td style={{ textAlign: 'center' }}>
-                  <input
-                    type="text"
-                    value={remarks[index] || ""}
-                    onChange={(e) => setRemarks({ ...remarks, [index]: e.target.value })}
-                  />
-                </td>
-          </tr>
-        );
-      })} */}
                                     </tbody>
                                 </RTable>
                             </div>

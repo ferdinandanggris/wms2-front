@@ -8,7 +8,7 @@ import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const ItemConsumptionList = ({ user, data, refreshData, deleteData, exportData }) => {
-  const title = "Transaction ItemConsumption List";
+  const title = "Non Komersil List";
   const img = <FaLayerGroup className="module-img" />;
   const path = "/transaction/non-komersil";
   const url = "ItemConsumption";

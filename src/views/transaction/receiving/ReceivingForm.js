@@ -201,11 +201,24 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
     setFormData({ ...formData, receivingDetails: details });
   };
-  const onSelectChange = (e, name) => {
+  const onSelectChange = (e, name,index) => {
     if (name === "category") {
       e.preventDefault();
       setFormData({ ...formData, [name]: e.target.value });
-    } else {
+    } else if (name === "location") {
+      let details = receivingDetails;
+    
+      details[index]["locationId"] = e.id;
+  
+      setFormData({ ...formData, receivingDetails: details });
+    } else if (name === "pallet") {
+      let details = receivingDetails;
+    
+      details[index]["palletId"] = e.id;
+  
+      setFormData({ ...formData, receivingDetails: details });
+
+     } else {
       setFormData({ ...formData, [name]: e.id });
     }
   };
@@ -375,12 +388,15 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
               </tr>
             </thead>
 
+          {console.log(receivingDetails)}
+
             <tbody>
               {receivingDetails !== undefined &&
                 receivingDetails !== null &&
                 receivingDetails.map((details, index) => {
                   const location = locationlist.find((obj) => obj.id === details.locationId);
                   console.log(details.locationId)
+                  console.log(details)
                   const pallet = palletList.find((obj) => obj.id === details.palletId);
                   return (
                     <tr key={index}>
@@ -398,10 +414,30 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                       </td>
                       <td style={{ textAlign: 'center' }}>{details.uom}</td>
                       <td style={{ textAlign: 'center' }}>
-                        {pallet && `${pallet.code} - ${pallet.name}`}
+                      <Select2
+                          options={master.pallet}
+                          optionValue={(option) => option.id.toString()}
+                          optionLabel={(option) => (String(option.code)).concat(" - ", option.name)}
+                          placeholder={"** Please select"}
+                          required
+                          value={master.pallet !== null ? master.pallet.find((obj) => obj.id === details.palletId) : ""}
+                          handleChange={(e) => {
+                            onSelectChange(e, "pallet",index);
+                          }}
+                        />
                       </td>
                       <td style={{ textAlign: 'center' }}>
-                        {location && `${location.code} - ${location.name}`}
+                        <Select2
+                          options={master.location}
+                          optionValue={(option) => option.id.toString()}
+                          optionLabel={(option) => (String(option.code)).concat(" - ", option.name)}
+                          placeholder={"** Please select"}
+                          required
+                          value={master.location !== null ? master.location.find((obj) => obj.id === details.locationId) : ""}
+                          handleChange={(e) => {
+                            onSelectChange(e, "location",index);
+                          }}
+                        />
                       </td>
                       <td style={{ textAlign: 'center' }}>{details.remark}</td>
                     </tr>

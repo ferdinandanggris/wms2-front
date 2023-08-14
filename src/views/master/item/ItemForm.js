@@ -29,7 +29,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   const [formData, setFormData] = useState({
     id: 0,
     name: "",
-    code: 0,
+    code: null,
     uomId: 0,
     packingId: "",
     initial: 0,
@@ -70,9 +70,19 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   console.log("masterGroup", master.group)
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
-      if (data.module !== url) return;
-      if (data.data !== undefined && data.data !== null) {
+      if (data.module !== url) return;    
+      if (data.data !== undefined && data.data !== null) {    
         console.log("data", data)
+        const newItemGroupDetail = {
+          id: 0,
+          name: "", 
+          code: "",
+          dateIn: null,
+          dateUp: null,
+          userIn: null,
+          userUp: null,
+          groupId:0, 
+        };
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
           name: data.data.name,
@@ -95,9 +105,11 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
           spPalletDetails: data.data.spPalletDetails,
           spLocationDetails: data.data.spLocationDetails
         });
+        
       }
     }
   }, [id, data, setFormData]);
+
 
 
   const onChange = (e) => {
@@ -120,6 +132,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     e.preventDefault();
 
     if (id === undefined) {
+      console.log(formData)
       addData({ url, body: formData }).then(() => {
         navigate(`${path}/create?`);
       });
@@ -144,6 +157,10 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
       setFormData({ ...formData, [name]: e.id });
     }
     else if (name === "group") {
+      e.push({
+        groupId:e.id,
+      })
+      console.log(e,"itemGroupDetails")
       setFormData({ ...formData, itemGroupDetails: e })
     }
     else if (name === "uomId") {
@@ -160,7 +177,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
             <label className="col-sm-2 col-form-label">Code
               <span className="text-danger">*</span></label>
             <div className="col-sm-10">
-              <input name="code" value={code} type="nummber" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
+              <input name="code" value={code} type="number" onChange={(e) => onChange(e)} className="form-control text-left" placeholder="" required />
             </div>
           </div>
           <div className="row align-items-center mb-3">
@@ -263,7 +280,6 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                   onSelectChange(e, "group");
                 }}
               />
-              {console.log("setSelectedGroup", selectedGroup)}
             </div>
           </div>
 
