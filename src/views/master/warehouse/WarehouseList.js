@@ -34,7 +34,7 @@ const WarehouseList = ({ user, data, refreshData, deleteData, exportData }) => {
   const customRenderValue = (col, value, item) => {
     if (col.key == "percentage") {
       return (
-        <ProgressBar now={item.occupancy} label={"100%"} />
+        <ProgressBar now={item.percentage} label={item.percentage + "%"} />
       );
     }
   };

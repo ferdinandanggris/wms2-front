@@ -70,18 +70,18 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   console.log("masterGroup", master.group)
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
-      if (data.module !== url) return;    
-      if (data.data !== undefined && data.data !== null) {    
+      if (data.module !== url) return;
+      if (data.data !== undefined && data.data !== null) {
         console.log("data", data)
         const newItemGroupDetail = {
           id: 0,
-          name: "", 
+          name: "",
           code: "",
           dateIn: null,
           dateUp: null,
           userIn: null,
           userUp: null,
-          groupId:0, 
+          groupId: 0,
         };
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
@@ -105,7 +105,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
           spPalletDetails: data.data.spPalletDetails,
           spLocationDetails: data.data.spLocationDetails
         });
-        
+
       }
     }
   }, [id, data, setFormData]);
@@ -138,7 +138,6 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        console.log("formdata", path)
         navigate(`${path}/${id}/edit?`);
       });
     }
@@ -157,11 +156,24 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
       setFormData({ ...formData, [name]: e.id });
     }
     else if (name === "group") {
-      e.push({
-        groupId:e.id,
-      })
-      console.log(e,"itemGroupDetails")
-      setFormData({ ...formData, itemGroupDetails: e })
+      // e.push({
+      //   groupId:e.id,
+      // })
+      // console.log(e,"itemGroupDetails")
+
+      let groupDetails = [];
+
+      e.map((item) => {
+        groupDetails.push({
+          id: 0,
+          itemId: id,
+          itemCode: code,
+          groupId: item.id,
+          orderId: 0
+        });
+      });
+
+      setFormData({ ...formData, itemGroupDetails: groupDetails })
     }
     else if (name === "uomId") {
       setFormData({ ...formData, [name]: e.id });
@@ -273,8 +285,8 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 placeholder={"** Please select"}
                 required
                 value={master.group !== null ? master.group.filter((obj) =>
-                  itemGroupDetails?.some((obj3) => obj.id === obj3.id)
-                ) : ""}
+                  itemGroupDetails?.some((obj3) => obj.id === obj3.groupId)
+                ) : null}
                 isMulti={true}
                 handleChange={(e) => {
                   onSelectChange(e, "group");
