@@ -405,16 +405,17 @@ const ListWrapper = (props) => {
   });
 
   const renderValue = (col, value, item) => {
-    if (value === undefined) {
-      if (customRenderValue !== undefined) {
-        var returnValue = customRenderValue(col, value, item);
-        if (returnValue === undefined)
-          returnValue = null;
+    // if (value === undefined) {
+    //   if (customRenderValue !== undefined) {
+    //     var returnValue = customRenderValue(col, value, item);
+    //     if (returnValue === undefined)
+    //       returnValue = null;
 
-        return returnValue;
-      } else return null;
+    //     return returnValue;
+    //   } else return null;
 
-    }
+    // }
+
     if (col.type === "date") {
       return value === undefined || value === null ? "" : moment(value).format("DD MMM YYYY");
     } else if (col.type === "datetime") {
@@ -433,12 +434,19 @@ const ListWrapper = (props) => {
         </a>
       );
     } else if (customRenderValue !== undefined) {
+
       var returnValue = customRenderValue(col, value, item);
-      if (col.type === "badge")
-        returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">{returnValue}</div></h6 >);
-      else
-        if (returnValue === undefined)
+      if (col.type === "badge") {
+        if (returnValue.className !== undefined) {
+          returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className={"badge badge-pill " + returnValue.className}>{returnValue.text}</div></h6 >);
+        } else {
+          returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">{returnValue}</div></h6 >);
+        }
+      } else {
+        if (returnValue === undefined) {
           returnValue = value;
+        }
+      }
 
       return returnValue;
     } else return value;

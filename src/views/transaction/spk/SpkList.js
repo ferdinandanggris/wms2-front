@@ -42,13 +42,13 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
                 return "";
         }
         else if (col.key == "status") {
-            if (value == "Y")
-                return "Completed";
-            else if (value == "N")
+            if (value === "Y") {
+                return { text: "Completed", className: "badge-success" };
+            } else if (value === "N") {
                 return "Incomplete";
-            else if (value == "C")
+            } else if (value === "C") {
                 return "Closed";
-            else
+            } else
                 return "";
 
         }
