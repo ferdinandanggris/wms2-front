@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "SPK Module";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaFile className="module-img" />;
     const path = "/transaction/spk";
     const url = "order";
     const role = "Transaction - SPK";

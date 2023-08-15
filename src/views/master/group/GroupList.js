@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBox } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const GroupList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Group";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBox className="module-img" />;
   const path = "/master/group";
   const url = "group";
   const role = "Master - Group";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const VendorList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Vendor";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaChalkboardTeacher className="module-img" />;
   const path = "/master/vendor";
   const url = "vendor";
   const role = "Master - Vendor";

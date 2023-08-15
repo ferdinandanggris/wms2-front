@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBalanceScaleRight } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -16,7 +16,7 @@ const UomForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Unit Of Measurement";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBalanceScaleRight className="module-img" />;
   const path = "/master/uom";
   const url = "uom";
   const role = "Master - UOM";

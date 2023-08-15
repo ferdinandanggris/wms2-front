@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaTimes, FaPlus } from "react-icons/fa";
+import { FaBox, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaTimes, FaPlus } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -20,7 +20,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
   const title = " Receiving Form";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBox className="module-img" />;
   // const path = "/master/customer/:id?/:customer";
   const path = "/transaction/receiving";
   const url = "Receiving";

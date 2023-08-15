@@ -1,4 +1,4 @@
-import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends,FaChartBar , FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt, FaCubes, FaUndo, FaDesktop, FaList, FaBoxOpen, FaPallet, FaSearch, FaChalkboardTeacher, FaBalanceScaleRight, FaCube, FaSteam, FaStream } from "react-icons/fa";
+import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends,FaChartBar, FaUser, FaMap, FaUserCog, FaBox, FaCarAlt, FaArchive, FaVoteYea, FaShippingFast, FaCarSide, FaBuilding, FaReceipt, FaTruck, FaFile, FaTruckPickup, FaBoxes, FaPeopleCarry, FaWindowClose, FaCalendarDay, FaCalendarCheck, FaRoute, FaFileAlt, FaMapMarkedAlt, FaClipboardCheck, FaTruckMoving, FaRegHandshake, FaHandshake, FaTruckLoading, FaCompressArrowsAlt, FaFileDownload, FaFileInvoice, FaMoneyCheckAlt, FaCoins, FaCashRegister, FaUserCheck, FaVest, FaBalanceScale, FaCommentsDollar, FaListAlt, FaCubes, FaUndo, FaDesktop, FaList, FaBoxOpen, FaPallet, FaSearch, FaChalkboardTeacher, FaBalanceScaleRight, FaCube, FaSteam, FaStream } from "react-icons/fa";
 
 const AdminMenu = [
   {
@@ -19,7 +19,7 @@ const AdminMenu = [
       },
       {
         path: "/master/lead-customer",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaUser className="sidebar-icon" />,
         title: "Lead Customer",
       },
       {

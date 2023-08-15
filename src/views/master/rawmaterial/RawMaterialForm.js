@@ -20,7 +20,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
   const title = "RawMaterialForm";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaCubes className="module-img" />;
   const path = "/master/raw-material";
   const url = "RawMaterial";
   const role = "Master - RawMaterial";

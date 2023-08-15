@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,7 +11,7 @@ import { loadWarehouse } from "../../../actions/master";
 const LocationList = ({ user, data, refreshData, deleteData, exportData, master, loadWarehouse }) => {
 
     const title = "Location";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaSearch className="module-img" />;
     const path = "/master/location";
     const url = "location";
     const role = "Master - Location";

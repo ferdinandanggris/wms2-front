@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -17,7 +17,7 @@ const WarehouseForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Warehouse";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaHome className="module-img" />;
   const path = "/master/warehouse";
   const url = "warehouse";
   const role = "Master - Warehouse";

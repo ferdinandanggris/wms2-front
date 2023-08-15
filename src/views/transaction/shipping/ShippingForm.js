@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap, FaTrashAlt } from "react-icons/fa";
+import { FaTruckLoading, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap, FaTrashAlt } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -15,7 +15,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Shipping";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaTruckLoading className="module-img" />;
     const path = "/transaction/shipping";
     const url = "Shipping";
     const role = "Transaction - Shipping";

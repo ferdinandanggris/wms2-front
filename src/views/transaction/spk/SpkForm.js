@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
+import { FaFile, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -18,7 +18,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "SPK";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaFile className="module-img" />;
     const path = "/transaction/spk";
     const url = "Order";
     const role = "Transaction - SPK";

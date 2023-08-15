@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaTruckLoading } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../actions/data";
 
 const RawMaterialBatchReceivingList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Raw Material Usage List";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaTruckLoading className="module-img" />;
   const path = "/transaction-rm/raw-material-usage";
   const url = "RawMaterialUsage";
   const role = "transaction -RawMaterialUsageList";

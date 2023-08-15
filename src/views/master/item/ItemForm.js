@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import {  } from "react-icons/fa";
 import Select2 from "../../../components/Select2";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, FaPallet } from "react-icons/fa";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, FaPallet, FaBoxes } from "react-icons/fa";
 import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
@@ -20,8 +20,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
   const title = "Item Type";
-  const img = <FaLayerGroup className="module-img" />;
-  // const path = "/master/item/:id?/:type";
+  const img = <FaBoxes className="module-img" />;
   const path = "/master/item";
   const url = "Item";
   const role = "Master - Item";

@@ -7,14 +7,14 @@ import { loadData, addData, editData } from "../../../actions/data";
 import { loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment } from "../../../actions/master";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends } from "react-icons/fa";
+import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaUser } from "react-icons/fa";
 import "../master.css"
 
 const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Customer";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaUser className="module-img" />;
     const path = "/master/customer";
     const url = "Customer";
     const role = "Master - Customer";

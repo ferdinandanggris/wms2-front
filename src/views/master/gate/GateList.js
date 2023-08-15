@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaDesktop } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const GateList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Gate";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaDesktop className="module-img" />;
   const path = "/master/gate";
   const url = "gate";
   const role = "Master - Gate";

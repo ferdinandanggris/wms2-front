@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -16,7 +16,7 @@ const VendorForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Vendor";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaChalkboardTeacher className="module-img" />;
   const path = "/master/vendor";
   const url = "vendor";
   const role = "Master - Vendor";

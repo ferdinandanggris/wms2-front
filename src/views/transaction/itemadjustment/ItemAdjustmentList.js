@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaChartBar } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
@@ -8,7 +8,7 @@ import { loadVendor } from "../../../actions/master";
 
 const ItemAdjustmentList = ({ user, data, refreshData, deleteData, exportData, master, loadVendor }) => {
     const title = "Item Adjustment Module";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaChartBar className="module-img" />;
     const path = "/transaction/item-adjustment";
     const url = "ItemAdjustment";
     const role = "Transaction - Item Adjustment";

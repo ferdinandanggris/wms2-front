@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import { FaDesktop } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -15,7 +15,7 @@ const GateForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Gate";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaDesktop className="module-img" />;
   const path = "/master/Gate";
   const url = "Gate";
   const role = "Master - Gate";

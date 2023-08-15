@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBoxOpen } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -15,7 +15,7 @@ const PackingForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Packing";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBoxOpen className="module-img" />;
   const path = "/master/packing";
   const url = "packing";
   const role = "Master - Packing";

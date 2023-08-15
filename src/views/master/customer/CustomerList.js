@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaUserFriends } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "Customer";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaUserFriends className="module-img" />;
     const path = "/master/customer";
     const url = "customer";
     const role = "Master - Customer";
