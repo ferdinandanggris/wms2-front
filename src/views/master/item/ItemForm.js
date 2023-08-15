@@ -11,10 +11,13 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadItem, loadPacking, loadGroup, loadUom } from "../../../actions/master";
+import { loadCategory, loadItem, loadPacking, loadGroup, loadUom, loadBatch } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
-const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking, loadGroup, loadUom }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import PagingComponent from "../../../components/Paging/PagingComponent";
+
+const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch }) => {
   let { id } = useParams();
 
   const navigate = useNavigate();
@@ -52,9 +55,19 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     batches: []
   });
 
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(0);
+  // const [data, setData] = useState([]);
+
   const { name, code, initial, uomId, packingId, isActive, incoming, outgoing, exclusive, category, qtyPerPacking, balance, type, spWarehouseDetails, spLocationDetails,
     spPalletDetails, itemGroupDetails, batches } = formData;
   const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const dispatch = useDispatch();
+  const dataBatches = useSelector(state => state.master.batch);
+  const total = useSelector(state => state.master.total);
+  const page = useSelector(state => state.master.page);
+
   useEffect(() => {
     if (user !== null && id !== undefined) {
       loadData({ url, id });
@@ -65,9 +78,16 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadPacking();
     loadGroup();
     loadUom();
-  }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom]);
-  console.log("formdata", formData)
-  console.log("masterGroup", master.group)
+    loadBatch({ limit: 10, page: 0, filterSearch: "itemid:" + id });
+
+  }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch]);
+  // console.log("formdata", formData)
+  // console.log("masterGroup", master.group)
+
+  const handlePageChange = (page) => {
+    dispatch(loadBatch({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
+  };
+
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
@@ -330,9 +350,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                   </tr>
                 </thead>
                 <tbody>
-                  {batches !== undefined &&
-                    batches !== null &&
-                    batches.map((batch, index) => {
+                  {dataBatches !== undefined &&
+                    dataBatches !== null &&
+                    dataBatches.map((batch, index) => {
                       return (
                         <tr key={index}>
                           <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -346,6 +366,13 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                     })}
                 </tbody>
               </RTable>
+              <PagingComponent
+                totalPages={5}
+                currentPage={page + 1}
+                limit={10}
+                total={total}
+                onPageChange={handlePageChange}
+              />
             </div>
           </Tab>
 
@@ -460,6 +487,7 @@ ItemForm.propTypes = {
   loadUom: propTypes.func,
   loadPacking: PropTypes.func,
   loadGroup: propTypes.func,
+  loadBatch: propTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
 };
@@ -470,4 +498,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking, loadGroup, loadUom })(ItemForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch })(ItemForm);
