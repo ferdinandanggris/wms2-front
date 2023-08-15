@@ -39,6 +39,9 @@ export const LOAD_ORDER = "LOAD_ORDER";
 export const LOAD_COUNTRY = "LOAD_COUNTRY";
 export const LOAD_DISTRICT = "LOAD_DISTRICT";
 export const LOAD_PROVINCE = "LOAD_PROVINCE";
+export const LOAD_TERMOFPAYMENT = "LOAD_TERMOFPAYMENT";
+export const LOAD_SELLER = "LOAD_SELLER";
+export const LOAD_CITY = "LOAD_CITY";
 
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
@@ -51,7 +54,6 @@ export const LOAD_WAREHOUSE = "LOAD_WAREHOUSE";
 export const LOAD_GROUP = "LOAD_GROUP";
 export const LOAD_SECTOR = "LOAD_SECTOR";
 export const LOAD_ADDRESS = "LOAD_ADDRESS";
-export const LOAD_TERMOFPAYMENT = "LOAD_TERMOFPAYMENT";
 export const LOAD_ACCOUNT = "LOAD_ACCOUNT";
 export const LOAD_PRODUCT = "LOAD_PRODUCT";
 export const LOAD_POOL = "LOAD_POOL";

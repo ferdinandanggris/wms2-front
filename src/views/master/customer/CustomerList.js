@@ -33,7 +33,7 @@ const CustomerList = ({ user, data, refreshData, deleteData, exportData }) => {
             if (value == 0)
                 return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
             else
-                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">In Active</div></h6 >);
+                return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-warning">In Active</div></h6 >);
         }
     };
 

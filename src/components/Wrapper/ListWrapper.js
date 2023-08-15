@@ -439,10 +439,12 @@ const ListWrapper = (props) => {
       if (col.type === "badge") {
         if (returnValue.className !== undefined) {
           returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className={"badge badge-pill " + returnValue.className}>{returnValue.text}</div></h6 >);
-        } else {
+        }
+        else {
           returnValue = (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">{returnValue}</div></h6 >);
         }
-      } else {
+      }
+      else {
         if (returnValue === undefined) {
           returnValue = value;
         }

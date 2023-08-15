@@ -367,7 +367,10 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                     return (
                                         <tr key={index}>
                                             <td className="text-center">
-                                                <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
+                                                <input type="checkbox"
+                                                    checked={details.checked !== undefined && details.checked}
+                                                    onChange={(e) => onDetailCheck(e, index)}
+                                                />
                                             </td>
                                             <td className="text-center">{index + 1}</td>
                                             <td style={{ textAlign: 'center' }}>
@@ -430,11 +433,7 @@ RawMaterialReceivingForm.propTypes = {
     master: PropTypes.object,
     addData: PropTypes.func,
     editData: PropTypes.func,
-    loadWarehouse: PropTypes.func,
-    loadVendor: PropTypes.func,
-    loadPallet: PropTypes.func,
-    loadLocation: PropTypes.func,
-    loadBatch: PropTypes.func,
+    loadData: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus, FaCheck, FaCubes } from "react-icons/fa";
+import { FaLayerGroup, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -538,45 +538,9 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                     </div>
 
                     <div style={{ marginTop: "30px" }}></div>
-                    {/* <hr style={{ borderColor: "gray", opacity: 0.5 }} /> */}
-
-                    {/* <div className="row align-items-center mt-4 mb-4">
-                        <label className="col-sm-2 col-form-label">Item No</label>
-                        <div className="col-sm-4">
-                            <Select2
-                                options={itemList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
-                                placeholder={"Pick Item"}
-                                value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
-                                handleChange={(e) => onSelectChange(e, "itemId")}
-                            />
-                        </div>
-                        <div className="col-sm-1 col-form-label">
-                            <button className="btn btn-primary ml-4" >
-                                <FaCheck /> Select
-                            </button>
-                        </div>
-                        <div className="col-sm-1 col-form-label">
-                            <button className="btn btn-primary ml-5" >
-                                <FaCubes /> Select
-                            </button>
-                        </div>
-                        <div className="col-sm-0" style={{ marginLeft: "70px" }}>
-                            <div className="form-check">
-                                <input
-                                    id="newItemCheckbox"
-                                    type="checkbox"
-                                    className="form-check-input"
-                                />
-                                <label className="form-check-label" htmlFor="newItemCheckbox">
-                                    New Item
-                                </label>
-                            </div>
-                        </div>
-                    </div> */}
 
                     <hr style={{ borderColor: "gray", opacity: 0.5 }} />
-                    {/* <div style={{ marginBottom: "40px" }}></div> */}
+
                 </div>
 
                 <div className="d-flex justify-content-end mb-2">
@@ -624,10 +588,10 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 SpkForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
+    master: PropTypes.object,
     loadData: PropTypes.func,
     addData: PropTypes.func,
-    editData: PropTypes.func,
-    master: PropTypes.object
+    editData: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({

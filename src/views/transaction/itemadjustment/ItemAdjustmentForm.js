@@ -181,6 +181,41 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         setFormData({ ...formData, itemAdjustmentDetails: updatedDetails });
     };
 
+    const handleProductInputKeyDown = (e) => {
+        if (e.key === "Enter") {
+            const batchCode = e.target.value;
+            const selectedBatch = batchList.find((batch) =>
+                batch.code.toLowerCase() === batchCode.toLowerCase()
+            );
+
+            if (selectedBatch) {
+                handleAddBatch(selectedBatch);
+            }
+
+            e.target.value = "";
+        }
+    };
+
+    const handleAddBatch = (selectedBatch) => {
+        let details = [...itemAdjustmentDetails];
+
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.id);
+
+        if (existingBatchIndex === -1) {
+            details.unshift({
+                checked: false,
+                id: 0,
+                warehouseId: 0,
+                vendorId: 0,
+                batchId: selectedBatch.id,
+                qty: 0,
+                voucherNo: "",
+                referenceNo: "",
+            });
+            setFormData({ ...formData, itemAdjustmentDetails: details });
+        }
+    };
+
     const onDetailCheck = (e, index) => {
         let details = itemAdjustmentDetails;
         if (details === undefined || details === null) details = [];
@@ -366,14 +401,15 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
-                        <div className="col-sm-5">
+                        <div className="col-sm-4">
                             <input
                                 name="batchNo"
                                 value={batchNo}
                                 type="text"
                                 onChange={(e) => onChange(e)}
+                                onKeyDown={(e) => handleProductInputKeyDown(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                placeholder="Input Batch"
                             />
                         </div>
                         <div className="input-group-append col-sm-2 col-form-label">
@@ -401,7 +437,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Import</label>
-                        <div className="col-sm-5">
+                        <div className="col-sm-4">
                             <div className="input-group">
                                 <input
                                     name=""
@@ -430,7 +466,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
                             <tr>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
+                                {/* <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th> */}
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
@@ -450,18 +486,47 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                     const actualIndex = startIndex + index + 1;
                                     return (
                                         <tr key={index}>
-                                            <td className="text-center">
-                                                <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
-                                            </td>
                                             <td className="text-center">{actualIndex}</td>
                                             <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                            <td style={{ textAlign: 'center', width: '15%'  }}>{details.itemName}</td>
                                             <td style={{ textAlign: 'center' }}>{details.stock}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                            <td style={{ textAlign: 'center', width: '9%' }}>
+                                                <input
+                                                    type="text"
+                                                    value={details.qty}
+                                                    onChange={(e) => onChange(e, index)}
+                                                    className="form-control text-center"
+                                                    style={{ maxWidth: '80px' }}
+                                                />
+                                            </td>
                                             <td style={{ textAlign: 'center' }}>{details.uom}</td>
-                                            <td style={{ textAlign: 'center' }}>{getPalletNameById(details.palletId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{getLocationNameById(details.locationId)}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <Select2
+                                                    options={palletList}
+                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                                    placeholder={"Pick Pallet"}
+                                                    value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(details.palletId))}
+                                                    handleChange={(e) => onSelectChange(e, "palletId")}
+                                                />
+                                            </td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <Select2
+                                                    options={locationList}
+                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                                                    placeholder={"Pick Location"}
+                                                    value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
+                                                    handleChange={(e) => onSelectChange(e, "locationId")}
+                                                />
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '11%' }}>
+                                                <input
+                                                    type="text"
+                                                    value={details.remark}
+                                                    onChange={(e) => onChange(e, index)}
+                                                    className="form-control text-center"
+                                                    style={{ maxWidth: '100px' }}
+                                                />
+                                            </td>
                                             <td className="text-center">
                                                 <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
                                                     <FaTrashAlt style={{ marginTop: "5px" }} />

@@ -31,7 +31,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         status: "",
         color: "",
         qc: "",
-        qty: 0,
+        qty: "",
         visual: "",
         description: "",
         spListTransactions: []
@@ -102,7 +102,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                navigate(`${path}/${formData.id}/edit`);
+                navigate(`${path}`);
             });
         } else {
             editData({ url, body: formData }).then(() => {
@@ -130,8 +130,6 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
         });
     }
 
-    console.log("ID", id)
-
     const element = () => {
         return (
             <div className="detail">
@@ -152,6 +150,7 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                required
                             />
                         </div>
                     </div>
@@ -165,7 +164,9 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Item"}
                                 value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
-                                handleChange={(e) => onSelectChange(e, "itemId")} />
+                                handleChange={(e) => onSelectChange(e, "itemId")}
+                                required
+                            />
                         </div>
                     </div>
                     <div className="row align-items-center mt-4 mb-3">
@@ -236,10 +237,10 @@ const BatchNumberForm = ({ user, data, loadData, addData, editData, master, load
                             <input
                                 name="qty"
                                 value={qty}
-                                type="number"
+                                type="text"
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
-                                className="form-control text-right"
+                                className="form-control text-left"
                             />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Visual</label>

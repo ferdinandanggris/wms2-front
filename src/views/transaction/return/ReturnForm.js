@@ -57,7 +57,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
     const [shippingList, setShipping] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState('');
-    const { voucherNo, referenceNo, transDate, postDate, locationId, palletId, createdBy, postedBy, remark, customerId, orderId, shippingNo, truckNo, picker, deliveryOrderNo, warehouseId, dateIn, dateUp, userIn, userUp, warehouse, customer, location, pallet, shippingId, batchNo, returnDetails } = formData;
+    const { voucherNo, referenceNo, postDate, locationId, palletId, createdBy, postedBy, customerId, truckNo, picker, dateIn, shippingId, batchNo, returnDetails } = formData;
 
     useEffect(() => {
         loadWarehouse();
@@ -585,12 +585,6 @@ ReturnForm.propTypes = {
     addData: PropTypes.func,
     editData: PropTypes.func,
     loadData: PropTypes.func,
-    loadBatch: PropTypes.func,
-    loadPallet: PropTypes.func,
-    loadLocation: PropTypes.func,
-    loadWarehouse: PropTypes.func,
-    loadCustomer: PropTypes.func,
-    loadShipping: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

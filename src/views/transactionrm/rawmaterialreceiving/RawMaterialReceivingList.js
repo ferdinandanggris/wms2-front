@@ -45,17 +45,15 @@ const RawMaterialReceivingList = ({ user, data, refreshData, deleteData, exportD
         return "";
     } else if (col.key == "status") {
       if (value == "Y")
-        return "Completed";
+        return { text: "Posted", className: "badge-success" };
       else if (value == "N")
-        return "Incomplete";
+        return { text: "Waiting", className: "badge-warning" };
       else if (value == "C")
-        return "Closed";
+        return { text: "Draft", className: "badge-primary" };
       else
         return "";
-
     }
   };
-
 
   return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
 };

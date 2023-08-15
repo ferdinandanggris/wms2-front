@@ -4,13 +4,13 @@ import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loadData, addData, editData } from "../../../actions/data";
-import { loadCountry, loadDistrict, loadProvince } from "../../../actions/master";
+import { loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment } from "../../../actions/master";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends } from "react-icons/fa";
 import "../master.css"
 
-const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince }) => {
+const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Customer";
@@ -46,7 +46,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         virtualAccount: "",
         seller: "",
         isActive: 1,
-
         billingAddress: "",
         billingPostalCode: "",
         billingPhone: "",
@@ -54,7 +53,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         billingProvince: "",
         billingCity: "",
         billingDistrict: "",
-
+        billingName: "",
+        billingEmail: "",
+        billingStreet: "",
         deliveryAddress: "",
         deliveryPostalCode: "",
         deliveryPhone: "",
@@ -62,22 +63,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         deliveryProvince: "",
         deliveryCity: "",
         deliveryDistrict: "",
-
-        // deliveryTitleName: "",
-        // billingTitleName: "",
-
-        billingName: "",
-        billingEmail: "",
-        billingStreet: "",
-
-        businessEntity: "",
-        category: "",
-        tempo: 0,
-
         deliveryName: "",
         deliveryEmail: "",
         deliveryStreet: "",
-
+        businessEntity: "",
+        category: "",
+        tempo: 0,
         fotoKTP: "",
         fotoNPWP: "",
         fotoSPPKP: "",
@@ -90,19 +81,27 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
     const [countryList, setCountry] = useState([]);
     const [billingDistrictList, setBillingDistrict] = useState([]);
     const [billingProvinceList, setBillingProvince] = useState([]);
+    const [billingCityList, setBillingCity] = useState([]);
 
     const [deliveryDistrictList, setDeliveryDistrict] = useState([]);
     const [deliveryProvinceList, setDeliveryProvince] = useState([]);
+    const [deliveryCityList, setDeliveryCity] = useState([]);
 
-    const { name, type, isActive, code, businessEntity, businessEntityName, deliveryTitleName, paymentTerm, tempo, customerType, seller, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingProvince, billingPhone, billingCity, billingPostalCode, billingDistrict, billingFax, billingEmail, billingStreet, billingAddress, deliveryPhone, deliveryProvince, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryCity, deliveryDistrict, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP, countryId, districtId, provinceId } = formData;
+    const [sellerList, setSeller] = useState([]);
+    const [termOfPaymentList, setTermOfPayment] = useState([]);
+
+    const { name, type, isActive, code, businessEntity, businessEntityName, deliveryTitleName, tempo, customerType, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingPhone, billingPostalCode, billingFax, billingEmail, billingStreet, billingAddress, deliveryPhone, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP, sellerId, termOfPaymentId } = formData;
 
     useEffect(() => {
         loadCountry();
         loadDistrict();
         loadProvince();
+        loadCity();
+        loadSeller();
+        loadTermOfPayment();
         if (user !== null && id !== undefined)
             loadData({ url, id });
-    }, [id, user, loadData, loadCountry, loadDistrict, loadProvince]);
+    }, [id, user, loadData, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment]);
 
     useEffect(() => {
         if (master.country !== undefined && master.country !== null) {
@@ -143,6 +142,43 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
             setBillingProvince(list);
             setDeliveryProvince(list);
         }
+        if (master.city !== undefined && master.city !== null) {
+            let list = [...master.city];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No City",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setBillingCity(list);
+            setDeliveryCity(list);
+        }
+        if (master.seller !== undefined && master.seller !== null) {
+            let list = [...master.seller];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Seller",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setSeller(list);
+        }
+        if (master.termOfPayment !== undefined && master.termOfPayment !== null) {
+            let list = [...master.termOfPayment];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Term Of Payment",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setTermOfPayment(list);
+        }
     }, [master]);
 
     useEffect(() => {
@@ -154,6 +190,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     code: data.data.code,
                     name: data.data.name,
                     seller: data.data.seller,
+                    city: data.data.city,
                     deliveryAddress: data.data.deliveryAddress,
                     deliveryPostalCode: data.data.deliveryPostalCode,
                     deliveryPhone: data.data.deliveryPhone,
@@ -188,6 +225,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     countryId: data.data.countryId,
                     districtId: data.data.districtId,
                     provinceId: data.data.provinceId,
+                    cityId: data.data.cityId,
+                    sellerId: data.data.sellerId,
+                    termOfPaymentId: data.data.termOfPaymentId,
                 });
             }
         }
@@ -199,11 +239,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
     };
 
     const onSelectChange = (e, name) => {
-        console.log(e);
-
         let updatedValue;
 
-        if (["billingDistrict", "deliveryDistrict", "deliveryProvince", "billingProvince",].includes(name)) {
+        if (["billingDistrict", "deliveryDistrict", "deliveryProvince", "billingProvince", "billingCity", "deliveryCity"].includes(name)) {
             updatedValue = e.name;
         } else {
             updatedValue = e.id;
@@ -228,8 +266,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
             });
         }
     };
-
-    console.log("ID", id)
 
     const tabIconStyle = {
         marginRight: '5px',
@@ -301,17 +337,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Payment Term</label>
                         <div className="col-sm-3">
-                            <select
-                                className="form-control"
-                                name="paymentTerm"
-                                value={paymentTerm}
-                                type="text"
-                                onChange={(e) => onChange(e)}>
-                                <option value="">Select Payment Term</option>
-                                <option value="C.O.D">C.O.D</option>
-                                <option value="term2">Term 2</option>
-                                <option value="term3">Term 3</option>
-                            </select>
+                            <Select2
+                                options={termOfPaymentList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Term Of Payment"}
+                                value={termOfPaymentList === null ? null : termOfPaymentList.filter((option) => option.id === parseInt(termOfPaymentId))}
+                                handleChange={(e) => onSelectChange(e, "termOfPaymentId")} required />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Tempo</label>
                         <div className="col">
@@ -336,14 +367,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Seller</label>
                         <div className="col">
-                            <select className="form-control" type="text" name="seller" value={seller} onChange={(e) => onChange(e)}>
-                                <option value="">Select Seller</option>
-                                <option value="IDS1">IDS1</option>
-                                <option value="SH">SH</option>
-                                <option value="SD">SD</option>
-                                <option value="SN">SN</option>
-                                <option value="AE01">AE01</option>
-                            </select>
+                            <Select2
+                                options={sellerList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                placeholder={"Pick Seller"}
+                                value={sellerList === null ? null : sellerList.filter((option) => option.id === parseInt(sellerId))}
+                                handleChange={(e) => onSelectChange(e, "sellerId")} required />
                         </div>
                     </div>
 
@@ -392,7 +421,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                         value={country ? countryList.find(option => option.name === country) : null}
                                         handleChange={(e) => onSelectChange(e, "country")}
                                     />
-                                    {console.log("country", countryList)}
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
@@ -498,7 +526,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={billingProvinceList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Province"} value={billingProvinceList === null ? null : billingProvinceList.filter((option) => option.name === formData.billingProvince)} handleChange={(e) => onSelectChange(e, "billingProvince")}
+                                        options={billingProvinceList}
+                                        optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name}
+                                        placeholder={"Pick Province"}
+                                        value={billingProvinceList === null ? null : billingProvinceList.filter((option) => option.name === formData.billingProvince)}
+                                        handleChange={(e) => onSelectChange(e, "billingProvince")}
                                     />
                                 </div>
 
@@ -517,14 +550,14 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     City<span className="required-star">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <input
-                                        className="form-control text-left"
-                                        name="billingCity"
-                                        value={billingCity}
-                                        type="text"
-                                        placeholder=""
-                                        onChange={(e) => onChange(e)}
-                                        required />
+                                    <Select2
+                                        options={billingCityList}
+                                        optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name}
+                                        placeholder={"Pick City"}
+                                        value={billingCityList === null ? null : billingCityList.filter((option) => option.name === formData.billingCity)}
+                                        handleChange={(e) => onSelectChange(e, "billingCity")}
+                                    />
                                 </div>
 
                                 <label className="col-sm-1 text-left col-form-label">Postal Code</label>
@@ -544,7 +577,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={billingDistrictList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick District"} value={billingDistrictList === null ? null : billingDistrictList.filter((option) => option.name === formData.billingDistrict)} handleChange={(e) => onSelectChange(e, "billingDistrict")}
+                                        options={billingDistrictList}
+                                        optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name}
+                                        placeholder={"Pick District"}
+                                        value={billingDistrictList === null ? null : billingDistrictList.filter((option) => option.name === formData.billingDistrict)}
+                                        handleChange={(e) => onSelectChange(e, "billingDistrict")}
                                     />
                                 </div>
 
@@ -642,14 +680,10 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     City<span className="required-star">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" type="text" name="deliveryCity" value={deliveryCity} onChange={(e) => onChange(e)} required>
-                                        <option value="">Select City</option>
-                                        <option value="city1">City 1</option>
-                                        <option value="city2">City 2</option>
-                                        <option value="city3">City 3</option>
-                                    </select>
+                                    <Select2
+                                        options={deliveryCityList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick City"} value={deliveryCityList === null ? null : deliveryCityList.filter((option) => option.name === formData.deliveryCity)} handleChange={(e) => onSelectChange(e, "deliveryCity")}
+                                    />
                                 </div>
-
                                 <label className="col-sm-1 text-left col-form-label">
                                     Postal Code
                                 </label>
@@ -672,9 +706,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     />
                                 </div>
 
-                                <label className="col-sm-1 text-left col-form-label">
-                                    Fax
-                                </label>
+                                <label className="col-sm-1 text-left col-form-label">Fax</label>
                                 <div className="col-sm-3">
                                     <input
                                         className="form-control text-left"
@@ -862,7 +894,6 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                 </Tabs>
             </div>
         );
-
     };
 
     return (
@@ -879,9 +910,6 @@ CustomerForm.propTypes = {
     loadData: PropTypes.func,
     addData: PropTypes.func,
     editData: PropTypes.func,
-    loadCountry: PropTypes.func,
-    loadDistrict: PropTypes.func,
-    loadProvince: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -890,4 +918,4 @@ const mapStateToProps = (state) => ({
     master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadCountry, loadDistrict, loadProvince })(CustomerForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment })(CustomerForm);

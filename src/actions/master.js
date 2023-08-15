@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_DISTRICT, LOAD_COUNTRY, LOAD_PROVINCE } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_DISTRICT, LOAD_COUNTRY, LOAD_PROVINCE, LOAD_TERMOFPAYMENT, LOAD_CITY, LOAD_SELLER } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -181,7 +181,6 @@ export const loadCustomer = () => async (dispatch) => {
 //Load Pallet
 export const loadPallet = () => async (dispatch) => {
   try {
-    // const res = await axios.get(`/Pallet`);
     const res = await axios.get(`/Pallet?limit=0&page=0`);
     dispatch({
       type: LOAD_PALLET,
@@ -230,7 +229,6 @@ export const loadBatch = () => async (dispatch) => {
 //Load Shipping
 export const loadShipping = () => async (dispatch) => {
   try {
-    // const res = await axios.get(`/Shipping`);
     const res = await axios.get(`/Shipping?limit=100&page=0`);
     dispatch({
       type: LOAD_SHIPPING,
@@ -260,6 +258,7 @@ export const loadShippingDetail = ({ id }) => async (dispatch) => {
   }
 }
 
+//Load Production
 export const loadproduction = () => async (dispatch) => {
   try {
     const res = await axios.get(`/Production`);
@@ -295,7 +294,7 @@ export const loadOrderDetail = ({ id }) => async (dispatch) => {
 //Load Order
 export const loadOrder = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/Order`);
+    const res = await axios.get(`/Order?limit=10&page=0`);
     dispatch({
       type: LOAD_ORDER,
       payload: res.data,
@@ -346,6 +345,54 @@ export const loadProvince = () => async (dispatch) => {
     const res = await axios.get(`/Province`);
     dispatch({
       type: LOAD_PROVINCE,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Seller
+export const loadSeller = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Sale`);
+    dispatch({
+      type: LOAD_SELLER,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load City
+export const loadCity = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/Regency`);
+    dispatch({
+      type: LOAD_CITY,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+//Load Terom of Payment
+export const loadTermOfPayment = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/TermOfPayment`);
+    dispatch({
+      type: LOAD_TERMOFPAYMENT,
       payload: res.data,
     });
   } catch (err) {

@@ -54,11 +54,11 @@ const BatchNumberList = ({ user, data, refreshData, deleteData, exportData, mast
             }
         } else if (col.key == "status") {
             if (value == "Y")
-                return "Completed";
+                return { text: "Approved", className: "badge-success" };
             else if (value == "N")
-                return "Incomplete";
+                return { text: "Draft", className: "badge-warning" };
             else if (value == "C")
-                return "Closed";
+                return { text: "Canceled", className: "badge-danger" };
             else
                 return "";
         }

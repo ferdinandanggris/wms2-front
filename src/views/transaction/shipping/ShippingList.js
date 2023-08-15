@@ -43,14 +43,13 @@ const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
         }
         else if (col.key == "status") {
             if (value == "Y")
-                return "Completed";
+                return { text: "Posted", className: "badge-success" };
             else if (value == "N")
-                return "Incomplete";
+                return { text: "Waiting", className: "badge-warning" };
             else if (value == "C")
-                return "Closed";
+                return { text: "Draft", className: "badge-primary" };
             else
                 return "";
-
         }
     };
 

@@ -6,12 +6,12 @@ import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
-import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer } from "../../../actions/master";
+import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadOrder } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import "../style.css";
 import moment from "moment";
 
-const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer }) => {
+const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer, loadOrder }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Shipping";
@@ -23,19 +23,17 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const [formData, setFormData] = useState({
         id: 0,
         voucherNo: "",
-        referenceNo: "",
-        orderNo: "",
+        referenceNo: "[AUTO]",
         status: "N",
         transDate: null,
         postDate: null,
         createdBy: "",
         postedBy: "",
         customerId: 0,
-        orderId: 0,
-        orderNo: "",
         truckNo: "",
         picker: "",
         deliveryOrderNo: "",
+        orderId: 0,
         warehouseId: 0,
         picQc: "",
         picWarehouse: "",
@@ -58,7 +56,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const [orderList, setOrder] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState('');
-    const { voucherNo, referenceNo, orderNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, warehouseId, remark, createdBy, dateIn, postedBy, postDate, shippingDetails, batchNo } = formData;
+    const { voucherNo, referenceNo, shippingDate, customerId, truckNo, picQc, picWarehouse, picExpedisi, security, picker, warehouseId, remark, createdBy, dateIn, postedBy, postDate, shippingDetails, batchNo, orderId } = formData;
 
     useEffect(() => {
         loadWarehouse();
@@ -66,10 +64,11 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         loadPallet();
         loadBatch();
         loadCustomer();
+        loadOrder();
         if (user !== null && id !== undefined) {
             loadData({ url, id });
         }
-    }, [id, user, loadData, loadWarehouse, loadPallet, loadBatch, loadLocation, loadCustomer]);
+    }, [id, user, loadData, loadWarehouse, loadPallet, loadBatch, loadLocation, loadCustomer, loadOrder]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -125,7 +124,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "No Customer",
+                    name: "Pick Customer",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -137,7 +136,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "No Order",
+                    voucherNo: "Pick Order",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -153,7 +152,8 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                 let details = data.data.shippingDetails;
                 if (details === undefined || details === null) details = [];
                 let warehouse = data.data.warehouse;
-                if (warehouse === undefined || warehouse === null) warehouse = [];
+                if (warehouse === undefined || warehouse === null)
+                    warehouse = [];
                 details.map((item) => {
                     item.checked = false;
                     return null;
@@ -169,7 +169,6 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                     status: data.data.status,
                     customerId: data.data.customerId,
                     orderId: data.data.orderId,
-                    orderNo: data.data.orderNo,
                     batchNo: data.data.batchNo,
                     truckNo: data.data.truckNo,
                     picker: data.data.picker,
@@ -210,7 +209,21 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     };
 
     const onSelectChange = (e, name) => {
-        setFormData({ ...formData, [name]: e.id });
+        if (name === "orderId") {
+            const selectedOrderId = e.id;
+            const selectedOrder = orderList.find(order => order.id === selectedOrderId);
+
+            setFormData({
+                ...formData,
+                [name]: selectedOrderId,
+                voucherNo: selectedOrder ? selectedOrder.voucherNo : "[AUTO]",
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: e.id,
+            });
+        }
     };
 
     const handleSave = (e) => {
@@ -323,15 +336,12 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                             Orders #<span className="required-star">*</span>
                         </label>
                         <div className="col-3">
-                            <input
-                                name="orderNo"
-                                value={orderNo}
-                                type="text"
-                                placeholder=""
-                                onChange={(e) => onChange(e)}
-                                className="form-control text-left"
-                                required
-                            />
+                            <Select2
+                                options={orderList}
+                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.voucherNo}
+                                placeholder={"Pick order"}
+                                value={orderList === null ? null : orderList.filter((option) => option.id === parseInt(orderId))}
+                                handleChange={(e) => onSelectChange(e, "orderId")} required />
                         </div>
                         <label className="col-sm-2 text-left col-form-label">
                             Shipping Date
@@ -795,11 +805,6 @@ ShippingForm.propTypes = {
     addData: PropTypes.func,
     editData: PropTypes.func,
     loadData: PropTypes.func,
-    loadBatch: PropTypes.func,
-    loadPallet: PropTypes.func,
-    loadLocation: PropTypes.func,
-    loadWarehouse: PropTypes.func,
-    loadCustomer: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -808,4 +813,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer })(ShippingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadOrder })(ShippingForm);

@@ -45,12 +45,11 @@ const SpkList = ({ user, data, refreshData, deleteData, exportData }) => {
             if (value === "Y") {
                 return { text: "Completed", className: "badge-success" };
             } else if (value === "N") {
-                return "Incomplete";
+                return { text: "Incompleted", className: "badge-warning" };
             } else if (value === "C") {
-                return "Closed";
+                return { text: "Closed", className: "badge-danger" };
             } else
                 return "";
-
         }
         else if (col.key == "warehouseId") {
             if (item.warehouse != null)
