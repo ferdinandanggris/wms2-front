@@ -9,11 +9,22 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
 
     let beginPage = 1;
     let pagingCount = 5;
-    let lastPaging = Math.floor(total / limit);
+    let lastPaging = Math.ceil(total / limit);
 
-    if (pagingCount <= currentPage) {
-        pagingCount = currentPage + 2;
-        beginPage = currentPage - 2;
+
+    if (currentPage == lastPaging) {
+        beginPage = currentPage - 4;
+        pagingCount = currentPage;
+    } else if (pagingCount <= currentPage) {
+        let lastCount = lastPaging - currentPage;
+        if (lastCount < 2) {
+            pagingCount = currentPage + lastCount;
+            beginPage = pagingCount - (5 - lastCount);
+        }
+        else {
+            pagingCount = currentPage + 2;
+            beginPage = currentPage - 2;
+        }
     }
     for (let i = beginPage; i <= pagingCount; i++) {
         pages.push(
@@ -27,7 +38,7 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
         );
     }
 
-    return total > 0 ? (
+    return total > 10 ? (
         <div className="form-inline">
             {/* Tampilkan data */}
             {/* Tampilkan komponen paging */}
