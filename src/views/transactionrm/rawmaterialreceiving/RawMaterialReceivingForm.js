@@ -6,12 +6,12 @@ import { Table as RTable } from "react-bootstrap";
 import Select2 from "../../../components/Select2";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { loadData, addData, editData } from "../../../actions/data";
-import { loadVendor, loadWarehouse, loadPallet, loadLocation, loadBatch } from "../../../actions/master";
+import { loadVendor, loadWarehouse, loadPallet, loadLocation, loadBatch, loadItem } from "../../../actions/master";
 import { FaBox, FaUserFriends, FaTrashAlt, FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 
-const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch }) => {
+const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch, loadItem }) => {
     let { id } = useParams();
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
     const [batchList, setBatch] = useState([]);
     const dispatch = useDispatch();
 
-    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, rawMaterialReceivingDetails } = formData;
+    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, itemId, rawMaterialReceivingDetails } = formData;
 
     useEffect(() => {
         loadVendor();
@@ -60,9 +60,10 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         loadLocation();
         loadPallet();
         loadBatch();
+        loadItem();
         if (user !== null && id !== undefined)
             loadData({ url, id });
-    }, [id, user, loadData, loadVendor, loadWarehouse, loadLocation, loadPallet, loadBatch]);
+    }, [id, user, loadData, loadVendor, loadWarehouse, loadLocation, loadPallet, loadBatch, loadItem]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -125,6 +126,18 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
             }
             setBatch(list);
         }
+        if (master.item !== undefined && master.item !== null) {
+            let list = [...master.item];
+            const obj = list.find((obj) => obj.id === 0);
+            if (obj === undefined || obj === null) {
+                list.push({
+                    name: "No Item",
+                    id: 0,
+                });
+                list.sort((a, b) => (a.id > b.id ? 1 : -1));
+            }
+            setItem(list);
+        }
     }, [master]);
 
     useEffect(() => {
@@ -137,9 +150,6 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                     item.checked = false;
                     return null;
                 });
-
-                console.log("DETAILS", details)
-
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
@@ -159,6 +169,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                     userUp: data.data.userUp,
                     batchNo: data.data.batchNo,
                     batchId: data.data.batchId,
+                    itemId: data.data.itemId,
                     rawMaterialReceivingDetails: details,
                 });
             }
@@ -212,6 +223,46 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         });
 
         setFormData({ ...formData, rawMaterialReceivingDetails: newDetail });
+    };
+
+    const handleProductInputKeyDown = (e) => {
+        if (e.key === "Enter") {
+            const batchCode = e.target.value;
+            const selectedBatch = batchList.find((batch) =>
+                batch.code.toLowerCase() === batchCode.toLowerCase()
+            );
+
+            if (selectedBatch) {
+                handleAddBatch(selectedBatch);
+            }
+
+            e.target.value = "";
+        }
+    };
+
+    const handleAddBatch = (selectedBatch) => {
+        let details = [...rawMaterialReceivingDetails];
+
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.id);
+
+        if (existingBatchIndex === -1) {
+            details.unshift({
+                checked: false,
+                id: 0,
+                warehouseId: 0,
+                vendorId: 0,
+                batchId: selectedBatch.id,
+                qty: 0,
+                voucherNo: "",
+                referenceNo: "",
+            });
+            setFormData({ ...formData, rawMaterialReceivingDetails: details });
+        }
+    };
+
+    const getItemNameById = (itemId) => {
+        const item = itemList.find((item) => item.id === itemId);
+        return item ? item.name : "Unknown Item";
     };
 
     const tabIconStyle = {
@@ -316,7 +367,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
                     </div>
-                    <div className="row align-items-center mt-4 mb-3">
+                    <div className="row align-items-center d-flex mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
                             <input
@@ -325,10 +376,11 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                 type="text"
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                onKeyDown={(e) => handleProductInputKeyDown(e)}
+                                placeholder="Input Batch"
                             />
                         </div>
-                        <div className="col-sm-2 col-form-label">
+                        <div className="col-sm-2 col-form-label d-flex align-items-center">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -384,8 +436,15 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                                     disabled={true}
                                                 />
                                             </td>
-                                            <td style={{ textAlign: 'center' }}>{details.itemId}</td>
-                                            <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                            <td style={{ textAlign: 'center' }}>{getItemNameById(details.itemId)}</td>
+                                            <td style={{ textAlign: 'center', width: '9%' }}>
+                                                <input
+                                                    type="text"
+                                                    value={details.qty}
+                                                    onChange={(e) => onChange(e, index)}
+                                                    className="form-control text-center"
+                                                />
+                                            </td>
                                             <td style={{ textAlign: 'center' }}>{details.uom}</td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <Select2
@@ -404,7 +463,14 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                                     value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
                                                     handleChange={(e) => onSelectChange(e, "locationId")} />
                                             </td>
-                                            <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <input
+                                                    type="text"
+                                                    value={details.remark}
+                                                    onChange={(e) => onChange(e, index)}
+                                                    className="form-control text-center"
+                                                />
+                                            </td>
                                             <td className="text-center">
                                                 <button className="btn-delete" onClick={(e) => handleDelete(e)}>
                                                     <FaTrashAlt style={{ marginTop: "5px" }} />
@@ -442,4 +508,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch })(RawMaterialReceivingForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch, loadItem })(RawMaterialReceivingForm);

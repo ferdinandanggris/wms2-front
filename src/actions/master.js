@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_DISTRICT, LOAD_COUNTRY, LOAD_PROVINCE, LOAD_TERMOFPAYMENT, LOAD_CITY, LOAD_SELLER } from "./types";
+import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_DISTRICT, LOAD_COUNTRY, LOAD_PROVINCE, LOAD_TERMOFPAYMENT, LOAD_CITY, LOAD_SELLER, LOAD_ITEMADJUSTMENT } from "./types";
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -233,6 +233,29 @@ export const loadBatch = ({ limit = 0, page = 0, filterSearch = {} } = {}) => as
   }
 }
 
+//Load ShippingDetail
+export const loadItemAdjustment = ({ limit = 0, page = 0, filterSearch = {} } = {}) => async (dispatch) => {
+  try {
+
+    let res = null;
+    if (limit == 0) {
+      res = await axios.get(`/ItemAdjustment?limit=0&page=0`);
+    }
+    else {
+      res = await axios.get(`/ItemAdjustment?limit=${limit}&page=${page}&limit=${limit}&filter=${filterSearch}`);
+    }
+    dispatch({
+      type: LOAD_ITEMADJUSTMENT,
+      payload: res.data,
+    });
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
 //Load Shipping
 export const loadShipping = () => async (dispatch) => {
   try {
@@ -264,6 +287,7 @@ export const loadShippingDetail = ({ id }) => async (dispatch) => {
     dispatch(setAlert(errMessage, 'danger'));
   }
 }
+
 
 //Load Production
 export const loadproduction = () => async (dispatch) => {

@@ -24,15 +24,15 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         id: 0,
         voucherNo: "",
         referenceNo: "",
-        createdBy: "",
+        status: "Approve",
         transDate: null,
-        postedBy: "",
         postDate: null,
+        createdBy: "",
+        postedBy: "",
         vendor: "",
         warehouse: "",
         batchNo: "",
         file: "",
-        status: "Approve",
         itemAdjustmentDetails: []
     });
 
@@ -132,12 +132,13 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
                     referenceNo: data.data.referenceNo,
-                    createdBy: data.data.createdBy,
+                    status: data.data.status,
                     transDate: data.data.transDate,
-                    postedBy: data.data.postedBy,
                     postDate: data.data.postDate,
-                    vendorId: data.data.vendorId,
+                    createdBy: data.data.createdBy,
+                    postedBy: data.data.postedBy,
                     warehouseId: data.data.warehouseId,
+                    vendorId: data.data.vendorId,
                     locationId: data.data.locationId,
                     palletId: data.data.palletId,
                     batchId: data.data.batchId,
@@ -176,8 +177,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         e.preventDefault();
 
         let updatedDetails = [...itemAdjustmentDetails];
-        updatedDetails.splice(index, 1); // Menghapus item pada index yang diberikan
-
+        updatedDetails.splice(index, 1);
         setFormData({ ...formData, itemAdjustmentDetails: updatedDetails });
     };
 
@@ -216,28 +216,8 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         }
     };
 
-    const onDetailCheck = (e, index) => {
-        let details = itemAdjustmentDetails;
-        if (details === undefined || details === null) details = [];
-
-        let checked = details[index]["checked"];
-        details[index]["checked"] = checked ? false : true;
-
-        setFormData({ ...formData, itemAdjustmentDetails: details });
-    };
-
     const tabIconStyle = {
         marginRight: '5px',
-    };
-
-    const getLocationNameById = (locationId) => {
-        const location = locationList.find((loc) => loc.id === locationId);
-        return location ? location.name : "Unknown Location";
-    };
-
-    const getPalletNameById = (palletId) => {
-        const pallet = palletList.find((pal) => pal.id === palletId);
-        return pallet ? pallet.name : "Unknown Pallet";
     };
 
     const getBatchCodeById = (batchId) => {
@@ -399,7 +379,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 handleChange={(e) => onSelectChange(e, "warehouseId")} />
                         </div>
                     </div>
-                    <div className="row align-items-center mt-4 mb-3">
+                    <div className="row align-items-center d-flex mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-4">
                             <input
@@ -488,7 +468,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                         <tr key={index}>
                                             <td className="text-center">{actualIndex}</td>
                                             <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
-                                            <td style={{ textAlign: 'center', width: '15%'  }}>{details.itemName}</td>
+                                            <td style={{ textAlign: 'center', width: '15%' }}>{details.itemName}</td>
                                             <td style={{ textAlign: 'center' }}>{details.stock}</td>
                                             <td style={{ textAlign: 'center', width: '9%' }}>
                                                 <input

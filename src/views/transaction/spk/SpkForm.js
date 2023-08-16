@@ -177,13 +177,10 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
         setFormData({ ...formData, orderDetails: details });
     };
-
-    // Get Detail
-
+    
     const getDetail = ({ itemId, warehouseId, qty, voucherNo }) => async (dispatch) => {
         try {
             const queryParams = { itemId, warehouseId, qty, voucherNo };
-            // console.log(axios.defaults.baseURL);
             const res = await axios.get(`/order/detail`, { params: queryParams });
             return Promise.resolve(res.data);
         } catch (err) {
@@ -225,7 +222,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
             details[index]["stock"] = data.data.stock;
             details[index]["diff"] = data.data.diff;
         }
-
         setFormData({ ...formData, orderDetails: details });
 
     };

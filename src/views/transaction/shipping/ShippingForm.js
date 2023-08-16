@@ -249,6 +249,41 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         setFormData({ ...formData, shippingDetails: updatedDetails });
     };
 
+    const handleProductInputKeyDown = (e) => {
+        if (e.key === "Enter") {
+            const batchCode = e.target.value;
+            const selectedBatch = batchList.find((batch) =>
+                batch.code.toLowerCase() === batchCode.toLowerCase()
+            );
+
+            if (selectedBatch) {
+                handleAddBatch(selectedBatch);
+            }
+
+            e.target.value = "";
+        }
+    };
+
+    const handleAddBatch = (selectedBatch) => {
+        let details = [...shippingDetails];
+
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.id);
+
+        if (existingBatchIndex === -1) {
+            details.unshift({
+                checked: false,
+                id: 0,
+                warehouseId: 0,
+                vendorId: 0,
+                batchId: selectedBatch.id,
+                qty: 0,
+                voucherNo: "",
+                referenceNo: "",
+            });
+            setFormData({ ...formData, shippingDetails: details });
+        }
+    };
+
     const PAGE_SIZE = 10;
     const MAX_VISIBLE_PAGES = 5;
 
@@ -457,19 +492,22 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 required={true} />
                         </div>
                     </div>
-                    <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">Batch No</label>
+                    <div className="row d-flex align-items-center">
+                        <div className="col-sm-2">
+                            <label className="col-form-label">Batch No</label>
+                        </div>
                         <div className="col-sm-3">
                             <input
                                 name="batchNo"
                                 value={batchNo}
                                 type="text"
                                 onChange={(e) => onChange(e)}
+                                onKeyDown={(e) => handleProductInputKeyDown(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                placeholder="Input Batch"
                             />
                         </div>
-                        <div className="col-sm-2 col-form-label">
+                        <div className="col-sm-2">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -477,14 +515,13 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                     className="form-check-input"
                                     name=""
                                     value=""
-                                // value={0} checked={status == 0} onChange={(e) => onChange(e)}
                                 />
                             </div>
-                            <button className="btn btn-primary ml-4" >
+                            <button className="btn btn-primary ml-4">
                                 <FaSearch /> Search
                             </button>
                         </div>
-                        <div className="col-sm-0" style={{ marginLeft: "70px" }}>
+                        <div className="col-sm-0">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -496,19 +533,20 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                 </label>
                             </div>
                         </div>
-                        <div className="col-sm-0" style={{ marginLeft: "20px" }}>
+                        <div className="col-sm-2">
                             <div className="form-check">
                                 <input
-                                    id="newItemCheckbox"
+                                    id="fullPalletCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
                                 />
-                                <label className="form-check-label" htmlFor="newItemCheckbox">
+                                <label className="form-check-label" htmlFor="fullPalletCheckbox">
                                     Full Pallet
                                 </label>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <hr style={{ borderColor: "gray", margin: "30px 0", opacity: 0.5 }} />
@@ -555,7 +593,14 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                                         />
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>{details.itemName}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                                    <td style={{ textAlign: 'center', width: '9%' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.qty}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                        />
+                                                    </td>
                                                     <td style={{ textAlign: 'center' }}>{details.pcs}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.voucherNo}</td>
@@ -629,8 +674,15 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                                             disabled={true}
                                                         />
                                                     </td>
-                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.itemName}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.qty}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.itemName}</td>
+                                                    <td style={{ textAlign: 'center', width: '9%' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.qty}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                        />
+                                                    </td>
                                                     <td style={{ textAlign: 'center' }}>{details.uom}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.pcs}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.totalPcs}</td>
@@ -766,7 +818,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
                                         className="form-control text-left"
                                     />
                                 </div>
-                                <div className="col-sm-0 text-left col-form-label">
+                                <div className="col-sm-2 text-left col-form-label">
                                     <Button variant="primary" className="fa fa-plus"> Add</Button>{' '}
                                 </div>
                             </div>

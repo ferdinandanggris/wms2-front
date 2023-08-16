@@ -387,7 +387,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 <FaSearch /> Search
                             </button>
                         </div>
-                        <div className="col-sm-0" style={{ marginLeft: "70px" }}>
+                        <div className="col-sm-0" style={{ marginLeft: "15px" }}>
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
@@ -438,13 +438,61 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                                     <td className="text-center"></td>
                                                     <td style={{ textAlign: 'center' }}>{details.batchId}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.itemId}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.return}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.qc}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.ok}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.reject}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.balance}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.return}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.qc}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.ok}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.reject}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.balance}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
                                                     <td style={{ textAlign: 'center' }}>{details.uom}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <input
+                                                            type="text"
+                                                            value={details.remark}
+                                                            onChange={(e) => onChange(e, index)}
+                                                            className="form-control text-center"
+                                                            style={{ maxWidth: '80px' }}
+                                                        />
+                                                    </td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <Select2
                                                             options={warehouseList}
