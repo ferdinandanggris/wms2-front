@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FaLayerGroup } from "react-icons/fa";
+import { FaList } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -15,7 +15,7 @@ const CategoryForm = ({ user, data, loadData, addData, editData }) => {
   const navigate = useNavigate();
 
   const title = "Category";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaList className="module-img" />;
   const path = "/master/category";
   const url = "Category";
   const role = "Master - Category";

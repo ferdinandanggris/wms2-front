@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaTruckLoading } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const ShippingList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "Shipping Module";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaTruckLoading className="module-img" />;
     const path = "/transaction/shipping";
     const url = "Shipping";
     const role = "Transaction - Shipping";

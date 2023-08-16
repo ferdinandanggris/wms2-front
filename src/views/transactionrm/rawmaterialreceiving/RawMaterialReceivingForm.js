@@ -7,7 +7,7 @@ import Select2 from "../../../components/Select2";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { loadData, addData, editData } from "../../../actions/data";
 import { loadVendor, loadWarehouse, loadPallet, loadLocation, loadBatch } from "../../../actions/master";
-import { FaLayerGroup, FaUserFriends, FaTrashAlt, FaSearch } from "react-icons/fa";
+import { FaBox, FaUserFriends, FaTrashAlt, FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 
@@ -16,7 +16,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
     const title = "Raw Material Receiving";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaBox className="module-img" />;
     const path = "/transaction-rm/raw-material-receiving";
     const url = "RawMaterialReceiving";
     const role = "Transaction - Raw Material Receiving";

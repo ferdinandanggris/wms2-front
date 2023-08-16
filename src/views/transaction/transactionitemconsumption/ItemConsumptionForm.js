@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs, Button } from "react-bootstrap";
-import { FaLayerGroup, FaPlus, FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation } from "react-icons/fa";
+import { FaLayerGroup, FaPlus, FaTimes, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaHouseUser, FaSearchLocation, FaTruckLoading } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -21,7 +21,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
     const title = " Non Komersil";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaTruckLoading className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     const path = "/transaction/non-komersil";
     const url = "ItemConsumption";

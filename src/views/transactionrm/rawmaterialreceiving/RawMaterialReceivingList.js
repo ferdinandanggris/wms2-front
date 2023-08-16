@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBox } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
@@ -7,7 +7,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const RawMaterialReceivingList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Raw Material Receiving List";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBox className="module-img" />;
   const path = "/transaction-rm/raw-material-receiving";
   const url = "RawMaterialReceiving";
   const role = "Transaction - Raw Material Receiving";

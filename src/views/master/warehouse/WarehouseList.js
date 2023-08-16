@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import { ProgressBar } from "react-bootstrap";
 
 const WarehouseList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Warehouses";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaHome className="module-img" />;
   const path = "/master/warehouse";
   const url = "warehouse";
   const role = "Master - Warehouse";

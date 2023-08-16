@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaInfoCircle, FaSearch, FaFile, FaTrashAlt } from "react-icons/fa";
+import { FaChartBar, FaInfoCircle, FaSearch, FaFile, FaTrashAlt } from "react-icons/fa";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
@@ -15,7 +15,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Item Adjustment";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaChartBar className="module-img" />;
     const path = "/transaction/item-adjustment";
     const url = "ItemAdjustment";
     const role = "Transaction - Item Adjustment";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaPallet } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const PalletList = ({ user, data, refreshData, deleteData, exportData }) => {
     const title = "Pallet";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaPallet className="module-img" />;
     const path = "/master/pallet";
     const url = "Pallet";
     const role = "Master - Pallet";

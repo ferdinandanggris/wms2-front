@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaCubes } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import { loadUom, loadPacking } from "../../../actions/master";
 
 const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, loadUom, loadPacking, master }) => {
   const title = "Raw Material List";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaCubes className="module-img" />;
   const path = "/master/raw-material";
   const url = "RawMaterial";
   const role = "Master - rawMaterial";

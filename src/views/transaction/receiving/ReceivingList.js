@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaCcMastercard, FaLayerGroup } from "react-icons/fa";
+import { FaCcMastercard, FaBox } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,7 +11,7 @@ import { propTypes } from "react-bootstrap/esm/Image";
 
 const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVendor, loadUser, master }) => {
   const title = "Reciving List";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBox className="module-img" />;
   const path = "/transaction/receiving";
   const url = "Receiving";
   const role = "transaction- RecivingList";

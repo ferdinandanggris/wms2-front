@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBox } from "react-icons/fa";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -15,7 +15,7 @@ const GroupForm = ({ user, data, loadData, addData, editData, master, loadWareho
   const navigate = useNavigate();
 
   const title = "Group";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBox className="module-img" />;
   const path = "/master/group";
   const url = "group";
   const role = "Master - Group";

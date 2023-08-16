@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Table, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaCheck, FaPlus, FaTimes } from "react-icons/fa";
+import { FaBox, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaCheck, FaPlus, FaTimes } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -20,7 +20,7 @@ const ProductionForm = ({ user, data, loadData, addData, editData, master, loadI
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
     const title = " Production Form";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaBox className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     // const path = "/transaction/production/:id?/:type";
     const path = "/transaction/production";

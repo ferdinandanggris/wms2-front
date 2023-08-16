@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaHouseUser,FaPlus,FaTimes } from "react-icons/fa";
+import { FaLayerGroup, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends,FaHouseUser,FaPlus,FaTimes, FaTruckLoading } from "react-icons/fa";
 
 import { batch, connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -16,8 +16,7 @@ const RawMaterialBatchReceivingForm = ({ user, data, loadData, addData, editData
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
     const title = " Raw Material Usage ";
-    const img = <FaLayerGroup className="module-img" />;
-    // const path = "/master/customer/:id?/:customer";
+    const img = <FaTruckLoading className="module-img" />;
     const path ="/transaction-rm/raw-material-usage/:id?/:type";
     const url = "RawMaterialUsage";
     const role = "transaction -RawMaterialUsageForm";

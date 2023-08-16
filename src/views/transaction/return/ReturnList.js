@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaUndo } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -11,7 +11,7 @@ import { loadCustomer } from "../../../actions/master";
 const ReturnList = ({ user, data, refreshData, deleteData, exportData }) => {
 
     const title = "Return Module";
-    const img = <FaLayerGroup className="module-img" />;
+    const img = <FaUndo className="module-img" />;
     const path = "/transaction/return";
     const url = "Return";
     const role = "Transaction - Return";

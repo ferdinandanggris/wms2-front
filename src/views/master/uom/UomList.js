@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBalanceScaleRight } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const UomList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Unit Of Measurement";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBalanceScaleRight className="module-img" />;
   const path = "/master/uom";
   const url = "uom";
   const role = "Master - UOM";

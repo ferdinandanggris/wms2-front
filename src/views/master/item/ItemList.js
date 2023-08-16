@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaBoxes } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ import { loadUom,loadPacking, loadproduction } from "../../../actions/master";
 
 const ItemList = ({ user, data, refreshData, deleteData, exportData, loadUom, master,loadPacking }) => {
   const title = "Item List";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaBoxes className="module-img" />;
   const path = "/master/item";
   const url = "Item";
   const role = "Master - Item";

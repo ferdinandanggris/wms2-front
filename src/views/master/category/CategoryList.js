@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaList } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const CategoryList = ({ user, data, refreshData, deleteData, exportData }) => {
   const title = "Category";
-  const img = <FaLayerGroup className="module-img" />;
+  const img = <FaList className="module-img" />;
   const path = "/master/category";
   const url = "category";
   const role = "Master - Category";
