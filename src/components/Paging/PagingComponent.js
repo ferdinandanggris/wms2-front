@@ -27,7 +27,7 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
         );
     }
 
-    return total > 0 ? (
+    return total > 10 ? (
         <div className="form-inline">
             {/* Tampilkan data */}
             {/* Tampilkan komponen paging */}
