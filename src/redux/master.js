@@ -42,6 +42,8 @@ const initialState = {
   country: null,
   district: null,
   province: null,
+  total: 0,
+  page: 0,
 };
 
 export default function master(state = initialState, action) {
@@ -68,7 +70,12 @@ export default function master(state = initialState, action) {
     case LOAD_ITEM:
       return { ...state, item: payload.data };
     case LOAD_BATCH:
-      return { ...state, batch: payload.data };
+      return {
+        ...state,
+        batch: payload.data,
+        total: payload.total,
+        page: payload.page,
+      };
     case LOAD_SHIPPING:
       return { ...state, shipping: payload.data };
     case LOAD_SHIPPINGDETAIL:

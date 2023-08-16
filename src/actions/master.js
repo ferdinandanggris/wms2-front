@@ -211,9 +211,16 @@ export const loadLocation = () => async (dispatch) => {
 }
 
 //Load Batch
-export const loadBatch = () => async (dispatch) => {
+export const loadBatch = ({ limit = 0, page = 0, filterSearch = {} } = {}) => async (dispatch) => {
   try {
-    const res = await axios.get(`/Batch?limit=0&page=0`);
+
+    let res = null;
+    if (limit == 0) {
+      res = await axios.get(`/Batch?limit=0&page=0`);
+    }
+    else {
+      res = await axios.get(`/Batch?limit=${limit}&page=${page}&limit=${limit}&filter=${filterSearch}`);
+    }
     dispatch({
       type: LOAD_BATCH,
       payload: res.data,

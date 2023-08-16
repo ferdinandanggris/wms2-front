@@ -23,7 +23,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
     const [formData, setFormData] = useState({
         id: 0,
         voucherNo: "",
-        referenceNo: "[AUTO]",
+        referenceNo: "",
         status: "N",
         transDate: null,
         postDate: null,
