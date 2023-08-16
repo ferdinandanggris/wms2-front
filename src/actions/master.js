@@ -1,6 +1,5 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import qs from "qs";
 import { LOAD_USER, LOAD_ROLE, LOAD_MODULE, LOAD_UOM, LOAD_CUSTOMER, LOAD_WAREHOUSE, LOAD_ITEM, LOAD_CATEGORY, LOAD_PACKING, LOAD_GROUP, LOAD_VENDOR, LOAD_PALLET, LOAD_LOCATION, LOAD_BATCH, LOAD_SHIPPINGDETAIL, LOAD_SHIPPING, LOAD_ORDER, LOAD_ORDERDETAIL, LOAD_PRODUCTION, LOAD_DISTRICT, LOAD_COUNTRY, LOAD_PROVINCE, LOAD_TERMOFPAYMENT, LOAD_CITY, LOAD_SELLER } from "./types";
 
 // Load User
@@ -220,11 +219,7 @@ export const loadBatch = ({ limit = 0, page = 0, filterSearch = {} } = {}) => as
       res = await axios.get(`/Batch?limit=0&page=0`);
     }
     else {
-      var filter = qs.stringify(filterSearch);
-      filter = filter.replaceAll("&", "|");
-      filter = filter.replaceAll("=", ":");
-
-      res = await axios.get(`/Batch?limit=${limit}&page=${page}&limit=${limit}&filter=${filter}`);
+      res = await axios.get(`/Batch?limit=${limit}&page=${page}&limit=${limit}&filter=${filterSearch}`);
     }
     dispatch({
       type: LOAD_BATCH,

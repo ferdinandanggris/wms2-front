@@ -367,7 +367,6 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tbody>
               </RTable>
               <PagingComponent
-                totalPages={5}
                 currentPage={page + 1}
                 limit={10}
                 total={total}
