@@ -8,25 +8,32 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
     const endItem = limit * currentPage;
 
     let beginPage = 1;
-    let pagingCount = 5;
-    let lastPaging = Math.ceil(total / limit);
+    let endPage = 5;
+    let lastPage = Math.ceil(total / limit);
+    let maxVisiblePage = 5;
 
+    if (lastPage <= 5) {
+        beginPage = 1
+        endPage = lastPage;
+    }
 
-    if (currentPage == lastPaging) {
-        beginPage = currentPage - 4;
-        pagingCount = currentPage;
-    } else if (pagingCount <= currentPage) {
-        let lastCount = lastPaging - currentPage;
-        if (lastCount < 2) {
-            pagingCount = currentPage + lastCount;
-            beginPage = pagingCount - (5 - lastCount);
+    if (lastPage >= 6) {
+        if (currentPage > 4) {
+            if (currentPage < lastPage) {
+                beginPage = (currentPage - maxVisiblePage) + 2;
+                endPage = (currentPage - maxVisiblePage) + maxVisiblePage + 1;
+            } else {
+                beginPage = lastPage - 4;
+                endPage = lastPage;
+            }
         }
         else {
-            pagingCount = currentPage + 2;
-            beginPage = currentPage - 2;
+            beginPage = 1;
+            endPage = maxVisiblePage;
         }
     }
-    for (let i = beginPage; i <= pagingCount; i++) {
+
+    for (let i = beginPage; i <= endPage; i++) {
         pages.push(
             <Pagination.Item
                 key={i}
@@ -38,6 +45,38 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
         );
     }
 
+    // if (currentPage == lastPage) {
+    //     if (currentPage - 4 > 0) {
+    //         beginPage = currentPage - 4;
+    //         endPage = currentPage;
+    //     }
+    //     else {
+    //         beginPage = 1;
+    //         endPage = currentPage;
+    //     }
+    // } else if (endPage <= currentPage) {
+    //     let lastCount = lastPage - currentPage;
+    //     if (lastCount < 2) {
+    //         endPage = currentPage + lastCount;
+    //         beginPage = endPage - (5 - lastCount);
+    //     }
+    //     else {
+    //         endPage = currentPage + 2;
+    //         beginPage = currentPage - 2;
+    //     }
+    // }
+    // for (let i = beginPage; i <= endPage; i++) {
+    //     pages.push(
+    //         <Pagination.Item
+    //             key={i}
+    //             active={i === currentPage}
+    //             onClick={() => onPageChange(i)}
+    //         >
+    //             {i}
+    //         </Pagination.Item>
+    //     );
+    // }
+
     return total > 10 ? (
         <div className="form-inline">
             {/* Tampilkan data */}
@@ -47,7 +86,7 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
                 <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} />
                 {pages}
                 <Pagination.Next onClick={() => onPageChange(currentPage + 1)} />
-                <Pagination.Last onClick={() => onPageChange(lastPaging)} />
+                <Pagination.Last onClick={() => onPageChange(lastPage)} />
             </Pagination>
             <span className="ml-2 mb-3">Showing {startItem} to {endItem} out of {total} items</span>
         </div>

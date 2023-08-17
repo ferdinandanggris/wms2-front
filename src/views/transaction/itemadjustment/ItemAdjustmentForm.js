@@ -6,12 +6,15 @@ import Select2 from "../../../components/Select2";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Table as RTable } from "react-bootstrap";
-import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet } from "../../../actions/master";
+import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet, loadItem } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 import "../style.css";
 import moment from "moment";
+import PagingComponent from "../../../components/Paging/PagingComponent";
+import axios from "axios";
+import { setAlert } from "../../../actions/alert";
 
-const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch }) => {
+const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch, loadLocation, loadPallet, loadItem }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Item Adjustment";
@@ -27,7 +30,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         status: "Approve",
         transDate: null,
         postDate: null,
-        createdBy: "",
+        createdBy: user.fullName,
         postedBy: "",
         vendor: "",
         warehouse: "",
@@ -41,19 +44,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     const [batchList, setBatch] = useState([]);
     const [locationList, setLocation] = useState([]);
     const [palletList, setPallet] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState('');
     const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, batchNo, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [startIndex, setStartIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(10);
 
     useEffect(() => {
         loadWarehouse();
         loadVendor();
-        loadBatch();
+        // loadBatch();
         loadLocation();
         loadPallet();
+
         if (user !== null && id !== undefined)
             loadData({ url, id });
-    }, [id, user, loadData, loadWarehouse, loadBatch, loadLocation, loadPallet]);
+    }, [id, user, loadData, loadWarehouse, loadBatch, loadLocation, loadLocation, loadPallet]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -80,23 +87,13 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             }
             setVendor(list);
         }
-        if (master.batch !== undefined && master.batch !== null) {
-            let list = [...master.batch];
-            const obj = list.find((obj) => obj.id === 0);
-            if (obj === undefined || obj === null) {
-                list.push({
-                    code: "No Batch",
-                    id: 0,
-                });
-                list.sort((a, b) => (a.id > b.id ? 1 : -1));
-            }
-            setBatch(list);
-        }
+
         if (master.location !== undefined && master.location !== null) {
             let list = [...master.location];
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
+                    code: "",
                     name: "No Location",
                     id: 0,
                 });
@@ -109,13 +106,16 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
+                    code: "",
                     name: "No Pallet",
                     id: 0,
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setPallet(list);
+
         }
+
     }, [master]);
 
     useEffect(() => {
@@ -155,8 +155,34 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const onSelectChange = (e, name) => {
+    const onSelectChange = (e, name, index) => {
         setFormData({ ...formData, [name]: e.id });
+    };
+
+    const onDetailChange = (e, index) => {
+        e.preventDefault();
+
+        let details = itemAdjustmentDetails;
+        if (details === undefined || details === null) details = [];
+
+        details[index][e.target.name] = e.target.value;
+
+        setFormData({ ...formData, orderDetails: details });
+    };
+
+    const onDetailSelectChange = async (e, value, index) => {
+        let details = itemAdjustmentDetails;
+        if (details === undefined || details === null) details = [];
+
+        if (value == "locationId") {
+            details[index]["locationId"] = e.id;
+        } else if (value == "palletId") {
+            details[index]["palletId"] = e.id;
+        }
+
+
+        setFormData({ ...formData, orderDetails: details });
+
     };
 
     const handleSave = (e) => {
@@ -181,91 +207,77 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         setFormData({ ...formData, itemAdjustmentDetails: updatedDetails });
     };
 
-    const handleProductInputKeyDown = (e) => {
+    const getDetail = async () => {
+        try {
+            const res = await axios.get(`/ItemAdjustment/detail?batchCode=` + batchNo);
+
+            return Promise.resolve(res.data);
+        } catch (err) {
+            let errMessage = "";
+            if (err.message) errMessage = err.message;
+            if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+            setAlert(errMessage, "danger");
+        }
+    };
+
+    const handleBatchNoKeyDown = async (e) => {
         if (e.key === "Enter") {
-            const batchCode = e.target.value;
-            const selectedBatch = batchList.find((batch) =>
-                batch.code.toLowerCase() === batchCode.toLowerCase()
-            );
+            e.preventDefault();
+            var data = await getDetail();
 
-            if (selectedBatch) {
-                handleAddBatch(selectedBatch);
+            if (data != null) {
+                handleAddBatch(data.data);
             }
-
-            e.target.value = "";
         }
     };
 
     const handleAddBatch = (selectedBatch) => {
         let details = [...itemAdjustmentDetails];
 
-        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.id);
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
 
         if (existingBatchIndex === -1) {
             details.unshift({
                 checked: false,
                 id: 0,
-                warehouseId: 0,
-                vendorId: 0,
-                batchId: selectedBatch.id,
-                qty: 0,
-                voucherNo: "",
-                referenceNo: "",
+                itemAdjustmentId: id,
+                locationId: 0,
+                palletId: 0,
+                batchId: selectedBatch.tmpBatchId,
+                itemId: selectedBatch.itemId,
+                qty: 1,
+                voucherNo: voucherNo,
+                remark: "",
+                stock: selectedBatch.stock,
+                batchCode: selectedBatch.batchCode,
+                uom: selectedBatch.uom,
+                itemName: selectedBatch.itemName
             });
-            setFormData({ ...formData, itemAdjustmentDetails: details });
         }
+        else {
+            details[existingBatchIndex] = {
+                ...details[existingBatchIndex],
+                // Update properti sesuai kebutuhan
+                qty: details[existingBatchIndex]["qty"] + 1,
+                // ...
+            };
+        }
+        setFormData({ ...formData, itemAdjustmentDetails: details });
     };
 
     const tabIconStyle = {
         marginRight: '5px',
     };
 
-    const getBatchCodeById = (batchId) => {
-        const batch = batchList.find((bat) => bat.id === batchId);
-        return batch ? batch.code : "Unknown Batch";
-    };
-
-    const PAGE_SIZE = 10;
-    const MAX_VISIBLE_PAGES = 5;
-
-    const getPaginatedDetails = () => {
-        const startIndex = (currentPage - 1) * PAGE_SIZE;
-        const endIndex = startIndex + PAGE_SIZE;
-        return itemAdjustmentDetails.slice(startIndex, endIndex);
-    };
-
     const handlePageChange = (pageNumber) => {
+        setStartIndex((pageNumber - 1) * 10);
+        setEndIndex(pageNumber * 10);
         setCurrentPage(pageNumber);
     };
 
-    const getPageNumbers = () => {
-        const totalPages = Math.ceil(itemAdjustmentDetails.length / PAGE_SIZE);
-        const currentPageIndex = currentPage - 1;
-        const halfMaxVisiblePages = Math.floor(MAX_VISIBLE_PAGES / 2);
-
-        if (totalPages <= MAX_VISIBLE_PAGES) {
-            return [...Array(totalPages).keys()].map((index) => index + 1);
-        }
-
-        if (currentPageIndex < halfMaxVisiblePages) {
-            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => index + 1);
-        }
-
-        if (currentPageIndex >= totalPages - halfMaxVisiblePages) {
-            return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => totalPages - MAX_VISIBLE_PAGES + index + 1);
-        }
-
-        const middlePage = currentPageIndex + 1;
-        const startPageIndex = middlePage - halfMaxVisiblePages;
-        return [...Array(MAX_VISIBLE_PAGES).keys()].map((index) => startPageIndex + index);
-    };
-
-    const totalPages = Math.ceil(itemAdjustmentDetails.length / PAGE_SIZE);
 
     const element = () => {
-        const paginatedDetails = getPaginatedDetails();
-        const pageNumbers = getPageNumbers();
-        const startIndex = (currentPage - 1) * PAGE_SIZE;
+
         return (
             <div className="detail">
                 <div className="subTitle">
@@ -299,6 +311,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                 placeholder=""
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
+                                required
                             />
                         </div>
                     </div>
@@ -373,10 +386,12 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         <div className="col-sm-4">
                             <Select2
                                 options={warehouseList}
-                                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                optionValue={(option) => option.id.toString()}
+                                optionLabel={(option) => option.name}
                                 placeholder={"Pick Warehouse"}
                                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                                handleChange={(e) => onSelectChange(e, "warehouseId")}
+                                required={true} />
                         </div>
                     </div>
                     <div className="row align-items-center d-flex mt-4 mb-3">
@@ -384,10 +399,10 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                         <div className="col-sm-4">
                             <input
                                 name="batchNo"
-                                value={batchNo}
                                 type="text"
+                                value={batchNo}
                                 onChange={(e) => onChange(e)}
-                                onKeyDown={(e) => handleProductInputKeyDown(e)}
+                                onKeyDown={(e) => handleBatchNoKeyDown(e)}
                                 className="form-control text-left"
                                 placeholder="Input Batch"
                             />
@@ -460,21 +475,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                             </tr>
                         </thead>
                         <tbody>
-                            {paginatedDetails !== undefined &&
-                                paginatedDetails !== null &&
-                                paginatedDetails.map((details, index) => {
+
+                            {itemAdjustmentDetails !== undefined &&
+                                itemAdjustmentDetails !== null &&
+                                itemAdjustmentDetails.slice(startIndex, endIndex).map((details, index) => {
                                     const actualIndex = startIndex + index + 1;
                                     return (
                                         <tr key={index}>
                                             <td className="text-center">{actualIndex}</td>
-                                            <td style={{ textAlign: 'center' }}>{getBatchCodeById(details.batchId)}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.batchCode}</td>
                                             <td style={{ textAlign: 'center', width: '15%' }}>{details.itemName}</td>
                                             <td style={{ textAlign: 'center' }}>{details.stock}</td>
                                             <td style={{ textAlign: 'center', width: '9%' }}>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     value={details.qty}
-                                                    onChange={(e) => onChange(e, index)}
+                                                    name="qty"
+                                                    onChange={(e) => onDetailChange(e, index)}
                                                     className="form-control text-center"
                                                     style={{ maxWidth: '80px' }}
                                                 />
@@ -483,33 +500,37 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                             <td style={{ textAlign: 'center' }}>
                                                 <Select2
                                                     options={palletList}
-                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                                    optionValue={(option) => option.id.toString()}
+                                                    optionLabel={(option) => (option.code != "" ? option.code + ' - ' + option.name : option.name)}
                                                     placeholder={"Pick Pallet"}
                                                     value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(details.palletId))}
-                                                    handleChange={(e) => onSelectChange(e, "palletId")}
+                                                    handleChange={(e) => onDetailSelectChange(e, "palletId", actualIndex - 1)}
                                                 />
                                             </td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <Select2
                                                     options={locationList}
-                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                                                    optionValue={(option) => option.id.toString()}
+                                                    optionLabel={(option) => (option.code != "" ? option.code + ' - ' + option.name : option.name)}
                                                     placeholder={"Pick Location"}
                                                     value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
-                                                    handleChange={(e) => onSelectChange(e, "locationId")}
+                                                    handleChange={(e) => onDetailSelectChange(e, "locationId", actualIndex - 1)}
                                                 />
                                             </td>
                                             <td style={{ textAlign: 'center', width: '11%' }}>
                                                 <input
                                                     type="text"
                                                     value={details.remark}
-                                                    onChange={(e) => onChange(e, index)}
+                                                    onChange={(e) => onDetailChange(e, index)}
                                                     className="form-control text-center"
+                                                    name="remark"
                                                     style={{ maxWidth: '100px' }}
+
                                                 />
                                             </td>
                                             <td className="text-center">
                                                 <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
-                                                    <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                    <FaTrashAlt style={{ fontSize: "12px" }} />
                                                 </button>
                                             </td>
                                         </tr>
@@ -519,19 +540,13 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     </RTable>
                 </div>
                 <div style={{ marginTop: "20px" }}></div>
-                <ul className="pagination" style={{ marginLeft: "15px" }}>
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
-                    </li>
-                    {pageNumbers.map((pageNumber) => (
-                        <li key={pageNumber} className={`page-item ${pageNumber === currentPage ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
-                        </li>
-                    ))}
-                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
-                    </li>
-                </ul>
+                <PagingComponent
+                    currentPage={currentPage}
+                    limit={10}
+                    total={itemAdjustmentDetails.length}
+                    onPageChange={handlePageChange}
+                />
+
             </div>
         );
     };
@@ -557,4 +572,4 @@ const mapStateToProps = (state) => ({
     master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadVendor, loadWarehouse, loadBatch })(ItemAdjustmentForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet, loadItem })(ItemAdjustmentForm);

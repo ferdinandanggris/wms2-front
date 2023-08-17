@@ -45,11 +45,11 @@
   .wide-screen {
     display: none !important;
   }
-  .narrow-screen {
+  /* .narrow-screen {
     display: flex !important;
     width: 100%;
     flex-flow: row;
-  }
+  } */
 
   .content {
     padding: 20px 20px 80px 20px;

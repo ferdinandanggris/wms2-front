@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import {  } from "react-icons/fa";
+import { } from "react-icons/fa";
 import Select2 from "../../../components/Select2";
 
 import { connect } from "react-redux";
@@ -75,7 +75,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadBatch({ limit: 10, page: 0, filterSearch: "itemid:" + id });
 
   }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch]);
- 
+
   // console.log("formdata", formData)
   // console.log("masterGroup", master.group)
 
@@ -87,17 +87,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
       if (data.data !== undefined && data.data !== null) {
-        console.log("data", data)
-        const newItemGroupDetail = {
-          id: 0,
-          name: "",
-          code: "",
-          dateIn: null,
-          dateUp: null,
-          userIn: null,
-          userUp: null,
-          groupId: 0,
-        };
+
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
           name: data.data.name,

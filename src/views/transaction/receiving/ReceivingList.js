@@ -44,19 +44,17 @@ const RecivingList = ({ user, data, refreshData, deleteData, exportData, loadVen
       else
         return "WAITING";
     } else if (col.key === "vendors") {
-      if (master.vendor !== null && master.vendor !== undefined) {
-        if (value) {
-          const tempVendor = master.vendor.find((obj) => obj.id === value.id);
-          return tempVendor.name;
-        } else {
-          return "";
-        }
-      }
+      if (item.vendors != null) {
+        return item.vendors.name;
+      } else { return ""; }
     } else if (col.key === "userIn") {
       if (master.user !== null && master.user !== undefined) {
         if (value) {
-          const tempUser = master.user.find((obj) => obj.id === value.id);
-          return tempUser.fullName;
+          const tempUser = master.user.find((obj) => obj.id === value);
+          if (tempUser !== undefined) {
+            return tempUser.fullName;
+          }
+          else { return ""; }
         } else {
           return "";
         }

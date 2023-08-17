@@ -14,6 +14,9 @@ import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
+import axios from "axios";
+import { setAlert } from "../../../actions/alert";
+import PagingComponent from "../../../components/Paging/PagingComponent";
 
 const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadproduction, loadVendor, loadCategory, loadPallet, loadLocation }) => {
   let { id } = useParams();
@@ -30,32 +33,43 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
     id: 0,
     voucherNo: "",
     status: "",
-    transDate: 0,
-    postDate: 0,
-    createdBy: "",
+    transDate: null,
+    postDate: null,
+    createdBy: user.fullName,
     postedBy: "",
-    vendorId: 1,
-    warehouseId: 1,
-    productionNo: 0,
+    vendorId: "",
+    warehouseId: "",
+    productionNo: "",
     category: "",
     referenceNo: "",
-    dateIn: "",
+    dateIn: null,
     dateUp: null,
     userIn: "",
     userUp: "",
-    warehouses: "",
-    vendors: "",
+    warehouses: null,
+    vendors: null,
+    batchNo: "",
     receivingDetails: []
 
   });
 
-  const { name, vendor, warehouse, vendorId, postedBy, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp, receivingDetails } = formData;
+  const { name, vendor, warehouse, vendorId, postedBy, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, batchNo, dateIn, dateUp, receivingDetails } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [locationlist, setlocation] = useState([]);
   const [palletList, setpallet] = useState([]);
   const [vendorList, setVendor] = useState([]);
   const [productionList, setproduction] = useState([]);
-  const [tempbatchno, settempbatchno] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(10);
+
+  const handlePageChange = (pageNumber) => {
+    setStartIndex((pageNumber - 1) * 10);
+    setEndIndex(pageNumber * 10);
+    setCurrentPage(pageNumber);
+  };
+
   useEffect(() => {
     if (user !== null && id !== undefined) loadData({ url, id });
   }, [id, user, loadData]);
@@ -90,7 +104,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       }
     }
   }, [id, data, setFormData]);
-  console.log(master)
+
   useEffect(() => {
     loadWarehouse();
     loadVendor();
@@ -168,9 +182,6 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
   const onChange = (e) => {
     e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (e.target.name === "batchno") {
-      settempbatchno(e.target.value)
-    }
 
   };
 
@@ -201,27 +212,42 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
     setFormData({ ...formData, receivingDetails: details });
   };
-  const onSelectChange = (e, name,index) => {
+  const onSelectChange = (e, name, index) => {
     if (name === "category") {
       e.preventDefault();
       setFormData({ ...formData, [name]: e.target.value });
     } else if (name === "location") {
       let details = receivingDetails;
-    
+
       details[index]["locationId"] = e.id;
-  
+
       setFormData({ ...formData, receivingDetails: details });
     } else if (name === "pallet") {
       let details = receivingDetails;
-    
+
       details[index]["palletId"] = e.id;
-  
+
       setFormData({ ...formData, receivingDetails: details });
 
-     } else {
+    } else {
       setFormData({ ...formData, [name]: e.id });
     }
   };
+
+  const onDetailSelectChange = async (e, value, index) => {
+    let details = receivingDetails;
+    if (details === undefined || details === null) details = [];
+
+    if (value == "locationId") {
+      details[index]["locationId"] = e.id;
+    } else if (value == "palletId") {
+      details[index]["palletId"] = e.id;
+    }
+
+
+    setFormData({ ...formData, orderDetails: details });
+  };
+
   const handleNewRow = (e) => {
     e.preventDefault();
     let details = receivingDetails;
@@ -265,6 +291,64 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
+  };
+
+  const getDetail = async () => {
+    try {
+      const res = await axios.get(`/receiving/detail?batchCode=` + batchNo);
+
+      return Promise.resolve(res.data);
+    } catch (err) {
+      let errMessage = "";
+      if (err.message) errMessage = err.message;
+      if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+      setAlert(errMessage, "danger");
+    }
+  };
+
+  const handleBatchNoKeyDown = async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      var data = await getDetail();
+
+      if (data != null) {
+        handleAddBatch(data.data);
+      }
+    }
+  };
+
+  const handleAddBatch = (selectedBatch) => {
+    let details = [...receivingDetails];
+
+    const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
+
+    if (existingBatchIndex === -1) {
+      details.unshift({
+        checked: false,
+        id: 0,
+        receivingId: 0,
+        locationId: 0,
+        palletId: 0,
+        batchId: selectedBatch.tmpBatchId,
+        itemId: selectedBatch.itemId,
+        qty: 1,
+        voucherNo: voucherNo,
+        remark: "",
+        stock: selectedBatch.stock,
+        batchCode: selectedBatch.batchCode,
+        uom: selectedBatch.uom,
+        itemName: selectedBatch.itemName
+      });
+    }
+    else {
+      details[existingBatchIndex] = {
+        ...details[existingBatchIndex],
+        // Update properti sesuai kebutuhan
+        qty: details[existingBatchIndex]["qty"] + 1,
+        // ...
+      };
+    }
+    setFormData({ ...formData, receivingDetails: details });
   };
 
   const tabIconStyle = {
@@ -323,10 +407,12 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
             <div className="col">
               <Select2
                 options={vendorList}
-                optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                optionValue={(option) => option.id.toString()}
+                optionLabel={(option) => option.name}
                 placeholder={"Pick Vendor"}
                 value={vendorList === null ? null : vendorList.filter((option) => option.id === parseInt(vendorId))}
-                handleChange={(e) => onSelectChange(e, "vendorId")} />
+                handleChange={(e) => onSelectChange(e, "vendorId")}
+                required={true} />
             </div>
           </div>
           <div className="row align-items-center mb-3">
@@ -346,7 +432,8 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                 placeholder={"Pick Warehouse"}
                 value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
-                handleChange={(e) => onSelectChange(e, "warehouseId")} />
+                handleChange={(e) => onSelectChange(e, "warehouseId")}
+                required={true} />
             </div>
           </div>
 
@@ -354,13 +441,13 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
             <label className="col-sm-2 col-form-label">Batch No</label>
             <div className="col-sm-3">
               <input
-                name="batchno"
+                name="batchNo"
                 value={receivingDetails.batchId}
                 type="text"
                 onChange={(e) => onChange(e)}
+                onKeyDown={(e) => handleBatchNoKeyDown(e)}
                 className="form-control text-left"
                 placeholder="Search..."
-                required
               />
             </div>
             <div className="col-sm-2 text-left col-form-label">
@@ -388,20 +475,15 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
               </tr>
             </thead>
 
-          {console.log(receivingDetails)}
-
             <tbody>
               {receivingDetails !== undefined &&
                 receivingDetails !== null &&
-                receivingDetails.map((details, index) => {
-                  const location = locationlist.find((obj) => obj.id === details.locationId);
-                  console.log(details.locationId)
-                  console.log(details)
-                  const pallet = palletList.find((obj) => obj.id === details.palletId);
+                receivingDetails.slice(startIndex, endIndex).map((details, index) => {
+
                   return (
                     <tr key={index}>
                       <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                      <td style={{ textAlign: 'center' }}>{details.batchId}</td>
+                      <td style={{ textAlign: 'center' }}>{details.batchCode}</td>
                       <td style={{ textAlign: 'center' }}>{details.itemName}</td>
                       <td className="text-center">
                         <NumericFormat
@@ -414,7 +496,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                       </td>
                       <td style={{ textAlign: 'center' }}>{details.uom}</td>
                       <td style={{ textAlign: 'center' }}>
-                      <Select2
+                        <Select2
                           options={master.pallet}
                           optionValue={(option) => option.id.toString()}
                           optionLabel={(option) => (String(option.code)).concat(" - ", option.name)}
@@ -422,7 +504,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                           required
                           value={master.pallet !== null ? master.pallet.find((obj) => obj.id === details.palletId) : ""}
                           handleChange={(e) => {
-                            onSelectChange(e, "pallet",index);
+                            onDetailSelectChange(e, "palletId", index);
                           }}
                         />
                       </td>
@@ -435,18 +517,32 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                           required
                           value={master.location !== null ? master.location.find((obj) => obj.id === details.locationId) : ""}
                           handleChange={(e) => {
-                            onSelectChange(e, "location",index);
+                            onDetailSelectChange(e, "locationId", index);
                           }}
                         />
                       </td>
-                      <td style={{ textAlign: 'center' }}>{details.remark}</td>
+                      <td style={{ textAlign: 'center' }}>
+                        <input
+                          type="text"
+                          value={details.remark}
+                          onChange={(e) => onDetailChange(e, index)}
+                          className="form-control text-center"
+                          name="remark"
+                          style={{ maxWidth: '100px' }}
+
+                        />
+                      </td>
                     </tr>
                   );
                 })}
             </tbody>
-
-
           </RTable>
+          <PagingComponent
+            currentPage={currentPage}
+            limit={10}
+            total={receivingDetails.length}
+            onPageChange={handlePageChange}
+          />
         </div>
 
       </div>
