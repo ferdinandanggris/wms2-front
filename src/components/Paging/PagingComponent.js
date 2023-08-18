@@ -51,38 +51,6 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
         );
     }
 
-    // if (currentPage == lastPage) {
-    //     if (currentPage - 4 > 0) {
-    //         beginPage = currentPage - 4;
-    //         endPage = currentPage;
-    //     }
-    //     else {
-    //         beginPage = 1;
-    //         endPage = currentPage;
-    //     }
-    // } else if (endPage <= currentPage) {
-    //     let lastCount = lastPage - currentPage;
-    //     if (lastCount < 2) {
-    //         endPage = currentPage + lastCount;
-    //         beginPage = endPage - (5 - lastCount);
-    //     }
-    //     else {
-    //         endPage = currentPage + 2;
-    //         beginPage = currentPage - 2;
-    //     }
-    // }
-    // for (let i = beginPage; i <= endPage; i++) {
-    //     pages.push(
-    //         <Pagination.Item
-    //             key={i}
-    //             active={i === currentPage}
-    //             onClick={() => onPageChange(i)}
-    //         >
-    //             {i}
-    //         </Pagination.Item>
-    //     );
-    // }
-
     return total > 10 ? (
         <div className="form-inline">
             {/* Tampilkan data */}
