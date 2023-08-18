@@ -12,6 +12,12 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
     let lastPage = Math.ceil(total / limit);
     let maxVisiblePage = 5;
 
+    if (currentPage > lastPage) {
+        currentPage = lastPage;
+    } else if (currentPage < 1) {
+        currentPage = 1;
+    }
+
     if (lastPage <= 5) {
         beginPage = 1
         endPage = lastPage;
@@ -83,9 +89,9 @@ const PagingComponent = ({ currentPage, limit, total, onPageChange }) => {
             {/* Tampilkan komponen paging */}
             <Pagination>
                 <Pagination.First onClick={() => onPageChange(1)} />
-                <Pagination.Prev onClick={() => onPageChange(currentPage - 1)} />
+                <Pagination.Prev onClick={() => onPageChange(currentPage - 1 < 1 ? 1 : currentPage - 1)} />
                 {pages}
-                <Pagination.Next onClick={() => onPageChange(currentPage + 1)} />
+                <Pagination.Next onClick={() => onPageChange(currentPage + 1 > lastPage ? currentPage : currentPage + 1)} />
                 <Pagination.Last onClick={() => onPageChange(lastPage)} />
             </Pagination>
             <span className="ml-2 mb-3">Showing {startItem} to {endItem} out of {total} items</span>
