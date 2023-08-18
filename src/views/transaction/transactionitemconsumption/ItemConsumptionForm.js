@@ -15,6 +15,8 @@ import Select2 from "../../../components/Select2";
 import moment from "moment";
 import { NumericFormat } from "react-number-format";
 import { te } from "date-fns/locale";
+import { setAlert } from "../../../actions/alert";
+import axios from "axios";
 
 const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor, loadPallet, loadLocation }) => {
     let { id } = useParams();
@@ -26,8 +28,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const path = "/transaction/non-komersil";
     const url = "ItemConsumption";
     const role = "transaction -ItemConsumptionForm";
-    const [itemConsumptionDetails, setItemConsumptionDetails] = useState([]);
-
+    
     const [formData, setFormData] = useState({
         id: 0,
         voucherNo: "",
@@ -58,11 +59,12 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
         location: "",
         pallet: "",
         warehouse: "",
+        batchNo: "",
         itemConsumptionDetails: []
 
     });
 
-    const { name, vendor, locationId, location,pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
+    const { name, vendor, locationId,batchNo, itemConsumptionDetails,location,pallet, security, palletId, postedBy, truckNo, picker, picQc, deliveryOrderNo, shippingDate, picExpedisi, picWarehouse, customerName, warehouse, vendorId, warehouseId, type, voucherNo, transDate, postDate, createdBy, productionNo, category, referenceNo, dateIn, dateUp } = formData;
     const [warehouseList, setWarehouse] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [locationlist, setLocation] = useState([]);
@@ -178,23 +180,9 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     }, [master]);
     const onChange = (e) => {
         e.preventDefault();
-        if (e.target.name === "batchno") {
-          const newBatchId = e.target.value;
-          const newDetail = {
-            batchId: newBatchId,
-            itemName: "",
-            qty: 0,
-            uom: "",
-            totalPcs: 0,
-            remarkk: "",
-          };
-          setItemConsumptionDetails([...itemConsumptionDetails, newDetail]);
-          setFormData({ ...formData, [e.target.name]: newBatchId });
-        } else {
-          setFormData({ ...formData, [e.target.name]: e.target.value });
-        }
+        setFormData({ ...formData, [e.target.name]: e.target.value });   
       };
-
+    
     const handleSave = (e) => {
         e.preventDefault();
 
@@ -229,7 +217,63 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
             setFormData({ ...formData, [name]: e.id });
         }
     }
-
+    const getDetail = async () => {
+        try {
+          const res = await axios.get(`ItemConsumption/detail?batchCode=`+ batchNo);
+    
+          return Promise.resolve(res.data);
+        } catch (err) {
+          let errMessage = "";
+          if (err.message) errMessage = err.message;
+          if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+          setAlert(errMessage, "danger");
+        }
+      };
+    
+    const handleBatchNoKeyDown = async (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var data = await getDetail();
+    
+          if (data != null) {
+            handleAddBatch(data.data);
+          }
+        }
+      };
+      const handleAddBatch = (selectedBatch) => {
+        let details = [... itemConsumptionDetails];
+    
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
+    
+        if (existingBatchIndex === -1) {
+          details.unshift({
+            checked: false,
+            id: 0,
+            receivingId: 0,
+            locationId: 0,
+            palletId: 0,
+            batchId: selectedBatch.tmpBatchId,
+            itemId: selectedBatch.itemId,
+            qty: 1,
+            voucherNo: voucherNo,
+            remark: "",
+            stock: selectedBatch.stock,
+            batchCode: selectedBatch.batchCode,
+            uom: selectedBatch.uom,
+            itemName: selectedBatch.itemName
+          });
+        }
+        else {
+          details[existingBatchIndex] = {
+            ...details[existingBatchIndex],
+            // Update properti sesuai kebutuhan
+            qty: details[existingBatchIndex]["qty"] + 1,
+            // ...
+          };
+        }
+        setFormData({ ...formData, itemConsumptionDetails: details });
+      };
+console.log("formdata",formData)
     const handleNewRow = (e) => {
         e.preventDefault();
         let details = itemConsumptionDetails;
@@ -277,10 +321,13 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const tabIconStyle = {
         marginRight: '5px',
     };
+
+    console.log("itemConsumptionDetails",itemConsumptionDetails)
     const renderItem = () =>
         itemConsumptionDetails !== undefined &&
         itemConsumptionDetails !== null &&
         itemConsumptionDetails.map((details, index) => {
+            console.log("details",details)
             return (
                 <tr key={index}>
                     <td className="text-center">{index + 1}</td>
@@ -290,7 +337,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                             type="text" style={{ textAlign: "center" }}
                             name="BATCH No"
                             readOnly={true}
-                            value={details.batchId}
+                            value={details.batchCode}
                         />
                     </td>
 
@@ -475,14 +522,14 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
                         <input
-                     name="batchno"
-                     value={formData.batchId}
-                    type="text"
-                    onChange={(e) => onChange(e)}
-                    className="form-control text-left"
-                    placeholder="Search..."
-                    required
-                    />
+                name="batchNo"
+                value={itemConsumptionDetails.batchId}
+                type="text"
+                onChange={(e) => onChange(e)}
+                onKeyDown={(e) => handleBatchNoKeyDown(e)}
+                className="form-control text-left"
+                placeholder="Search..."
+              />
                         </div>
                         <div className="col-sm-2 text-left col-form-label">
                             <Button variant="primary" className="fa fa-search"> Search</Button>{' '}

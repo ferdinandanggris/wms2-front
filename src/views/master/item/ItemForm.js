@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { } from "react-icons/fa";
+import {  } from "react-icons/fa";
 import Select2 from "../../../components/Select2";
 
 import { connect } from "react-redux";
@@ -11,13 +11,13 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadItem, loadPacking, loadGroup, loadUom, loadBatch } from "../../../actions/master";
+import { loadCategory, loadItem, loadPacking, loadGroup, loadUom, loadBatch,loadPallet,loadWarehouse, loadLocation } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 
 import { useSelector, useDispatch } from 'react-redux';
 import PagingComponent from "../../../components/Paging/PagingComponent";
 
-const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch }) => {
+const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch,loadPallet,loadWarehouse,loadLocation }) => {
   let { id } = useParams();
 
   const navigate = useNavigate();
@@ -54,12 +54,22 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     batches: []
   });
 
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(0);
+  // const [data, setData] = useState([]);
+
   const { name, code, initial, uomId, packingId, isActive, incoming, outgoing, exclusive, category, qtyPerPacking, balance, type, spWarehouseDetails, spLocationDetails,
     spPalletDetails, itemGroupDetails, batches } = formData;
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [palletPage, setPalletPage] = useState(0);
+  const [locationPage, setLocationPage] = useState(0);
+  const [warehousePage, setWarehousePage] = useState(0);
 
   const dispatch = useDispatch();
   const dataBatches = useSelector(state => state.master.batch);
+  const dataPallet =useSelector(state => state.master.pallet);
+  const dataLocation =useSelector(state => state.master.location);
+  const dataWarehouse =useSelector(state => state.master.warehouse);
   const total = useSelector(state => state.master.total);
   const page = useSelector(state => state.master.page);
 
@@ -67,27 +77,52 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     if (user !== null && id !== undefined) {
       loadData({ url, id });
     }
+
     loadItem();
     loadCategory();
     loadPacking();
     loadGroup();
     loadUom();
     loadBatch({ limit: 10, page: 0, filterSearch: "itemid:" + id });
+    loadPallet({ limit: 10, page: 0, filterSearch: "itemid:" + id });
+    loadWarehouse({ limit: 10, page: 0, filterSearch: "itemid:" + id });
+    loadLocation({ limit: 10, page: 0, filterSearch: "itemid:" + id });
 
-  }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch]);
-
+  }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch,loadPallet,loadWarehouse,loadLocation]);
   // console.log("formdata", formData)
   // console.log("masterGroup", master.group)
 
   const handlePageChange = (page) => {
     dispatch(loadBatch({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
   };
+  const handlePalletPageChange = (page) => {
+    setPalletPage(page - 1);
+    dispatch(loadPallet({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
+  };
+  const handleWarehousePageChange = (page) => {
+    setWarehousePage(page - 1);
+    dispatch(loadWarehouse({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
+  };
+   const handleLocationPageChange = (page) => {
+    setLocationPage(page - 1);
+    dispatch(loadLocation({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
+  };
 
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
       if (data.data !== undefined && data.data !== null) {
-
+        console.log("data", data)
+        const newItemGroupDetail = {
+          id: 0,
+          name: "",
+          code: "",
+          dateIn: null,
+          dateUp: null,
+          userIn: null,
+          userUp: null,
+          groupId: 0,
+        };
         setFormData({
           id: id === undefined ? 0 : parseInt(id),
           name: data.data.name,
@@ -372,21 +407,27 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {spWarehouseDetails !== undefined &&
-                  spWarehouseDetails !== null &&
-                  spWarehouseDetails.map((WarehouseDetails, index) => {
+              {dataWarehouse !== undefined &&
+                    dataWarehouse !== null &&
+                    dataWarehouse.map((warehouse, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                        <td style={{ textAlign: 'center' }}>{WarehouseDetails.code}</td> { }
-                        <td style={{ textAlign: 'center' }}>{WarehouseDetails.incoming}</td> { }
-                        <td style={{ textAlign: 'center' }}>{WarehouseDetails.outgoing}</td> { }
-                        <td style={{ textAlign: 'center' }}>{WarehouseDetails.balance}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.balance}</td> { }
                       </tr>
                     );
                   })}
               </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={warehousePage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handleWarehousePageChange}
+              />
           </Tab>
 
 
@@ -402,21 +443,27 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {spLocationDetails !== undefined &&
-                  spLocationDetails !== null &&
-                  spLocationDetails.map((LocationDetails, index) => {
+              {dataLocation !== undefined &&
+                    dataLocation !== null &&
+                    dataLocation.map((location, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                        <td style={{ textAlign: 'center' }}>{LocationDetails.code}</td> { }
-                        <td style={{ textAlign: 'center' }}>{LocationDetails.incoming}</td> { }
-                        <td style={{ textAlign: 'center' }}>{LocationDetails.outgoing}</td> { }
-                        <td style={{ textAlign: 'center' }}>{LocationDetails.balance}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.balance}</td> { }
                       </tr>
                     );
                   })}
               </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={locationPage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handleLocationPageChange}
+              />
           </Tab>
 
           <Tab eventKey="Document" title={<span><FaPallet style={tabIconStyle} /> Pallets Detail</span>}>
@@ -431,21 +478,27 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {spPalletDetails !== undefined &&
-                  spPalletDetails !== null &&
-                  spPalletDetails.map((PalletDetails, index) => {
+              {dataPallet !== undefined &&
+                    dataPallet !== null &&
+                    dataPallet.map((pallet, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
-                        <td style={{ textAlign: 'center' }}>{PalletDetails.code}</td> { }
-                        <td style={{ textAlign: 'center' }}>{PalletDetails.incoming}</td> { }
-                        <td style={{ textAlign: 'center' }}>{PalletDetails.outgoing}</td> { }
-                        <td style={{ textAlign: 'center' }}>{PalletDetails.balance}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.balance}</td> { }
                       </tr>
                     );
                   })}
               </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={palletPage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handlePalletPageChange}
+              />
           </Tab>
         </Tabs>
       </div>
@@ -470,8 +523,11 @@ ItemForm.propTypes = {
   loadData: PropTypes.func,
   loadUom: propTypes.func,
   loadPacking: PropTypes.func,
+  loadLocation:propTypes.func,
+  loadWarehouse:propTypes.func,
   loadGroup: propTypes.func,
   loadBatch: propTypes.func,
+  loadPallet: propTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
 };
@@ -482,4 +538,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch })(ItemForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch,loadPallet,loadLocation,loadWarehouse })(ItemForm);

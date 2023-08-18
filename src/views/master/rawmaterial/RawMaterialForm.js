@@ -10,11 +10,13 @@ import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { Table as RTable, Tab, Tabs } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
-import { loadCategory, loadPacking, loadUom } from "../../../actions/master";
+import { loadCategory, loadPacking, loadUom,loadBatch,loadPallet,loadWarehouse, loadLocation } from "../../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../../components/Select2";
+import { useSelector, useDispatch } from 'react-redux';
+import PagingComponent from "../../../components/Paging/PagingComponent";
 
-const RawMaterialForm = ({ user, data, loadData, addData, editData, master, loadCategory, loadPacking, loadUom }) => {
+const RawMaterialForm = ({ user, data, loadData, addData, editData, master, loadCategory, loadPacking, loadUom,loadBatch,loadPallet,loadWarehouse, loadLocation }) => {
   let { type, id } = useParams();
 
   const navigate = useNavigate();
@@ -48,6 +50,17 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
 
   const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails,spLocationDetails, 
     spPalletDetails,batches } = formData;
+    const [palletPage, setPalletPage] = useState(0);
+    const [locationPage, setLocationPage] = useState(0);
+    const [warehousePage, setWarehousePage] = useState(0);
+  
+    const dispatch = useDispatch();
+    const dataBatches = useSelector(state => state.master.batch);
+    const dataPallet =useSelector(state => state.master.pallet);
+    const dataLocation =useSelector(state => state.master.location);
+    const dataWarehouse =useSelector(state => state.master.warehouse);
+    const total = useSelector(state => state.master.total);
+    const page = useSelector(state => state.master.page);
 
   useEffect(() => {
     if (user !== null && id !== undefined) {
@@ -57,7 +70,27 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     loadCategory();
     loadPacking();
     loadUom();
-  }, [id, user, loadData, loadCategory, loadPacking, loadUom]);
+    loadBatch({ limit: 10, page: 0, filterSearch: "rawmaterialid:" + id });
+    loadPallet({ limit: 10, page: 0, filterSearch: "rawmaterialid:" + id });
+    loadWarehouse({ limit: 10, page: 0, filterSearch: "rawmaterialid:" + id });
+    loadLocation({ limit: 10, page: 0, filterSearch: "rawmaterialid:" + id });
+  }, [id, user, loadData, loadCategory, loadPacking, loadUom,loadBatch,loadPallet,loadWarehouse,loadLocation]);
+
+  const handlePageChange = (page) => {
+    dispatch(loadBatch({ limit: 10, page: page - 1, filterSearch: "rawmaterialid:" + id }));
+  };
+  const handlePalletPageChange = (page) => {
+    setPalletPage(page - 1);
+    dispatch(loadPallet({ limit: 10, page: page - 1, filterSearch: "rawmaterialid:" + id }));
+  };
+  const handleWarehousePageChange = (page) => {
+    setWarehousePage(page - 1);
+    dispatch(loadWarehouse({ limit: 10, page: page - 1, filterSearch: "rawmaterialid:" + id }));
+  };
+   const handleLocationPageChange = (page) => {
+    setLocationPage(page - 1);
+    dispatch(loadLocation({ limit: 10, page: page - 1, filterSearch: "rawmaterialid:" + id }));
+  };
 
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
@@ -210,13 +243,13 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
         </div>
 
 
-        <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
+     <Tabs defaultActiveKey="ContactDetail" className="mt-5 mb-5">
           <Tab eventKey="ContactDetail" title={<span><FaLayerGroup style={tabIconStyle} /> Batch Detail</span>}>
             <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
               <RTable bordered style={{ float: 'center', width: "100%" }}>
                 <thead>
                   <tr>
-                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                    <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Initial</th>
                     <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
@@ -225,31 +258,36 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                   </tr>
                 </thead>
                 <tbody>
-    {batches !== undefined &&
-      batches !== null &&
-      batches.map((batch, index) => { 
-        return (
-          <tr key={index}>
-              <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{batch.code}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.initial}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.incoming}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.outgoing}</td> {}
-            <td style={{ textAlign: 'center' }}>{batch.balance}</td> {}
-          </tr>
-        );
-      })}
-  </tbody>
+                  {dataBatches !== undefined &&
+                    dataBatches !== null &&
+                    dataBatches.map((batch, index) => {
+                      return (
+                        <tr key={index}>
+                          <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                          <td style={{ textAlign: 'center' }}>{batch.code}</td>
+                          <td style={{ textAlign: 'center' }}>{batch.initial}</td>
+                          <td style={{ textAlign: 'center' }}>{batch.incoming}</td>
+                          <td style={{ textAlign: 'center' }}>{batch.outgoing}</td>
+                          <td style={{ textAlign: 'center' }}>{batch.balance}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
               </RTable>
+              <PagingComponent
+                currentPage={page + 1}
+                limit={10}
+                total={total}
+                onPageChange={handlePageChange}
+              />
             </div>
-
           </Tab>
 
           <Tab eventKey="BillingDetail" title={<span><FaHouseUser style={tabIconStyle} />WareHouse Detail</span>}>
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
-                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>WareHouse</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -257,21 +295,27 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-    {spWarehouseDetails !== undefined &&
-      spWarehouseDetails !== null &&
-      spWarehouseDetails.map((WarehouseDetails, index) => { 
-        return (
-          <tr key={index}>
-            <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{WarehouseDetails.code}</td> {}
-            <td style={{ textAlign: 'center' }}>{WarehouseDetails.incoming}</td> {}
-            <td style={{ textAlign: 'center' }}>{WarehouseDetails.outgoing}</td> {}
-            <td style={{ textAlign: 'center' }}>{WarehouseDetails.balance}</td> {}
-          </tr>
-        );
-      })}
-  </tbody>
+              {dataWarehouse !== undefined &&
+                    dataWarehouse !== null &&
+                    dataWarehouse.map((warehouse, index) => {
+                    return (
+                      <tr key={index}>
+                        <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                        <td style={{ textAlign: 'center' }}>{warehouse.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{warehouse.balance}</td> { }
+                      </tr>
+                    );
+                  })}
+              </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={warehousePage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handleWarehousePageChange}
+              />
           </Tab>
 
 
@@ -279,7 +323,7 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
-                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>LOCATIOM</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -287,28 +331,34 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-    {spLocationDetails !== undefined &&
-      spLocationDetails !== null &&
-      spLocationDetails.map((LocationDetails, index) => { 
-        return (
-          <tr key={index}>
-              <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{LocationDetails.code}</td> {}
-            <td style={{ textAlign: 'center' }}>{LocationDetails.incoming}</td> {}
-            <td style={{ textAlign: 'center' }}>{LocationDetails.outgoing}</td> {}
-            <td style={{ textAlign: 'center' }}>{LocationDetails.balance}</td> {}
-          </tr>
-        );
-      })}
-  </tbody>
+              {dataLocation !== undefined &&
+                    dataLocation !== null &&
+                    dataLocation.map((location, index) => {
+                    return (
+                      <tr key={index}>
+                        <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                        <td style={{ textAlign: 'center' }}>{location.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{location.balance}</td> { }
+                      </tr>
+                    );
+                  })}
+              </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={locationPage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handleLocationPageChange}
+              />
           </Tab>
 
           <Tab eventKey="Document" title={<span><FaPallet style={tabIconStyle} /> Pallets Detail</span>}>
             <RTable bordered style={{ float: 'center', width: "100%" }}>
               <thead>
                 <tr>
-                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
+                  <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>PALLETS</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Incoming</th>
                   <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Outgoing</th>
@@ -316,21 +366,27 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-    {spPalletDetails!== undefined &&
-      spPalletDetails !== null &&
-      spPalletDetails .map((PalletDetails , index) => { 
-        return (
-          <tr key={index}>
-              <td style={{ textAlign: 'center' }}>{index + 1}</td>
-            <td style={{ textAlign: 'center' }}>{PalletDetails.code}</td> {}
-            <td style={{ textAlign: 'center' }}>{PalletDetails.incoming}</td> {}
-            <td style={{ textAlign: 'center' }}>{PalletDetails.outgoing}</td> {}
-            <td style={{ textAlign: 'center' }}>{PalletDetails.balance}</td> {}
-          </tr>
-        );
-      })}
-  </tbody>
+              {dataPallet !== undefined &&
+                    dataPallet !== null &&
+                    dataPallet.map((pallet, index) => {
+                    return (
+                      <tr key={index}>
+                        <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                        <td style={{ textAlign: 'center' }}>{pallet.code}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.incoming}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.outgoing}</td> { }
+                        <td style={{ textAlign: 'center' }}>{pallet.balance}</td> { }
+                      </tr>
+                    );
+                  })}
+              </tbody>
             </RTable>
+            <PagingComponent
+                currentPage={palletPage + 1}
+                limit={10}
+                total={total}
+                onPageChange={handlePalletPageChange}
+              />
           </Tab>
         </Tabs>
       </div>
@@ -353,6 +409,11 @@ RawMaterialForm.propTypes = {
   loadCategory: PropTypes.func,
   loadData: PropTypes.func,
   loadPacking: PropTypes.func,
+  loadLocation:propTypes.func,
+  loadWarehouse:propTypes.func,
+  loadGroup: propTypes.func,
+  loadBatch: propTypes.func,
+  loadPallet: propTypes.func,
   loadUom: PropTypes.func,
   addData: PropTypes.func,
   editData: PropTypes.func,
@@ -364,4 +425,4 @@ const mapStateToProps = (state) => ({
   master: state.master
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadCategory, loadPacking, loadUom })(RawMaterialForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadCategory, loadPacking, loadUom,loadBatch,loadPallet,loadLocation,loadWarehouse })(RawMaterialForm);
