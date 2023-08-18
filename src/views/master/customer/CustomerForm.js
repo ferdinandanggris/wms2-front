@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { connect } from "react-redux";
+
+import "../master.css"
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Select2 from "../../../components/Select2";
+import { Table as RTable, Tab, Tabs } from "react-bootstrap";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaUser } from "react-icons/fa";
+
 import { loadData, addData, editData } from "../../../actions/data";
 import { loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment } from "../../../actions/master";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
-import Select2 from "../../../components/Select2";
-import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaUser } from "react-icons/fa";
-import "../master.css"
 
 const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();

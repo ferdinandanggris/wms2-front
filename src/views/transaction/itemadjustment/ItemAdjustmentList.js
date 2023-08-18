@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { FaChartBar } from "react-icons/fa";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { FaChartBar } from "react-icons/fa";
+import { loadVendor } from "../../../actions/master";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
-import { loadVendor } from "../../../actions/master";
 
 const ItemAdjustmentList = ({ user, data, refreshData, deleteData, exportData, master, loadVendor }) => {
     const title = "Item Adjustment Module";
