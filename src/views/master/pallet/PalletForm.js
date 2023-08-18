@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+
 import { FaLayerGroup, FaPallet } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import { loadData, addData, editData } from "../../../actions/data";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import { loadData, addData, editData } from "../../../actions/data";
 
 import ListTransaction from "../customComponent/listTransaction";
 

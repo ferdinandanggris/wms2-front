@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { FaBox } from "react-icons/fa";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { FaBox } from "react-icons/fa";
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 

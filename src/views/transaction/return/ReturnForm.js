@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { FaUndo, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap, FaTrashAlt } from "react-icons/fa";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
-import Select2 from "../../../components/Select2";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { Table as RTable, Tab, Tabs } from "react-bootstrap";
-import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadShipping } from "../../../actions/master";
-import { loadData, addData, editData } from "../../../actions/data";
+
 import "../style.css";
+import axios from "axios";
 import moment from "moment";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Select2 from "../../../components/Select2";
+import { setAlert } from "../../../actions/alert";
+import { useNavigate, useParams } from "react-router-dom";
+import { Table as RTable, Tab, Tabs } from "react-bootstrap";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import PagingComponent from "../../../components/Paging/PagingComponent";
+import { FaUndo, FaInfoCircle, FaSearch, FaUsers, FaFile, FaSitemap, FaTrashAlt } from "react-icons/fa";
+
+import { loadData, addData, editData } from "../../../actions/data";
+import { loadLocation, loadPallet, loadWarehouse, loadBatch, loadCustomer, loadShipping } from "../../../actions/master";
 
 const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadLocation, loadPallet, loadBatch, loadCustomer, loadShipping }) => {
     let { id } = useParams();
@@ -29,7 +34,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
         postDate: null,
         locationId: 0,
         palletId: 0,
-        createdBy: "",
+        createdBy: user.fullName,
         postedBy: "",
         remark: "",
         customerId: 0,
@@ -55,9 +60,12 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
     const [customerList, setCustomer] = useState([]);
     const [orderList, setOrder] = useState([]);
     const [shippingList, setShipping] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState('');
     const { voucherNo, referenceNo, postDate, locationId, palletId, createdBy, postedBy, customerId, truckNo, picker, dateIn, shippingId, batchNo, returnDetails } = formData;
+
+    const [startIndex, setStartIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         loadWarehouse();
@@ -77,6 +85,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
+                    code: "",
                     name: "No Warehouse",
                     id: 0,
                 });
@@ -202,16 +211,6 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
         }
     }, [id, data, setFormData]);
 
-    const onDetailCheck = (e, index) => {
-        let details = returnDetails;
-        if (details === undefined || details === null) details = [];
-
-        let checked = details[index]["checked"];
-        details[index]["checked"] = checked ? false : true;
-
-        setFormData({ ...formData, returnDetails: details });
-    };
-
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -219,6 +218,18 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
 
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
+    };
+
+    const onDetailSelectChange = async (e, value, index) => {
+        let details = returnDetails;
+        if (details === undefined || details === null) details = [];
+
+        if (value == "warehouseIdId") {
+            details[index]["locationId"] = e.id;
+        }
+
+        setFormData({ ...formData, orderDetails: details });
+
     };
 
     const handleSave = (e) => {
@@ -233,6 +244,7 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                 navigate(`${path}`);
             });
         }
+
     };
 
     const handleDelete = (e, index) => {
@@ -242,6 +254,71 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
         updatedDetails.splice(index, 1);
 
         setFormData({ ...formData, returnDetails: updatedDetails });
+    };
+
+    const getDetail = async () => {
+        try {
+            const res = await axios.get(`/Return/detail?batchCode=` + batchNo);
+
+            return Promise.resolve(res.data);
+        } catch (err) {
+            let errMessage = "";
+            if (err.message) errMessage = err.message;
+            if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+            setAlert(errMessage, "danger");
+        }
+    };
+
+    const handleBatchNoKeyDown = async (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            var data = await getDetail();
+
+            if (data != null) {
+                handleAddBatch(data.data);
+            }
+        }
+    };
+
+    const handleAddBatch = (selectedBatch) => {
+        let details = [...returnDetails];
+
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
+
+        if (existingBatchIndex === -1) {
+            details.unshift({
+                checked: false,
+                id: 0,
+                returnId: id,
+                batchId: selectedBatch.tmpBatchId,
+                batchCode: selectedBatch.batchCode,
+                itemName: selectedBatch.itemName,
+                itemId: selectedBatch.itemId,
+                qty: 1,
+                return: selectedBatch.return,
+                qc: selectedBatch.qc,
+                ok: selectedBatch.ok,
+                reject: selectedBatch.reject,
+                balance: selectedBatch.balance,
+                uom: selectedBatch.uom,
+                voucherNo: voucherNo,
+                remark: "",
+                warehouseId: 0,
+            });
+        }
+        else {
+            details[existingBatchIndex] = {
+                ...details[existingBatchIndex],
+                qty: details[existingBatchIndex]["qty"] + 1,
+            };
+        }
+        setFormData({ ...formData, returnDetails: details });
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setStartIndex((pageNumber - 1) * 10);
+        setEndIndex(pageNumber * 10);
+        setCurrentPage(pageNumber);
     };
 
     const tabIconStyle = {
@@ -361,40 +438,41 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                             />
                         </div>
                     </div>
-                    <div className="row align-items-center mt-4 mb-3">
-                        <label className="col-sm-2 col-form-label">Batch No</label>
+                    <div className="row d-flex align-items-center">
+                        <div className="col-sm-2">
+                            <label className="col-form-label">Batch No</label>
+                        </div>
                         <div className="col-sm-4">
                             <input
                                 name="batchNo"
                                 value={batchNo}
                                 type="text"
                                 onChange={(e) => onChange(e)}
+                                onKeyDown={(e) => handleBatchNoKeyDown(e)}
                                 className="form-control text-left"
-                                placeholder=""
+                                placeholder="Input Batch"
                             />
                         </div>
-                        <div className="col-sm-2 col-form-label">
+                        <div className="col-sm-5 d-flex align-items-center">
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
-                                    name="status"
-                                    value={0} checked={status == 0} onChange={(e) => onChange(e)}
+                                    name=""
+                                    value=""
                                 />
                             </div>
-                            <button className="btn btn-primary ml-4" >
+                            <button className="btn btn-primary mr-5">
                                 <FaSearch /> Search
                             </button>
-                        </div>
-                        <div className="col-sm-0" style={{ marginLeft: "15px" }}>
                             <div className="form-check">
                                 <input
                                     id="newItemCheckbox"
                                     type="checkbox"
                                     className="form-check-input"
                                 />
-                                <label className="form-check-label" htmlFor="newItemCheckbox">
+                                <label className="form-check-label mr-3" htmlFor="newItemCheckbox">
                                     New Item
                                 </label>
                             </div>
@@ -411,7 +489,6 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                             <RTable bordered style={{ float: 'center', width: "100%" }}>
                                 <thead>
                                     <tr>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>BATCH NO</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
@@ -429,15 +506,13 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 <tbody>
                                     {returnDetails !== undefined &&
                                         returnDetails !== null &&
-                                        returnDetails.map((details, index) => {
+                                        returnDetails.slice(startIndex, endIndex).map((details, index) => {
+                                            const actualIndex = startIndex + index + 1;
                                             return (
                                                 <tr key={index}>
-                                                    <td className="text-center">
-                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
-                                                    </td>
-                                                    <td className="text-center"></td>
-                                                    <td style={{ textAlign: 'center' }}>{details.batchId}</td>
-                                                    <td style={{ textAlign: 'center' }}>{details.itemId}</td>
+                                                    <td className="text-center">{actualIndex}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.batchCode}</td>
+                                                    <td style={{ textAlign: 'center' }}>{details.itemName}</td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <input
                                                             type="text"
@@ -497,16 +572,15 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                                         <Select2
                                                             options={warehouseList}
                                                             optionValue={(option) => option.id.toString()}
-                                                            optionLabel={(option) => option.code}
+                                                            optionLabel={(option) => (option.code != "" ? option.code + ' - ' + option.name : option.name)}
                                                             placeholder={"Pick Warehouse"}
                                                             value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(details.warehouseId))}
-                                                            handleChange={(e) => onSelectChange(e, "warehouseId")}
-                                                            disabled={true}
+                                                            handleChange={(e) => onDetailSelectChange(e, "warehouseId", actualIndex - 1)}
                                                         />
                                                     </td>
                                                     <td className="text-center">
                                                         <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
-                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                            <FaTrashAlt className="icon-trash" />
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -516,6 +590,14 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 </tbody>
                             </RTable>
                         </div>
+                        <div style={{ marginTop: "20px" }}></div>
+                        {/* Belum bsa berjalan paginationnya karena returnDetailsnya masih null */}
+                        {/* <PagingComponent
+                            currentPage={currentPage}
+                            limit={10}
+                            total={returnDetails.length}
+                            onPageChange={handlePageChange}
+                        /> */}
                     </Tab>
 
                     <Tab eventKey="BillingDetail" title={<span><FaSitemap style={tabIconStyle} />Item Detail</span>}>
@@ -523,7 +605,6 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                             <RTable bordered style={{ float: 'center', width: "100%" }}>
                                 <thead>
                                     <tr>
-                                        <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>CODE</th>
                                         <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>NAME</th>
@@ -536,21 +617,19 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 <tbody>
                                     {returnDetails !== undefined &&
                                         returnDetails !== null &&
-                                        returnDetails.map((details, index) => {
+                                        returnDetails.slice(startIndex, endIndex).map((details, index) => {
+                                            const actualIndex = startIndex + index + 1;
                                             return (
                                                 <tr>
-                                                    <td style={{ textAlign: 'center' }}>
-                                                        <input type="checkbox" checked={details.checked !== undefined && details.checked} onChange={(e) => onDetailCheck(e, index)} />
-                                                    </td>
-                                                    <td style={{ textAlign: 'center' }}></td>
-                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.code}</td>
+                                                    <td style={{ textAlign: 'center' }}>{actualIndex}</td>
+                                                    <td style={{ textAlign: 'center', width: "95px" }}>{details.batchCode}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.itemName}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.qty}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.shipping}</td>
                                                     <td style={{ textAlign: 'center' }}>{details.diff}</td>
                                                     <td className="text-center">
                                                         <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
-                                                            <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                            <FaTrashAlt className="icon-trash" />
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -560,60 +639,76 @@ const ReturnForm = ({ user, data, loadData, addData, editData, master, loadWareh
                                 </tbody>
                             </RTable>
                         </div>
+                        <div style={{ marginTop: "20px" }}></div>
+                        {/* <PagingComponent
+                            currentPage={currentPage}
+                            limit={10}
+                            total={returnDetails.length}
+                            onPageChange={handlePageChange}
+                        /> */}
                     </Tab>
-
                     <Tab eventKey="DeliveryDetail" title={<span><FaUsers style={tabIconStyle} />Change Logs</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-2 col-form-label">Created</label>
-                                <div className="col mr-5">
+                                <div className="col-sm-2">
+                                    <label className="col-form-label">Created</label>
+                                </div>
+                                <div className="col-sm-3">
                                     <input
                                         name="createdBy"
                                         value={createdBy}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)}
-                                        className="form-control text-left"
+                                        className="form-control text-left input-size"
                                     />
                                 </div>
-                                <label className="col-sm-0 text-left col-form-label">Created Date</label>
-                                <div className="col">
+                                <div className="col-sm-2">
+                                    <label className="col-form-label">Created Date</label>
+                                </div>
+                                <div className="col-sm-3">
                                     <input
                                         name="dateIn"
                                         value={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")}
                                         onChange={(e) => onChange(e)}
                                         type="date"
                                         placeholder=""
-                                        className="form-control text-left"
+                                        className="form-control text-left input-size"
                                     />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
-                                <label className="col-sm-2 col-form-label">Posted</label>
-                                <div className="col mr-5">
+                                <div className="col-sm-2">
+                                    <label className="col-form-label">Posted</label>
+                                </div>
+                                <div className="col-sm-3">
                                     <input
                                         name="postedBy"
                                         value={postedBy}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)}
-                                        className="form-control text-left"
+                                        className="form-control text-left input-size"
                                     />
                                 </div>
-                                <label className="col-sm-0 text-left col-form-label">Posted Date</label>
-                                <div className="col">
+                                <div className="col-sm-2">
+                                    <label className="col-form-label">Posted Date</label>
+                                </div>
+                                <div className="col-sm-3">
                                     <input
                                         name="postDate"
                                         value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
                                         onChange={(e) => onChange(e)}
                                         type="date"
                                         placeholder=""
-                                        className="form-control text-left"
+                                        className="form-control text-left input-size"
                                     />
                                 </div>
                             </div>
                         </div>
                     </Tab>
+
+
                 </Tabs>
             </div >
         );

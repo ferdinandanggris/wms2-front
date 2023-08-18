@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Select2 from "../../../components/Select2";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaSearch, FaSearchLocation } from "react-icons/fa";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import ListTransaction from "../customComponent/listTransaction";
-import Select2 from "../../../components/Select2";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import { loadWarehouse, loadGroup } from "../../../actions/master";
 import { loadData, addData, editData } from "../../../actions/data";
 
