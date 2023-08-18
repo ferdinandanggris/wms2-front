@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { connect } from "react-redux";
+
+import "../style.css";
+import axios from "axios";
+import moment from "moment";
 import PropTypes from "prop-types";
-import { Table as RTable } from "react-bootstrap";
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import Select2 from "../../../components/Select2";
+import { setAlert } from "../../../actions/alert";
+import { Table as RTable } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import PagingComponent from "../../../components/Paging/PagingComponent";
+import { FaBox, FaUserFriends, FaTrashAlt, FaSearch } from "react-icons/fa";
+
 import { loadData, addData, editData } from "../../../actions/data";
 import { loadVendor, loadWarehouse, loadPallet, loadLocation, loadBatch, loadItem } from "../../../actions/master";
-import { FaBox, FaUserFriends, FaTrashAlt, FaSearch } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import moment from "moment";
 
 const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch, loadItem }) => {
     let { id } = useParams();
@@ -28,10 +34,10 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         status: "Approve",
         transDate: null,
         postDate: null,
-        createdBy: "",
+        createdBy: user.fullName,
         postedBy: "",
-        vendorId: 0,
-        warehouseId: 0,
+        vendor: "",
+        warehouse: "",
         dateIn: null,
         dateUp: null,
         userIn: "",
@@ -39,8 +45,6 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         batchNo: "",
         palletId: 0,
         locationId: 0,
-        batchNo: "",
-        batch: "",
         rawMaterialReceivingDetails: []
     });
 
@@ -51,19 +55,21 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
     const [locationList, setLocation] = useState([]);
     const [batchList, setBatch] = useState([]);
     const dispatch = useDispatch();
+    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, rawMaterialReceivingDetails } = formData;
 
-    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, itemId, rawMaterialReceivingDetails } = formData;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [startIndex, setStartIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(10);
 
     useEffect(() => {
-        loadVendor();
-        loadWarehouse();
-        loadLocation();
-        loadPallet();
         loadBatch();
-        loadItem();
+        loadVendor();
+        loadPallet();
+        loadLocation();
+        loadWarehouse();
         if (user !== null && id !== undefined)
             loadData({ url, id });
-    }, [id, user, loadData, loadVendor, loadWarehouse, loadLocation, loadPallet, loadBatch, loadItem]);
+    }, [id, user, loadData, loadVendor, loadWarehouse, loadLocation, loadPallet, loadBatch]);
 
     useEffect(() => {
         if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -95,6 +101,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
+                    code: "",
                     name: "No Pallet",
                     id: 0,
                 });
@@ -107,6 +114,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
+                    code: "",
                     name: "No Location",
                     id: 0,
                 });
@@ -155,8 +163,8 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                     voucherNo: data.data.voucherNo,
                     referenceNo: data.data.referenceNo,
                     status: data.data.status,
-                    transDate: data.data.country,
-                    postDate: data.data.deliveryAddress,
+                    transDate: data.data.transDate,
+                    postDate: data.data.postDate,
                     createdBy: data.data.createdBy,
                     postedBy: data.data.postedBy,
                     vendorId: data.data.vendorId,
@@ -176,16 +184,6 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         }
     }, [id, data, setFormData]);
 
-    const onDetailCheck = (e, index) => {
-        let details = rawMaterialReceivingDetails;
-        if (details === undefined || details === null) details = [];
-
-        let checked = details[index]["checked"];
-        details[index]["checked"] = checked ? false : true;
-
-        setFormData({ ...formData, rawMaterialReceivingDetails: details });
-    };
-
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -193,6 +191,20 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
 
     const onSelectChange = (e, name) => {
         setFormData({ ...formData, [name]: e.id });
+    };
+
+    const onDetailSelectChange = async (e, value, index) => {
+        let details = rawMaterialReceivingDetails;
+        if (details === undefined || details === null) details = [];
+
+        if (value == "locationId") {
+            details[index]["locationId"] = e.id;
+        } else if (value == "palletId") {
+            details[index]["palletId"] = e.id;
+        }
+
+        setFormData({ ...formData, orderDetails: details });
+
     };
 
     const handleSave = (e) => {
@@ -225,44 +237,70 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         setFormData({ ...formData, rawMaterialReceivingDetails: newDetail });
     };
 
-    const handleProductInputKeyDown = (e) => {
+    const getDetail = async () => {
+        try {
+            const res = await axios.get(`/RawMaterialReceiving/detail?batchCode=` + batchNo);
+
+            return Promise.resolve(res.data);
+        } catch (err) {
+            let errMessage = "";
+            if (err.message) errMessage = err.message;
+            if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+            setAlert(errMessage, "danger");
+        }
+    };
+
+    const handleBatchNoKeyDown = async (e) => {
         if (e.key === "Enter") {
-            const batchCode = e.target.value;
-            const selectedBatch = batchList.find((batch) =>
-                batch.code.toLowerCase() === batchCode.toLowerCase()
-            );
+            e.preventDefault();
+            var data = await getDetail();
 
-            if (selectedBatch) {
-                handleAddBatch(selectedBatch);
+            if (data != null) {
+                handleAddBatch(data.data);
             }
-
-            e.target.value = "";
         }
     };
 
     const handleAddBatch = (selectedBatch) => {
         let details = [...rawMaterialReceivingDetails];
 
-        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.id);
+        const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
 
         if (existingBatchIndex === -1) {
             details.unshift({
                 checked: false,
                 id: 0,
-                warehouseId: 0,
-                vendorId: 0,
-                batchId: selectedBatch.id,
-                qty: 0,
-                voucherNo: "",
-                referenceNo: "",
+                rawMaterialReceivingId: 0,
+                batchId: selectedBatch.tmpBatchId,
+                batchCode: selectedBatch.batchCode,
+                itemId: selectedBatch.itemId,
+                itemName: selectedBatch.itemName,
+                uom: selectedBatch.uom,
+                locationId: 0,
+                palletId: 0,
+                qty: 1,
+                voucherNo: voucherNo,
+                remark: "",
             });
-            setFormData({ ...formData, rawMaterialReceivingDetails: details });
         }
+        else {
+            details[existingBatchIndex] = {
+                ...details[existingBatchIndex],
+                qty: details[existingBatchIndex]["qty"] + 1,
+            };
+        }
+        setFormData({ ...formData, rawMaterialReceivingDetails: details });
     };
 
     const getItemNameById = (itemId) => {
         const item = itemList.find((item) => item.id === itemId);
         return item ? item.name : "Unknown Item";
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setStartIndex((pageNumber - 1) * 10);
+        setEndIndex(pageNumber * 10);
+        setCurrentPage(pageNumber);
     };
 
     const tabIconStyle = {
@@ -372,11 +410,11 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                         <div className="col-sm-3">
                             <input
                                 name="batchNo"
-                                value={batchNo}
                                 type="text"
+                                value={batchNo}
                                 onChange={(e) => onChange(e)}
+                                onKeyDown={(e) => handleBatchNoKeyDown(e)}
                                 className="form-control text-left"
-                                onKeyDown={(e) => handleProductInputKeyDown(e)}
                                 placeholder="Input Batch"
                             />
                         </div>
@@ -400,7 +438,6 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                     <RTable bordered style={{ float: 'center', width: "100%" }}>
                         <thead>
                             <tr>
-                                <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}></th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>Batch No</th>
                                 <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>ITEM</th>
@@ -415,28 +452,13 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                         <tbody>
                             {rawMaterialReceivingDetails !== undefined &&
                                 rawMaterialReceivingDetails !== null &&
-                                rawMaterialReceivingDetails.map((details, index) => {
+                                rawMaterialReceivingDetails.slice(startIndex, endIndex).map((details, index) => {
+                                    const actualIndex = startIndex + index + 1;
                                     return (
                                         <tr key={index}>
-                                            <td className="text-center">
-                                                <input type="checkbox"
-                                                    checked={details.checked !== undefined && details.checked}
-                                                    onChange={(e) => onDetailCheck(e, index)}
-                                                />
-                                            </td>
-                                            <td className="text-center">{index + 1}</td>
-                                            <td style={{ textAlign: 'center' }}>
-                                                <Select2
-                                                    options={batchList}
-                                                    optionValue={(option) => option.id.toString()}
-                                                    optionLabel={(option) => option.code}
-                                                    placeholder={"Pick Batch"}
-                                                    value={batchList === null ? null : batchList.filter((option) => option.id === parseInt(details.batchId))}
-                                                    handleChange={(e) => onSelectChange(e, "batchId")}
-                                                    disabled={true}
-                                                />
-                                            </td>
-                                            <td style={{ textAlign: 'center' }}>{getItemNameById(details.itemId)}</td>
+                                            <td className="text-center">{actualIndex}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.batchCode}</td>
+                                            <td style={{ textAlign: 'center' }}>{details.itemName}</td>
                                             <td style={{ textAlign: 'center', width: '9%' }}>
                                                 <input
                                                     type="text"
@@ -449,19 +471,22 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                             <td style={{ textAlign: 'center' }}>
                                                 <Select2
                                                     options={palletList}
-                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+                                                    optionValue={(option) => option.id.toString()}
+                                                    optionLabel={(option) => (option.code != "" ? option.code + ' - ' + option.name : option.name)}
                                                     placeholder={"Pick Pallet"}
                                                     value={palletList === null ? null : palletList.filter((option) => option.id === parseInt(details.palletId))}
-                                                    handleChange={(e) => onSelectChange(e, "palletId")}
+                                                    handleChange={(e) => onDetailSelectChange(e, "palletId", actualIndex - 1)}
                                                 />
                                             </td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <Select2
                                                     options={locationList}
-                                                    optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+                                                    optionValue={(option) => option.id.toString()}
+                                                    optionLabel={(option) => (option.code != "" ? option.code + ' - ' + option.name : option.name)}
                                                     placeholder={"Pick Location"}
                                                     value={locationList === null ? null : locationList.filter((option) => option.id === parseInt(details.locationId))}
-                                                    handleChange={(e) => onSelectChange(e, "locationId")} />
+                                                    handleChange={(e) => onDetailSelectChange(e, "locationId", actualIndex - 1)}
+                                                />
                                             </td>
                                             <td style={{ textAlign: 'center' }}>
                                                 <input
@@ -473,7 +498,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                                             </td>
                                             <td className="text-center">
                                                 <button className="btn-delete" onClick={(e) => handleDelete(e)}>
-                                                    <FaTrashAlt style={{ marginTop: "5px" }} />
+                                                    <FaTrashAlt className="icon-trash" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -483,6 +508,13 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                         </tbody>
                     </RTable>
                 </div>
+                <div style={{ marginTop: "20px" }}></div>
+                <PagingComponent
+                    currentPage={currentPage}
+                    limit={10}
+                    total={rawMaterialReceivingDetails.length}
+                    onPageChange={handlePageChange}
+                />
             </div>
         );
     };

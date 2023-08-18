@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { FaPallet } from "react-icons/fa";
 
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";

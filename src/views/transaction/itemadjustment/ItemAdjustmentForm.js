@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { FaChartBar, FaInfoCircle, FaSearch, FaFile, FaTrashAlt } from "react-icons/fa";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
-import Select2 from "../../../components/Select2";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { Table as RTable } from "react-bootstrap";
-import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet, loadItem } from "../../../actions/master";
-import { loadData, addData, editData } from "../../../actions/data";
-import "../style.css";
-import moment from "moment";
-import PagingComponent from "../../../components/Paging/PagingComponent";
-import axios from "axios";
-import { setAlert } from "../../../actions/alert";
 
-const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch, loadLocation, loadPallet, loadItem }) => {
+import "../style.css";
+import axios from "axios";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Table as RTable } from "react-bootstrap";
+import { setAlert } from "../../../actions/alert";
+import Select2 from "../../../components/Select2";
+import { useNavigate, useParams } from "react-router-dom";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import PagingComponent from "../../../components/Paging/PagingComponent";
+import { FaChartBar, FaInfoCircle, FaSearch, FaFile, FaTrashAlt } from "react-icons/fa";
+
+import { loadData, addData, editData } from "../../../actions/data";
+import { loadVendor, loadWarehouse, loadBatch, loadLocation, loadPallet, loadItem } from "../../../actions/master";
+
+const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadBatch, loadLocation, loadPallet }) => {
     let { id } = useParams();
     const navigate = useNavigate();
     const title = "Item Adjustment";
@@ -39,25 +41,23 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         itemAdjustmentDetails: []
     });
 
-    const [warehouseList, setWarehouse] = useState([]);
-    const [vendorList, setVendor] = useState([]);
-    const [batchList, setBatch] = useState([]);
-    const [locationList, setLocation] = useState([]);
-    const [palletList, setPallet] = useState([]);
     const [status, setStatus] = useState('');
-    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, batchNo, vendorId, warehouseId, batchId, file, itemAdjustmentDetails } = formData;
+    const [vendorList, setVendor] = useState([]);
+    const [palletList, setPallet] = useState([]);
+    const [warehouseList, setWarehouse] = useState([]);
+    const [locationList, setLocation] = useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [startIndex, setStartIndex] = useState(0);
     const [endIndex, setEndIndex] = useState(10);
+    const [startIndex, setStartIndex] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const { voucherNo, referenceNo, createdBy, transDate, postedBy, postDate, batchNo, vendorId, warehouseId, file, itemAdjustmentDetails } = formData;
 
     useEffect(() => {
-        loadWarehouse();
         loadVendor();
-        // loadBatch();
-        loadLocation();
         loadPallet();
-
+        loadLocation();
+        loadWarehouse();
         if (user !== null && id !== undefined)
             loadData({ url, id });
     }, [id, user, loadData, loadWarehouse, loadBatch, loadLocation, loadLocation, loadPallet]);
@@ -113,7 +113,6 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
             setPallet(list);
-
         }
 
     }, [master]);
@@ -159,17 +158,6 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         setFormData({ ...formData, [name]: e.id });
     };
 
-    const onDetailChange = (e, index) => {
-        e.preventDefault();
-
-        let details = itemAdjustmentDetails;
-        if (details === undefined || details === null) details = [];
-
-        details[index][e.target.name] = e.target.value;
-
-        setFormData({ ...formData, orderDetails: details });
-    };
-
     const onDetailSelectChange = async (e, value, index) => {
         let details = itemAdjustmentDetails;
         if (details === undefined || details === null) details = [];
@@ -180,9 +168,19 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
             details[index]["palletId"] = e.id;
         }
 
-
         setFormData({ ...formData, orderDetails: details });
 
+    };
+
+    const onDetailChange = (e, index) => {
+        e.preventDefault();
+
+        let details = itemAdjustmentDetails;
+        if (details === undefined || details === null) details = [];
+
+        details[index][e.target.name] = e.target.value;
+
+        setFormData({ ...formData, orderDetails: details });
     };
 
     const handleSave = (e) => {
@@ -210,7 +208,6 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
     const getDetail = async () => {
         try {
             const res = await axios.get(`/ItemAdjustment/detail?batchCode=` + batchNo);
-
             return Promise.resolve(res.data);
         } catch (err) {
             let errMessage = "";
@@ -265,16 +262,15 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
         setFormData({ ...formData, itemAdjustmentDetails: details });
     };
 
-    const tabIconStyle = {
-        marginRight: '5px',
-    };
-
     const handlePageChange = (pageNumber) => {
         setStartIndex((pageNumber - 1) * 10);
         setEndIndex(pageNumber * 10);
         setCurrentPage(pageNumber);
     };
 
+    const tabIconStyle = {
+        marginRight: '5px',
+    };
 
     const element = () => {
 
@@ -530,7 +526,7 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                                             </td>
                                             <td className="text-center">
                                                 <button className="btn-delete" onClick={(e) => handleDelete(e, index)}>
-                                                    <FaTrashAlt style={{ fontSize: "12px" }} />
+                                                    <FaTrashAlt className="icon-trash" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -546,7 +542,6 @@ const ItemAdjustmentForm = ({ user, data, loadData, addData, editData, master, l
                     total={itemAdjustmentDetails.length}
                     onPageChange={handlePageChange}
                 />
-
             </div>
         );
     };

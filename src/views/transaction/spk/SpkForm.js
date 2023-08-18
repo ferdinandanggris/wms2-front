@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaFile, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
-import FormWrapper from "../../../components/Wrapper/FormWrapper";
-import Select2 from "../../../components/Select2";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { Table as RTable } from "react-bootstrap";
-import { loadItem, loadWarehouse, loadCustomer } from "../../../actions/master";
-import { loadData, addData, editData } from "../../../actions/data";
-import { NumericFormat } from "react-number-format";
-import moment from "moment";
+
 import axios from "axios";
+import moment from "moment";
+import PropTypes from "prop-types";
+import Select2 from "../../../components/Select2";
+import { Table as RTable } from "react-bootstrap";
 import { setAlert } from "../../../actions/alert";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
+import { NumericFormat } from "react-number-format";
+import FormWrapper from "../../../components/Wrapper/FormWrapper";
+import { FaFile, FaInfoCircle, FaTimes, FaPlus } from "react-icons/fa";
+import PagingComponent from "../../../components/Paging/PagingComponent";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+
+import { loadData, addData, editData } from "../../../actions/data";
+import { loadItem, loadWarehouse, loadCustomer } from "../../../actions/master";
 
 const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadItem, loadCustomer }) => {
     let { id } = useParams();
@@ -54,6 +56,11 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
     const [customerList, setCustomer] = useState([]);
     const [warehouseList, setWarehouse] = useState([]);
     const [showModal, setShowModal] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [startIndex, setStartIndex] = useState(0);
+    const [endIndex, setEndIndex] = useState(10);
+
     const handleClose = () => setShowModal(false);
     const handleCekStock = () => setShowModal(true);
 
@@ -164,10 +171,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         }
     };
 
-    const tabIconStyle = {
-        marginRight: '5px',
-    };
-
     const onDetailCheck = (e, index) => {
         let details = orderDetails;
         if (details === undefined || details === null) details = [];
@@ -177,7 +180,7 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
 
         setFormData({ ...formData, orderDetails: details });
     };
-    
+
     const getDetail = ({ itemId, warehouseId, qty, voucherNo }) => async (dispatch) => {
         try {
             const queryParams = { itemId, warehouseId, qty, voucherNo };
@@ -241,16 +244,63 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
         setFormData({ ...formData, orderDetails: details });
     };
 
+
+    const handleNewRow = (e) => {
+        e.preventDefault();
+
+        let details = orderDetails;
+        if (details === undefined || details === null) details = [];
+
+        details.push({
+            checked: false,
+            productID: 0,
+            id: 0,
+            orderId: 0,
+            itemId: 0,
+            qty: 0,
+            voucherNo: "",
+            remark: "",
+        });
+        setFormData({ ...formData, orderDetails: details });
+    };
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+
+        let details = orderDetails;
+        if (details === undefined || details === null) details = [];
+
+        let newDetail = [];
+
+        details.map((item) => {
+            if (!item.checked) newDetail.push(item);
+            return null;
+        });
+
+        setFormData({ ...formData, orderDetails: newDetail });
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setStartIndex((pageNumber - 1) * 10);
+        setEndIndex(pageNumber * 10);
+        setCurrentPage(pageNumber);
+    };
+
+    const tabIconStyle = {
+        marginRight: '5px',
+    };
+
     const renderItem = () =>
         orderDetails !== undefined &&
         orderDetails !== null &&
-        orderDetails.map((item, index) => {
+        orderDetails.slice(startIndex, endIndex).map((item, index) => {
+            const actualIndex = startIndex + index + 1;
             return (
                 <tr key={index}>
                     <td className="text-center">
                         <input type="checkbox" checked={item.checked !== undefined && item.checked} onChange={(e) => onDetailCheck(e, index)} />
                     </td>
-                    <td className="text-center">{index + 1}</td>
+                    <td className="text-center">{actualIndex}</td>
                     <td className="text-left">
                         <Select2
                             maxLength={300}
@@ -373,41 +423,6 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                 </tr >
             );
         });
-
-    const handleNewRow = (e) => {
-        e.preventDefault();
-
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        details.push({
-            checked: false,
-            productID: 0,
-            id: 0,
-            orderId: 0,
-            itemId: 0,
-            qty: 0,
-            voucherNo: "",
-            remark: "",
-        });
-        setFormData({ ...formData, orderDetails: details });
-    };
-
-    const handleDelete = (e) => {
-        e.preventDefault();
-
-        let details = orderDetails;
-        if (details === undefined || details === null) details = [];
-
-        let newDetail = [];
-
-        details.map((item) => {
-            if (!item.checked) newDetail.push(item);
-            return null;
-        });
-
-        setFormData({ ...formData, orderDetails: newDetail });
-    };
 
     const element = () => {
         return (
@@ -571,6 +586,13 @@ const SpkForm = ({ user, data, loadData, addData, editData, master, loadWarehous
                         </tbody>
                     </RTable>
                 </div>
+                <div style={{ marginTop: "20px" }}></div>
+                <PagingComponent
+                    currentPage={currentPage}
+                    limit={10}
+                    total={orderDetails.length}
+                    onPageChange={handlePageChange}
+                />
             </div>
         );
     };
