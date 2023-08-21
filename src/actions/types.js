@@ -43,6 +43,7 @@ export const LOAD_TERMOFPAYMENT = "LOAD_TERMOFPAYMENT";
 export const LOAD_SELLER = "LOAD_SELLER";
 export const LOAD_CITY = "LOAD_CITY";
 export const LOAD_GATE = "LOAD_GATE";
+export const LOAD_RAWMATERIAL = "LOAD_RAWMATERIAL";
 
 // ice.js
 export const LOAD_FLEETCATEGORY = "LOAD_FLEETCATEGORY";
