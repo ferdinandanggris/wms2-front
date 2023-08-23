@@ -54,9 +54,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     batches: []
   });
 
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(0);
-  // const [data, setData] = useState([]);
+
 
   const { name, code, initial, uomId, packingId, isActive, incoming, outgoing, exclusive, category, qtyPerPacking, balance, type, spWarehouseDetails, spLocationDetails,
     spPalletDetails, itemGroupDetails, batches } = formData;
@@ -89,9 +87,6 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     loadLocation({ limit: 10, page: 0, filterSearch: "itemid:" + id });
 
   }, [id, user, loadData, loadItem, loadCategory, loadPacking, loadGroup, loadUom, loadBatch,loadPallet,loadWarehouse,loadLocation]);
-  // console.log("formdata", formData)
-  // console.log("masterGroup", master.group)
-
   const handlePageChange = (page) => {
     dispatch(loadBatch({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
   };
