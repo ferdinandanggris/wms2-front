@@ -13,7 +13,7 @@ import "../master.css"
 const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const title = "LeadCustomerFormr";
+    const title = "LeadCustomerForm";
     const img = <FaUser className="module-img" />;
     const path = "/master/lead-customer/:id?/:type";
     const url =  "LeadCustomer";
@@ -49,6 +49,7 @@ const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loa
         phoneBilling: 0,
         provinceBillingId: 0,
         cityBillingId:0,
+        jalanBilling:"",
         districtBillingId: 0,
         kodeposBilling: 0,
         alamatBilling: "",
@@ -85,6 +86,12 @@ const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loa
         dateUp: 0,
         userIn:  "",
         userUp:  "",
+        taxType: "",
+        tax1: "",
+        tax2:"",
+        faxPengiriman:"",
+        faxBilling:"",
+        jalanPengiriman:"",
         regencyDelivery: {},
         districtDelivery: {},
         provinceDelivery: {},
@@ -112,7 +119,7 @@ const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loa
     ,phonePengiriman,provincePengirimanId,cityPengirimanId,districtBilling,districtBillingId,districtPengirimanId,kodeposBilling,kodeposPengiriman,
 alamatPengiriman,namaBilling,judulBilling,emailBilling,phoneBilling,provinceBilling,provinceBillingId,cityBillingId,alamatBilling,namaCabang,
 currency,noRekening,namaRekening,npwp,ktp,imgKtp,imgNpwp,imgSppkp,sppkp,tanggalSppkp,nib,tanggalKtp,lastSync,badanUsaha,seller,name,status,paymentTerm,paymentTermId,
-email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dateUp,userIn,userUp,regencyDelivery, districtDelivery,provinceDelivery,regencyBilling, sale,termOfPayment,termOfPaymentId} = formData;
+email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPengiriman, jalanBilling,country,code,type,leadResellerId,salesId,dateIn,dateUp,userIn,userUp,regencyDelivery, districtDelivery,provinceDelivery,regencyBilling, sale,termOfPayment,termOfPaymentId} = formData;
 
     useEffect(() => {
         loadCountry();
@@ -244,6 +251,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                     sppkp: data.data.sppkp,
                     tanggalSppkp: data.data.tanggalSppkp,
                     nib: data.data.nib,
+                    jalanBilling:data.data.jalanBilling,
                     imgKtp: data.data.imgKtp,
                     ktp: data.data.ktp,
                     tanggalKtp: data.data.tanggalKtp,
@@ -273,6 +281,12 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                     districtBilling:  data.data.districtBilling,
                     provinceBilling:  data.data.provinceBilling,
                     sale:  data.data.sale,
+                    taxType:data.data.taxType,
+                    tax1:data.data.tax1,
+                    tax2:data.data.tax2,
+                    faxPengiriman:data.data.faxPengiriman,
+                    faxBilling:data.data.faxBilling,
+                    jalanPengiriman:data.data.jalanPengiriman,
                     termOfPayment: data.data.termOfPayment,
                     termOfPaymentId: data.data.termOfPaymentId,
                 });
@@ -396,7 +410,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                         <div className="col">
                             <input
                                 className="form-control text-right"
-                                name="tempo"
+                                name="paymentTerm"
                                 value={paymentTerm}
                                 onChange={(e) => onChange(e)}
                                 type="number"
@@ -537,12 +551,17 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                     </Tab>
                     <Tab eventKey="BillingDetail" title={<span><FaFileAlt style={tabIconStyle} /> Billing Detail</span>}>
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
-                            <div className="row align-items-center mt-4 mb-3">
-                                <label className="col-sm-2 col-form-label">Virtual Account</label>
-                                <div className="col-sm-3">
-                                  s
-                                </div>
-                            </div>
+                        <div className="row align-items-center mt-4 mb-3">
+    <label className="col-sm-2 col-form-label">Virtual Account</label>
+    <div className="col-sm-3">
+        <input
+            className="form-control text-left"
+            name="virtualAccount"
+            value={`${namaBank} - ${noRekening}`}
+            type="text"
+        />
+    </div>
+</div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
                                     Title Name<span className="required-star">*</span>
@@ -641,7 +660,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                     <input
                                         className="form-control text-left"
                                         name="billingFax"
-                                        value={paymentTerm}
+                                        value={faxBilling}
                                         type="text"
                                         onChange={(e) => onChange(e)} />
                                 </div>
@@ -663,7 +682,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                 <div className="col-sm-7">
                                     <input
                                         name="billingStreet"
-                                        value={alamatBilling}
+                                        value={jalanBilling}
                                         type="text"
                                         className="form-control text-left"
                                         placeholder=""
@@ -761,7 +780,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                     <input
                                         className="form-control text-left"
                                         name="deliveryFax"
-                                        value={paymentTerm}
+                                        value={faxPengiriman}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />
@@ -784,7 +803,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                 <div className="col-sm-7">
                                     <input
                                         name="deliveryStreet"
-                                        value={districtPengirimanId}
+                                        value={jalanPengiriman}
                                         type="text"
                                         className="form-control text-left"
                                         placeholder=""
@@ -876,7 +895,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                     <input
                                         className="form-control text-left"
                                         name="taxType"
-                                        value={paymentTerm}
+                                        value={taxType}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />
@@ -888,7 +907,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                     { <input
                                         className="form-control text-left"
                                         name="tax1"
-                                        value={paymentTerm}
+                                        value={tax1}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />}
@@ -898,7 +917,7 @@ email, mobile1, mobile2,pic, country,code,type,leadResellerId,salesId,dateIn,dat
                                     <input
                                         className="form-control text-left"
                                         name="tax2"
-                                        value={paymentTerm}
+                                        value={tax2}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />

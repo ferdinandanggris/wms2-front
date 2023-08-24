@@ -5,12 +5,12 @@ import { FaBox, FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaTimes
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-
+import {getHistoryCard} from"../../actions/report";
 import { loadData,addData, editData } from "../../actions/data";
 
 import FormWrapper from "../../components/Wrapper/FormWrapper";
 import { BsBorderBottom } from "react-icons/bs";
-import { loadCategory, loadLocation, loadPallet, loadVendor, loadWarehouse, loadproduction } from "../../actions/master";
+import { loadCategory, loadLocation, loadPallet, loadVendor, loadWarehouse, loadproduction,loadItem } from "../../actions/master";
 import { propTypes } from "react-bootstrap/esm/Image";
 import Select2 from "../../components/Select2";
 import moment from "moment";
@@ -18,7 +18,7 @@ import { NumericFormat } from "react-number-format";
 import axios from "axios";
 import { setAlert } from "../../actions/alert";
 
-const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadWarehouse, loadproduction, loadVendor, loadCategory, loadPallet, loadLocation }) => {
+const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadWarehouse, loadproduction, loadVendor, loadCategory, loadPallet, loadLocation,loadItem }) => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState('');
@@ -39,26 +39,32 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
     qtyPerPacking: 0,
     packingName: "",
     type: "",
+
     warehouse: "",
     initial: 0,
     incoming: 0,
     outgoing: 0,
-    balance: 0
+    balance: 0,
+    itemId:0,
+    warehouseId:0,
 
   });
 
-  const { code,name,voucherNo,objectName,postDate,qtyPerPacking,packingName,type,warehouse,initial,incoming,outgoing,balance } = formData;
+  const { code,name,voucherNo, warehouseId, itemId,objectName,postDate,qtyPerPacking,packingName,type,warehouse,initial,incoming,outgoing,balance } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [locationlist, setlocation] = useState([]);
   const [palletList, setpallet] = useState([]);
   const [vendorList, setVendor] = useState([]);
   const [productionList, setproduction] = useState([]);
   const [result,setResult]=useState(null);
+  const [itemList, setItemList] = useState(null)
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(10);
-
+  const [reportList, setReportList] = useState(null)
+  const [searchClicked, setSearchClicked] = useState(false);
   const handlePageChange = (pageNumber) => {
     setStartIndex((pageNumber - 1) * 10);
     setEndIndex(pageNumber * 10);
@@ -101,9 +107,10 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
     loadLocation();
     loadPallet();
     loadproduction();
+    loadItem();
 
     if (user !== null && id !== undefined) loadData({ url, id });
-  }, [id, user, loadData, loadWarehouse, loadVendor, loadCategory, loadPallet, loadLocation, loadproduction]);
+  }, [id, user, loadData, loadWarehouse, loadVendor, loadCategory, loadPallet, loadLocation, loadproduction,loadItem]);
 
   useEffect(() => {
     if (master.warehouse !== undefined && master.warehouse !== null) {
@@ -143,6 +150,19 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
       }
       setproduction(list);
     }
+    if (master && master.item !== undefined && master.item !== null) {
+      let list = [...master.item];
+      const obj = list.find((obj) => obj.id === 0);
+      if (obj === undefined || obj === null) {
+          list.push({
+              name: "Name",
+              id: 0,
+              code: "Code"
+          });
+          list.sort((a, b) => (a.id > b.id ? 1 : -1));
+      }
+      setItemList(list);
+  }
     if (master.pallet !== undefined && master.pallet !== null) {
       let list = [...master.pallet];
       const obj = list.find((obj) => obj.id === 0);
@@ -155,6 +175,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
       }
       setpallet(list);
     }
+    
     if (master.vendor !== undefined && master.vendor !== null) {
       let list = [...master.vendor];
       const obj = list.find((obj) => obj.id === 0);
@@ -190,9 +211,26 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
   };
 
   const onSelectChange = (e, name, index) => {
-    e.preventDefault();
-    setFormData({ ...formData, [name]: e.target.value }); 
+   
+    setFormData({ ...formData, [name]: e.id}); 
   };
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    try {
+        // lempar parameternya
+        const HistoryItemData = await getHistoryCard({
+            itemId,
+            warehouseId,
+        })();
+
+        setReportList(HistoryItemData);
+        setSearchClicked(true);
+
+    } catch (error) {
+        console.error("Error fetching stock card data:", error);
+    }
+};
 
 
 
@@ -213,15 +251,12 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
               Item# 
             </label>
             <div className="col-sm-10">
-              <input
-                readOnly
-                className="form-control text-left"
-                name="code"
-                value={code}
-                onChange={(e) => onChange(e)}
-                type="text"
-                placeholder="[AUTO]"
-              />
+            <Select2
+            options={itemList}
+            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code}
+            placeholder={"** Please"}
+            value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
+            handleChange={(e) => onSelectChange(e, "itemId")} />
             </div>
           </div>
           <div className="row align-items-center mb-3">
@@ -229,15 +264,12 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
               Item Name 
             </label>
             <div className="col-sm-10">
-              <input
-                name="name"
-                value={name}
-                type="text"
-                onChange={(e) => onChange(e)}
-                className="form-control text-left"
-                placeholder=""
-               
-              />
+            <Select2
+            options={itemList}
+            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
+            placeholder={"** Please"}
+            value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
+            handleChange={(e) => onSelectChange(e, "itemId")} />
             </div>
           </div>
           <div className="row align-items-center mb-3">
@@ -265,9 +297,8 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
       optionValue={(option) => option.id.toString()}
       optionLabel={(option) => option.name}
       placeholder="Pick Warehouse"
-      value={warehouse}
-      handleChange={(e) => onSelectChange(e, "warehouse")}
-    />
+      value={warehouseList === null ? null : warehouseList.filter((option) => option.id === parseInt(warehouseId))}
+      handleChange={(e) => onSelectChange(e, "warehouseId")} />
   </div>
 </div>
 <div className="row mb-3">
@@ -281,6 +312,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
         
   
         <RTable bordered style={{ float: 'center', width: "100%" }}>
+          
           <thead>
             <tr>
               <th style={{ backgroundColor: '#0e81ca', color: 'white', textAlign: 'center' }}>No</th>
@@ -298,23 +330,39 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
             </tr>
           </thead>
           <tbody>
-  {result !== undefined && result !== null && result.map((item, index) => (
-    <tr key={index}>
-      <td style={{ textAlign: 'center' }}>{index + 1}</td>
-      <td>{item.code || "[AUTO]"}</td>
-      <td>{item.name}</td>
-      <td>{item.voucherNo}</td>
-      <td>{item.objectName}</td>
-      <td>{item.postDate ? moment(item.postDate).format("YYYY-MM-DD") : ""}</td>
-      <td>{item.packingName}</td>
-      <td>{item.qtyPerPacking}</td>
-      <td>{item.initial}</td>
-      <td>{item.incoming}</td>
-      <td>{item.outgoing}</td>
-      <td>{item.balance}</td>
-    </tr>
-  ))}
-</tbody>
+                        {reportList !== undefined && reportList !== null ?
+                            reportList.data.map((item, index) => {
+
+                                const warehouse = warehouseList.find((obj) => obj.id === item.warehouseId)
+                                  if (searchClicked && reportList !== undefined && reportList !== null) {
+                                return (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.code}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.batchCode}</td>
+                                        <td>{item.voucherNo}</td>
+                                        <td>{item.objectName}</td>
+                                        <td>{moment(item.postDate).format("DD MMM YYYY hh:mm:ss")}</td>
+                                        <td>{item.uomName}</td>
+                                        <td>{item.packingName}</td>
+                                        <td>{item.qtyPerPacking}</td>
+                                        <td>{item.initial}</td>
+                                        <td>{item.incoming}</td>
+                                        <td>{item.outgoing}</td>
+                                        <td>{item.balance}</td>
+                                    </tr>
+                                )
+                              } else {
+                                return null; // Return null if searchClicked is false or reportList is not available
+                            }
+                            }) :
+                            <tr>
+                                <td colSpan={20} className="text-center">No Data</td>
+                            </tr>
+                        }
+
+                    </tbody>
         </RTable>
       </div>
       
@@ -338,6 +386,7 @@ HistoryItemForm.propTypes = {
   loadCategory: PropTypes.func,
   loadPallet: PropTypes.func,
   loadLocation: PropTypes.func,
+  loadItem: PropTypes.func,
   loadproduction: PropTypes.func,
   editData: PropTypes.func,
   master: PropTypes.object,
@@ -349,4 +398,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor, loadCategory, loadPallet, loadLocation, loadproduction })(HistoryItemForm);
+export default connect(mapStateToProps, { loadData, addData, editData, loadWarehouse, loadVendor, loadCategory, loadPallet, loadLocation, loadproduction,loadItem })(HistoryItemForm);
