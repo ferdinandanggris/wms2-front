@@ -34,9 +34,9 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
         voucherNo: "",
         referenceNo: "",
         status: "",
-        transDate: 0,
-        postDate: 0,
-        locationId: "",
+        transDateDate: new Date().toISOString(),
+        postDate: new Date().toISOString(),
+        locationId: 0,
         palletId: 0,
         createdBy: "",
         postedBy: "",
@@ -47,19 +47,16 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
         security: "",
         truckNo: "",
         picker: "",
-        deliveryOrderNo: 0,
+        deliveryOrderNo: "",
         note: "",
-        shippingDate: 0,
+        shippingDate: new Date().toISOString(),
         customerName: "",
         type: "",
-        dateIn: 0,
-        dateUp: 0,
+        dateIn: new Date().toISOString(),
+        dateUp: new Date().toISOString(),
         userIn: "",
         userUp: "",
-        location: "",
-        pallet: "",
-        warehouse: "",
-        batchNo: "",
+        batchNo:"",
         itemConsumptionDetails: []
 
     });
@@ -81,6 +78,12 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
             if (data.module !== url) return;
             let details = itemConsumptionDetails;
             if (data.data !== undefined && data.data !== null) {
+                let details = data.data.itemConsumptionDetails;
+                if (details === undefined || details === null) details = [];
+                details.map((item) => {
+                    item.checked = false;
+                    return null;
+                });
                 setFormData({
                     id: id === undefined ? 0 : parseInt(id),
                     voucherNo: data.data.voucherNo,
@@ -104,13 +107,12 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                     shippingDate: data.data.shippingDate,
                     customerName: data.data.customerName,
                     type: data.data.type,
+                    batchId: data.data.batchId,
+                    batchNo: data.data.batchNo,
                     dateIn: data.data.dateIn,
                     dateUp: data.data.dateUp,
                     userIn: data.data.userIn,
                     userUp: data.data.userUp,
-                    location: data.data.location,
-                    pallet: data.data.pallet,
-                    warehouse: data.data.warehouse,
                     itemConsumptionDetails: data.data.itemConsumptionDetails,
 
 
@@ -181,7 +183,9 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const onChange = (e) => {
         e.preventDefault();
         setFormData({ ...formData, [e.target.name]: e.target.value });   
+        console.log(e)
       };
+      
     
     const handleSave = (e) => {
         e.preventDefault();
@@ -207,9 +211,21 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
             details[index]["qty"] = e.target.value;
         }
 
-        setFormData({ ...formData, itemConsumptionDetails: details });
+        setFormData({ ...formData, orderDetails: details });
     };
+    const onDetailSelectChange = async (e, value, index) => {
+        let details = itemConsumptionDetails;
+        if (details === undefined || details === null) details = [];
 
+        if (value == "locationId") {
+            details[index]["locationId"] = e.id;
+        } else if (value == "palletId") {
+            details[index]["palletId"] = e.id;
+        }
+
+        setFormData({ ...formData, orderDetails: details });
+
+    };
     const onSelectChange = (e, name) => {
         if (name === "location") {
             setFormData({ ...formData, [name]: e.code });
@@ -402,7 +418,6 @@ console.log("formdata",formData)
                 </tr >
             );
         });
-
     const element = () => {
         return (
             <div className="detail">
@@ -521,15 +536,15 @@ console.log("formdata",formData)
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Batch No</label>
                         <div className="col-sm-3">
-                        <input
-                name="batchNo"
-                value={itemConsumptionDetails.batchId}
-                type="text"
-                onChange={(e) => onChange(e)}
-                onKeyDown={(e) => handleBatchNoKeyDown(e)}
-                className="form-control text-left"
-                placeholder="Search..."
-              />
+                         <input
+                         name="batchNo"
+                        value={batchNo}
+                         type="text"
+                         onChange={(e) => onChange(e)}
+                       onKeyDown={(e) => handleBatchNoKeyDown(e)}
+                       className="form-control text-left"
+                             placeholder="Search..."
+/>
                         </div>
                         <div className="col-sm-2 text-left col-form-label">
                             <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
@@ -648,7 +663,7 @@ ItemConsumptionForm.propTypes = {
     addData: PropTypes.func,
     loadWarehouse: PropTypes.func,
     loadVendor: PropTypes.func,
-    loadLocation: propTypes.func,
+    loadLocation: PropTypes.func,
     loadPallet: PropTypes.func,
     editData: PropTypes.func,
     master: PropTypes.object,

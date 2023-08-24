@@ -46,10 +46,9 @@ const ItemConsumptionList = lazy(() => import("../../views/transaction/transacti
 const ItemConsumptionForm = lazy(() => import("../../views/transaction/transactionitemconsumption/ItemConsumptionForm"));
 const LeadCustomerList = lazy(() => import("../../views/master/leadcustomer/LeadCustomerList"));
 const LeadCustomerForm = lazy(() => import("../../views/master/leadcustomer/LeadCustomerForm"));
-
 // url report
 const StockCardReport = lazy(()=> import("../../views/report/StockCard"))
-
+const HistoryItemForm = lazy(() => import("../../views/reports/HistoryItemForm"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -212,9 +211,10 @@ const AdminRoutes = [
   { path: "/transaction-rm/raw-material-usage/:id?/:type", element: <RawMaterialUsageForm />, meta: { layout: "full", publicRoute: false } },
 
   // REPORT
-  { path: "/report/stock-card", element: <StockCardReport />, meta: { layout: "full", publicRoute: false } },
-  { path: "/report/history-item", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
-  { path: "/report/history-item/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  { path: "/report/stock-card", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/report/stock-card/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
+  // { path: "/report/history-item", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/report/history-item/:id?/:type", element: <HistoryItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/stock-by-date", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/stock-by-date/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/spk-vs-shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },

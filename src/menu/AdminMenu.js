@@ -151,7 +151,7 @@ const AdminMenu = [
   },
   {
     group: "reports",
-    icon: <FaThList className="sidebar-icon" />,
+    icon: <FaFileInvoice className="sidebar-icon" />,
     title: "Reports",
     subMenus: [
       {
@@ -160,8 +160,8 @@ const AdminMenu = [
         title: "Stock Card",
       },
       {
-        path: "/report/history-item",
-        icon: <FaBox className="sidebar-icon" />,
+        path: "/report/history-item/:id?/:type",
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "History Item",
       },
       {
