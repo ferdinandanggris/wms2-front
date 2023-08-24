@@ -211,7 +211,7 @@ const AdminRoutes = [
   { path: "/transaction-rm/raw-material-usage/:id?/:type", element: <RawMaterialUsageForm />, meta: { layout: "full", publicRoute: false } },
 
   // REPORT
-  { path: "/report/stock-card", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/report/stock-card", element: <StockCardReport />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/stock-card/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   // { path: "/report/history-item", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/history-item/:id?/:type", element: <HistoryItemForm />, meta: { layout: "full", publicRoute: false } },
