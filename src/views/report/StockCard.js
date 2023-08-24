@@ -171,9 +171,8 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
             const obj = list.find((obj) => obj.id === 0);
             if (obj === undefined || obj === null) {
                 list.push({
-                    name: "Name",
+                    name: "**Please Select",
                     id: 0,
-                    code: "Code"
                 });
                 list.sort((a, b) => (a.id > b.id ? 1 : -1));
             }
@@ -200,6 +199,7 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
         if (batchName && name === "batchName") {
             try {
                 const foundBatch = batchList?.find(batch => batch.code === batchName);
+                console.log("match", foundBatch)
                 if (foundBatch) {
                     setFormData({ ...formData, batchId: foundBatch.id, batchName: foundBatch.code });
                 } else {
@@ -220,8 +220,8 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
             const stockCardData = await getStockCard({
                 itemType,
                 trxType,
-                fromDate: moment(fromDate).format("YYYY-MM-DD"),
-                toDate: moment(toDate).format("YYYY-MM-DD"),
+                fromDate: fromDate === null? "" : moment(fromDate).format("YYYY-MM-DD"),
+                toDate: toDate === null? "" : moment(toDate).format("YYYY-MM-DD"),
                 voucherNo,
                 itemId,
                 batchId,
@@ -435,7 +435,7 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
                     <div className="col">
                         <Select2
                             options={itemList}
-                            optionValue={(option) => option.id.toString()} optionLabel={(option) => `${option.name} - ${option.code}`}
+                            optionValue={(option) => option.id.toString()} optionLabel={(option) => option.code ? `${option.name} - ${option.code}` : option.name}
                             placeholder={"** Please"}
                             value={itemList === null ? null : itemList.filter((option) => option.id === parseInt(itemId))}
                             handleChange={(e) => onSelectChange(e, "itemId")} />
