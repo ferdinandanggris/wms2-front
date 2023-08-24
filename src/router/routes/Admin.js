@@ -47,7 +47,7 @@ const ItemConsumptionForm = lazy(() => import("../../views/transaction/transacti
 const LeadCustomerList = lazy(() => import("../../views/master/leadcustomer/LeadCustomerList"));
 const LeadCustomerForm = lazy(() => import("../../views/master/leadcustomer/LeadCustomerForm"));
 // url report
-const StockCardReport = lazy(()=> import("../../views/report/StockCard"))
+const StockCardReport = lazy(()=> import("../../views/reports/StockCard"))
 const HistoryItemForm = lazy(() => import("../../views/reports/HistoryItemForm"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));

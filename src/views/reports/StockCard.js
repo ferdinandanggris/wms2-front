@@ -220,8 +220,8 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
             const stockCardData = await getStockCard({
                 itemType,
                 trxType,
-                fromDate: fromDate === null? "" : moment(fromDate).format("YYYY-MM-DD"),
-                toDate: toDate === null? "" : moment(toDate).format("YYYY-MM-DD"),
+                fromDate: fromDate === null ? "" : moment(fromDate).format("YYYY-MM-DD"),
+                toDate: toDate === null ? "" : moment(toDate).format("YYYY-MM-DD"),
                 voucherNo,
                 itemId,
                 batchId,
@@ -242,7 +242,7 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
 
     // Table ketika difilter
     const renderTable = () => {
-        if (searchClicked && reportList !== undefined && reportList !== null) {
+        if (searchClicked) {
             return (
                 <Table className="table-list mt-2" striped responsive hover>
                     <thead>
@@ -269,7 +269,7 @@ const StockCard = ({ loadWarehouse, loadLocation, loadPallet, loadVendor, loadBa
                         </tr>
                     </thead>
                     <tbody>
-                        {reportList !== undefined && reportList !== null ?
+                        {reportList !== undefined && reportList !== null && reportList.data.length > 0?
                             reportList.data.map((item, index) => {
 
                                 const warehouse = warehouseList.find((obj) => obj.id === item.warehouseId)

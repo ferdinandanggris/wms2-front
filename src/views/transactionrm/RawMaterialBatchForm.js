@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaLayerGroup, FaUserFriends} from "react-icons/fa";
+import { FaLayerGroup, FaUserFriends } from "react-icons/fa";
 
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -46,7 +46,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadRaw
     const [rawMaterialList, setRawMaterialList] = useState([])
     // Dapatkan code raw material ketika item di select
     const [rawMaterialCode, setRawMaterialCode] = useState('')
-    const {item, status, code, itemId, expired, initial, incoming, outgoing, balance, color, qty, visual, qc, number, description, transDate, } = formData;
+    const { item, status, code, itemId, expired, initial, incoming, outgoing, balance, color, qty, visual, qc, number, description, transDate, } = formData;
 
     useEffect(() => {
         loadRawMaterial();
@@ -113,12 +113,7 @@ const RawMaterialBatchForm = ({ user, data, loadData, addData, editData, loadRaw
     };
 
     const onSelectChange = (e, name) => {
-        if (name === "itemId") {
-            setRawMaterialCode(e.id)
-            setFormData({ ...formData, [name]: e.id, code: `-${e.code}` })
-        } else {
-            setFormData({ ...formData, [name]: e.id })
-        }
+        setFormData({ ...formData, [name]: e.id })
     };
 
     const tabIconStyle = {
