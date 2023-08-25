@@ -49,6 +49,7 @@ const LeadCustomerForm = lazy(() => import("../../views/master/leadcustomer/Lead
 // url report
 const StockCardReport = lazy(()=> import("../../views/reports/StockCard"))
 const HistoryItemForm = lazy(() => import("../../views/reports/HistoryItemForm"));
+const StockByDateReport = lazy(() => import("../../views/reports/StockByDate"));
 
 // const ItemTypeList = lazy(() => import("../../views/master/itemType/ItemTypeList"));
 // const ItemTypeForm = lazy(() => import("../../views/master/itemType/ItemTypeForm"));
@@ -215,7 +216,7 @@ const AdminRoutes = [
   { path: "/report/stock-card/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   // { path: "/report/history-item", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/history-item/:id?/:type", element: <HistoryItemForm />, meta: { layout: "full", publicRoute: false } },
-  { path: "/report/stock-by-date", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
+  { path: "/report/stock-by-date", element: <StockByDateReport />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/stock-by-date/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/spk-vs-shipping", element: <ItemList />, meta: { layout: "full", publicRoute: false } },
   { path: "/report/spk-vs-shipping/:id?/:type", element: <ItemForm />, meta: { layout: "full", publicRoute: false } },
