@@ -92,7 +92,7 @@ const AdminMenu = [
       {
         path: "/transaction/production",
         icon: <FaBox className="sidebar-icon" />,
-        title: "Production",
+        title: "Production Order",
       },
       {
         path: "/transaction/batch-number",

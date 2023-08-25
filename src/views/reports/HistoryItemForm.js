@@ -17,6 +17,7 @@ import moment from "moment";
 import { NumericFormat } from "react-number-format";
 import axios from "axios";
 import { setAlert } from "../../actions/alert";
+import { AiOutlineSearch } from "react-icons/ai"
 
 const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadWarehouse, loadproduction, loadVendor, loadCategory, loadPallet, loadLocation,loadItem }) => {
   let { id } = useParams();
@@ -39,7 +40,8 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
     qtyPerPacking: 0,
     packingName: "",
     type: "",
-
+    fromDate: null,
+    toDate: null,
     warehouse: "",
     initial: 0,
     incoming: 0,
@@ -50,7 +52,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
 
   });
 
-  const { code,name,voucherNo, warehouseId, itemId,objectName,postDate,qtyPerPacking,packingName,type,warehouse,initial,incoming,outgoing,balance } = formData;
+  const { code,name,voucherNo, warehouseId,fromDate,toDate, itemId,objectName,postDate,qtyPerPacking,packingName,type,warehouse,initial,incoming,outgoing,balance } = formData;
   const [warehouseList, setWarehouse] = useState([]);
   const [locationlist, setlocation] = useState([]);
   const [palletList, setpallet] = useState([]);
@@ -222,6 +224,8 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
         const HistoryItemData = await getHistoryCard({
             itemId,
             warehouseId,
+            fromDate: fromDate === null ? "" : moment(fromDate).format("YYYY-MM-DD"),
+            toDate: toDate === null ? "" : moment(toDate).format("YYYY-MM-DD"),
         })();
 
         setReportList(HistoryItemData);
@@ -277,15 +281,26 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
               Date 
             </label>
             <div className="col-3">
-              <input
-                className="form-control text-left"
-                name="postDate"
-                value={postDate === null ? "" : moment(postDate).format("YYYY-MM-DD")}
-                onChange={(e) => onChange(e)}
-                type="date"
-                placeholder=""
-              />
-            </div>
+  <div className="input-group">
+    <input
+      className="form-control text-left"
+      name="fromDate"
+      value={fromDate === null ? "" : moment(fromDate).format("YYYY-MM-DD")}
+      onChange={(e) => onChange(e)}
+      type="date"
+      placeholder=""
+    />
+    <div class="input-group-addon mx-3">to</div>
+    <input
+      className="form-control text-left"
+      name="toDate"
+      value={toDate === null ? "" : moment(toDate).format("YYYY-MM-DD")}
+      onChange={(e) => onChange(e)}
+      type="date"
+      placeholder=""
+    />
+  </div>
+</div>
           </div>
           <div className="row align-items-center mb-3 dflex flex">
   <label className="col-sm-2 text-left col-form-label">
@@ -303,7 +318,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
 </div>
 <div className="row mb-3">
 <div className="col-sm-2 offset-sm-2">
-    <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
+<button type="button" className="d-flex align-items-center btn btn-success" onClick={e => handleSearch(e)}> <AiOutlineSearch className="mr-2" /> Search</button>
   </div>
   </div>
         </div>
@@ -340,11 +355,9 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
                                         <td>{index + 1}</td>
                                         <td>{item.code}</td>
                                         <td>{item.name}</td>
-                                        <td>{item.batchCode}</td>
                                         <td>{item.voucherNo}</td>
                                         <td>{item.objectName}</td>
                                         <td>{moment(item.postDate).format("DD MMM YYYY hh:mm:ss")}</td>
-                                        <td>{item.uomName}</td>
                                         <td>{item.packingName}</td>
                                         <td>{item.qtyPerPacking}</td>
                                         <td>{item.initial}</td>
@@ -354,7 +367,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
                                     </tr>
                                 )
                               } else {
-                                return null; // Return null if searchClicked is false or reportList is not available
+                                return null; 
                             }
                             }) :
                             <tr>

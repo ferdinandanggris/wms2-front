@@ -19,7 +19,7 @@ const ProductionForm = ({ user, data, loadData, addData, editData, master, loadI
     let { id } = useParams();
     const [status, setStatus] = useState('');
     const navigate = useNavigate();
-    const title = " Production Form";
+    const title = " Production Order Form";
     const img = <FaBox className="module-img" />;
     // const path = "/master/customer/:id?/:customer";
     // const path = "/transaction/production/:id?/:type";

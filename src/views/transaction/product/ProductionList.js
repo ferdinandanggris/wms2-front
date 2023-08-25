@@ -8,7 +8,7 @@ import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
 
 const ProductionList = ({ user, data, refreshData, deleteData, exportData }) => {
-  const title = "Production List";
+  const title = "Production Order List";
   const img = <FaBox className="module-img" />;
   const path = "/transaction/production";
   const url = "Production";
