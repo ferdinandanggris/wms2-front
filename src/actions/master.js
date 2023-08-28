@@ -68,7 +68,7 @@ export const loadModule = () => async (dispatch) => {
 //     dispatch(setAlert(errMessage, 'danger'));
 //   }
 // }
-export const loadWarehouse  = ({ limit = 0, page = 0, filterSearch = {} } = {}) => async (dispatch) => {
+export const loadWarehouse = ({ limit = 0, page = 0, filterSearch = {} } = {}) => async (dispatch) => {
   try {
 
     let res = null;
@@ -79,7 +79,7 @@ export const loadWarehouse  = ({ limit = 0, page = 0, filterSearch = {} } = {}) 
       res = await axios.get(`/warehouse?limit=${limit}&page=${page}&limit=${limit}&filter=${filterSearch}`);
     }
     dispatch({
-      type:LOAD_WAREHOUSE,
+      type: LOAD_WAREHOUSE,
       payload: res.data,
     });
   } catch (err) {
@@ -505,5 +505,19 @@ export const loadRawMaterial = () => async (dispatch) => {
     if (err.message) errMessage = err.message;
     if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
     dispatch(setAlert(errMessage, 'danger'));
+  }
+}
+
+// Load Batch by batch code
+export const getBatchDetails = ({ url, batchCode }) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/${url}/detail?batchCode=${batchCode}`);
+    return Promise.resolve(res.data);
+  } catch (err) {
+    let errMessage = "";
+    if (err.message) errMessage = err.message;
+    if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+    dispatch(setAlert(errMessage, 'danger'));
+    return Promise.reject(errMessage);
   }
 }
