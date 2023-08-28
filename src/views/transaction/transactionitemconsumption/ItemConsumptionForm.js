@@ -262,34 +262,29 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
         const existingBatchIndex = details.findIndex(item => item.batchId === selectedBatch.tmpBatchId);
     
         if (existingBatchIndex === -1) {
-          details.unshift({
-            checked: false,
-            id: 0,
-            receivingId: 0,
-            locationId: 0,
-            palletId: 0,
-            batchId: selectedBatch.tmpBatchId,
-            itemId: selectedBatch.itemId,
-            qty: 1,
-            voucherNo: voucherNo,
-            remark: "",
-            stock: selectedBatch.stock,
-            batchCode: selectedBatch.batchCode,
-            uom: selectedBatch.uom,
-            itemName: selectedBatch.itemName
-          });
+            details.unshift({
+                checked: false,
+                id: 0,
+                itemConsumptionId: id,
+                voucherNo: voucherNo,
+                batchId: selectedBatch.tmpBatchId,
+                itemId: selectedBatch.itemId,
+                qty: 1,
+                remark: "",
+                stock: selectedBatch.stock,
+                batchCode: selectedBatch.batchCode,
+                uom: selectedBatch.uom,
+                itemName: selectedBatch.itemName
+            });
         }
         else {
           details[existingBatchIndex] = {
             ...details[existingBatchIndex],
-            // Update properti sesuai kebutuhan
             qty: details[existingBatchIndex]["qty"] + 1,
-            // ...
           };
         }
         setFormData({ ...formData, itemConsumptionDetails: details });
       };
-console.log("formdata",formData)
     const handleNewRow = (e) => {
         e.preventDefault();
         let details = itemConsumptionDetails;
@@ -309,7 +304,8 @@ console.log("formdata",formData)
             userUp: " null",
             itemName: "",
             uom: "",
-            totalPcs: 0
+            totalPcs: 0,
+            pcs:0,
         });
         setFormData({ ...formData, itemConsumptionDetails: details });
     };
@@ -392,17 +388,18 @@ console.log("formdata",formData)
                             type="text" style={{ textAlign: "center" }}
                             name="PCS"
                             readOnly={true}
-                            value={details.totalPcs}
+                            value={details.pcs}
                         />
                     </td>
                     <td className="text-center" >
-                        <input
-                            className="form-control"
-                            type="text" style={{ textAlign: "center" }}
-                            name="TOTAL PCS"
-                            readOnly={true}
-                            value={details.totalPcs}
-                        />
+                          <input
+                           className="form-control"
+                           type="text"
+                           style={{ textAlign: "center" }}
+                           name="TOTAL PCS"
+                           readOnly={true}
+                           value={details.qty * details.pcs}
+                         />
                     </td>
 
                     <td className="text-right">
