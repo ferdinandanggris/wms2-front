@@ -13,6 +13,20 @@ export const getStockCard = ({ limit = 100, page=0, itemType, trxType, fromDate,
     }
 };
 
+// get report stock by date
+// get report stock card
+export const getStockByDate = ({ limit = 100, page=0, itemType, trxType, fromDate, toDate, itemId, warehouseId}) => async () => {
+    try {
+        const res = await axios.get(`/StockByDate?limit=${limit}&page=${page}&itemType=${itemType}&trxType=${trxType}&fromDate=${fromDate}&toDate=${toDate}&itemId=${itemId}&warehouseId=${warehouseId}`);
+        return Promise.resolve(res.data);
+    } catch (err) {
+        let errMessage = "";
+        if (err.message) errMessage = err.message;
+        if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+        return Promise.reject(errMessage);
+    }
+};
+
 export const getHistoryCard = ({ limit = 100, page=0,itemId,  warehouseId, }) => async () => {
     try {
         const res = await axios.get(`/HistoryItem?limit=${limit}&page=${page}&itemId=${itemId}&warehouseId=${warehouseId}`);
