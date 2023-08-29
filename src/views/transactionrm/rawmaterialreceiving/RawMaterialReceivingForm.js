@@ -19,7 +19,7 @@ import { loadVendor, loadWarehouse, loadPallet, loadLocation, loadBatch, loadIte
 
 const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, master, loadWarehouse, loadVendor, loadLocation, loadPallet, loadBatch, loadItem }) => {
     let { id } = useParams();
-    const [status, setStatus] = useState('');
+
     const navigate = useNavigate();
     const title = "Raw Material Receiving";
     const img = <FaBox className="module-img" />;
@@ -36,26 +36,24 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
         postDate: null,
         createdBy: user.fullName,
         postedBy: "",
-        vendor: "",
-        warehouse: "",
-        dateIn: null,
-        dateUp: null,
-        userIn: "",
-        userUp: "",
+        vendors: "",
+        warehouses: "",
+        warehouseId: 0,
+        vendorId: 0,
         batchNo: "",
         palletId: 0,
         locationId: 0,
         rawMaterialReceivingDetails: []
     });
 
+    const [status, setStatus] = useState('');
     const [itemList, setItem] = useState([]);
     const [warehouseList, setWarehouse] = useState([]);
     const [vendorList, setVendor] = useState([]);
     const [palletList, setPallet] = useState([]);
     const [locationList, setLocation] = useState([]);
-    const [batchList, setBatch] = useState([]);
-    const dispatch = useDispatch();
-    const { voucherNo, referenceNo, postDate, createdBy, postedBy, vendorId, warehouseId, dateIn, batchNo, rawMaterialReceivingDetails } = formData;
+
+    const { voucherNo, referenceNo, transDate, postDate, createdBy, postedBy, vendorId, warehouseId, batchNo, rawMaterialReceivingDetails } = formData;
 
     const [currentPage, setCurrentPage] = useState(1);
     const [startIndex, setStartIndex] = useState(0);
@@ -122,18 +120,6 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
             }
             setLocation(list);
         }
-        if (master.batch !== undefined && master.batch !== null) {
-            let list = [...master.batch];
-            const obj = list.find((obj) => obj.id === 0);
-            if (obj === undefined || obj === null) {
-                list.push({
-                    name: "No Batch",
-                    id: 0,
-                });
-                list.sort((a, b) => (a.id > b.id ? 1 : -1));
-            }
-            setBatch(list);
-        }
         if (master.item !== undefined && master.item !== null) {
             let list = [...master.item];
             const obj = list.find((obj) => obj.id === 0);
@@ -186,6 +172,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
 
     const onChange = (e) => {
         e.preventDefault();
+        console.log("apa yang salah", transDate)
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -351,14 +338,7 @@ const RawMaterialReceivingForm = ({ user, data, loadData, addData, editData, mas
                         </div>
                         <label className="col-sm-2 text-left col-form-label">Date</label>
                         <div className="col-sm-3">
-                            <input
-                                className="form-control text-left"
-                                name="dateIn"
-                                value={dateIn === null ? "" : moment(dateIn).format("YYYY-MM-DD")}
-                                onChange={(e) => onChange(e)}
-                                type="date"
-                                placeholder=""
-                            />
+                            <input className="form-control text-left" name="transDate" value={transDate === null ? "" : moment(transDate).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
