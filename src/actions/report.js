@@ -38,3 +38,15 @@ export const getHistoryCard = ({ limit = 100, page=0,itemId,  warehouseId, }) =>
         return Promise.reject(errMessage);
     }
 };
+
+export const getSpkVsShipping = ({ limit = 100, page=0,fromDate,toDate }) => async () => {
+    try {
+        const res = await axios.get(`/SpkVsShipping?limit=${limit}&page=${page}&fromDate=${fromDate}&toDate=${toDate}`);
+        return Promise.resolve(res.data);
+    } catch (err) {
+        let errMessage = "";
+        if (err.message) errMessage = err.message;
+        if (err.response && err.response.data && err.response.data.message) errMessage = err.response.data.message;
+        return Promise.reject(errMessage);
+    }
+};

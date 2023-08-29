@@ -156,7 +156,7 @@ const AdminMenu = [
     subMenus: [
       {
         path: "/report/stock-card",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "Stock Card",
       },
       {
@@ -166,17 +166,17 @@ const AdminMenu = [
       },
       {
         path: "/report/stock-by-date",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "Stock By Date",
       },
       {
         path: "/report/spk-vs-shipping",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "SPK Vs Shipping",
       },
       {
         path: "/report/detail-spk-vs-shipping",
-        icon: <FaBox className="sidebar-icon" />,
+        icon: <FaChartBar className="sidebar-icon" />,
         title: "Detail SPK Vs Shipping",
       },
 

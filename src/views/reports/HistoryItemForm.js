@@ -383,7 +383,7 @@ const HistoryItemForm= ({ user, data, loadData, addData, master, editData, loadW
   };
   
   return (
-    <FormWrapper img={img} title={title} path={path} type={type} role={role} id={id} handleSave={handleSave}>
+    <FormWrapper img={img} title={title} path={path} type={type} role={role} id={id} handleSave={handleSave} allowAdd={false}>
       {element}
     </FormWrapper>
   );
