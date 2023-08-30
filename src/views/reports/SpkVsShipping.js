@@ -99,7 +99,7 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
                 toDate: toDate === null ? "" : moment(toDate).format("YYYY-MM-DD"),
             })();
 
-            setReportList(SpkVsShipping);
+            setReportList(SpkVsShipping.data);
             setSearchClicked(true);
         } catch (error) {
             console.error("Error fetching stock card data:", error);
@@ -125,21 +125,22 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
                             <td style={{ textAlign: "left" }}>NOTE</td>
                         </tr>
                     </thead>
+                    {console.log("reportList", reportList)}
                     <tbody>
-                        {listSpkvsShippingDetail !== undefined && listSpkvsShippingDetail !== null && listSpkvsShippingDetail.data.length > 0 ?
-                            listSpkvsShippingDetail.data.map((item, index) => {
+                        {reportList !== undefined && reportList !== null && reportList.listSpkvsShippingDetail.data.length > 0 ?
+                            reportList.listSpkvsShippingDetail.data.map((item, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{item.voucherNo}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.uomName}</td>
+                                        <td>{item.transDate}</td>
+                                        <td>{item.createdBy}</td>
                                         <td>{item.customerName}</td>
                                         <td>{item.qty}</td>
                                         <td>{item.shipping}</td>
                                         <td>{item.qty - item.shipping}</td>
                                         <td>{item.status}</td>
-                                        <td>{item.outgoing}</td>
+                                        <td></td>
                                     </tr>
                                 )
                             }) :
@@ -189,84 +190,88 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
                         </div>
 
                     </div>
-                    <div className="row align-items-left mb-3">
-                        <div className="col-1">
-                            <label className="col-form-label">Total SPK:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                            <div>{totalSPk}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">BOX:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                       <div>{spkBox}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">PCS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{spkPcs}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">OTHERS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{spkOther}</div>
-                        </div>
-                    </div>
-                    <div className="row align-items-left mb-3">
-                        <div className="col-1">
-                            <label className="col-form-label">Total Shipping:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{totalShipping}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">BOX:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{shippingBox}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">PCS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{shippingPcs}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">OTHERS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{shippingOther}</div>
-                        </div>
-                    </div>
-                    <div className="row align-items-left mb-3">
-                        <div className="col-1">
-                            <label className="col-form-label">Selisih:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{totalSPk - totalShipping}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">BOX:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{spkBox - shippingBox}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">PCS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{spkPcs - shippingPcs}</div>
-                        </div>
-                        <div className="col-1">
-                            <label className="col-form-label">OTHERS:</label>
-                        </div>
-                        <div className="col-1 mt-2">
-                        <div>{spkOther - shippingOther}</div>
-                        </div>
-                    </div>
+                    {reportList !== undefined && reportList !== null && reportList.listSpkvsShippingDetail.data.length > 0 && (
+                        <>
+                            <div className="row align-items-left mb-3">
+                                <div className="col-1">
+                                    <label className="col-form-label">Total SPK:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.totalSPk}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">BOX:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkBox}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">PCS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkPcs}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">OTHERS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkOther}</div>
+                                </div>
+                            </div>
+                            <div className="row align-items-left mb-3">
+                                <div className="col-1">
+                                    <label className="col-form-label">Total Shipping:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.totalShipping}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">BOX:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.shippingBox}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">PCS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.shippingPcs}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">OTHERS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.shippingOther}</div>
+                                </div>
+                            </div>
+                            <div className="row align-items-left mb-3">
+                                <div className="col-1">
+                                    <label className="col-form-label">Selisih:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.totalSPk - reportList.totalShipping}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">BOX:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkBox - reportList.shippingBox}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">PCS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkPcs - reportList.shippingPcs}</div>
+                                </div>
+                                <div className="col-1">
+                                    <label className="col-form-label">OTHERS:</label>
+                                </div>
+                                <div className="col-1 mt-2">
+                                    <div>{reportList.spkOther - reportList.shippingOther}</div>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
                 {renderTable()}
             </div>
