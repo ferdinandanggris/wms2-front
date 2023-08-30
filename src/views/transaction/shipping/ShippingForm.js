@@ -32,7 +32,7 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         status: "N",
         transDate: null,
         postDate: null,
-        createdBy: user.fullName,
+        createdBy: user?.fullName,
         postedBy: "",
         customerId: 0,
         truckNo: "",
@@ -211,22 +211,16 @@ const ShippingForm = ({ user, data, loadData, addData, editData, master, loadWar
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    console.log("yang mana ", orderList)
     const onSelectChange = (e, name) => {
-        if (name === "orderId") {
-            const selectedOrderId = e.id;
-            const selectedOrder = orderList.find(order => order.id === selectedOrderId);
-
-            setFormData({
-                ...formData,
-                [name]: selectedOrderId,
-                voucherNo: selectedOrder ? selectedOrder.voucherNo : "[AUTO]",
-            });
-        } else {
-            setFormData({
-                ...formData,
-                [name]: e.id,
-            });
+        if(name === "orderId"){
+            // Cari id customer
+            const findCustomerId = customerList.find((obj) => obj.id === e.customer.id)
+            setFormData({...formData, [name]: e.id, customerId: findCustomerId.id});
+        }else{
+            setFormData({...formData, [name]: e.id});
         }
+        
     };
 
     const onDetailSelectChange = async (e, value, index) => {
@@ -840,6 +834,7 @@ ShippingForm.propTypes = {
     user: PropTypes.object,
     data: PropTypes.object,
     master: PropTypes.object,
+    loadOrder: PropTypes.func,
     addData: PropTypes.func,
     editData: PropTypes.func,
     loadData: PropTypes.func,
