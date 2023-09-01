@@ -184,92 +184,117 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
                             <div className="row align-items-center my-3">
                                 <div className="col-sm-2 col-form-label"></div>
                                 <div className="col-sm-3">
-                                    <button type="button" className="d-flex align-items-center btn btn-success" onClick={e => handleSearch(e)}> <AiOutlineSearch className="mr-2" /> Refresh</button>
+                                <button
+                            type="button"
+                            className="d-flex align-items-center btn btn-success"
+                            onClick={e => handleSearch(e)}
+                            style={{ backgroundColor: '#28c76f' }} 
+                            >
+                         <AiOutlineSearch className="mr-2" />
+                           Refresh
+                         </button>
+
                                 </div>
+                                
                             </div>
+                            <div className="row align-items-center my-3">
+                           <div className="col-sm-2 col-form-label"></div>
+                          <div className="col-sm-3">
+                             <button
+                       type="button"
+                        className="d-flex align-items-center btn btn-success"
+                         onClick={e => handleSearch(e)}
+                        style={{ backgroundColor: '#FF9F43' }}
+                          >
+                   <i className="fa fa-upload mr-2"></i> Export Data
+                      </button>
+                           </div>
+                      </div>
+
                         </div>
 
                     </div>
                     {reportList !== undefined && reportList !== null && reportList.listSpkvsShippingDetail.data.length > 0 && (
                         <>
-                            <div className="row align-items-left mb-3">
-                                <div className="col-1">
-                                    <label className="col-form-label">Total SPK:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.totalSPk}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">BOX:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkBox}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">PCS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkPcs}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">OTHERS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkOther}</div>
-                                </div>
-                            </div>
-                            <div className="row align-items-left mb-3">
-                                <div className="col-1">
-                                    <label className="col-form-label">Total Shipping:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.totalShipping}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">BOX:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.shippingBox}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">PCS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.shippingPcs}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">OTHERS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.shippingOther}</div>
-                                </div>
-                            </div>
-                            <div className="row align-items-left mb-3">
-                                <div className="col-1">
-                                    <label className="col-form-label">Selisih:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.totalSPk - reportList.totalShipping}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">BOX:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkBox - reportList.shippingBox}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">PCS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkPcs - reportList.shippingPcs}</div>
-                                </div>
-                                <div className="col-1">
-                                    <label className="col-form-label">OTHERS:</label>
-                                </div>
-                                <div className="col-1 mt-2">
-                                    <div>{reportList.spkOther - reportList.shippingOther}</div>
-                                </div>
-                            </div>
+                           <div className="row align-items-left mb-3">
+    <div className="col-1">
+        <label className="col-form-label">Total SPK:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.totalSPk.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">BOX:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.spkBox.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">PCS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.spkPcs.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">OTHERS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.spkOther.toLocaleString()}</div>
+    </div>
+</div>
+<div className="row align-items-left mb-3">
+    <div className="col-1">
+        <label className="col-form-label">Total Shipping:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.totalShipping.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">BOX:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.shippingBox.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">PCS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.shippingPcs.toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">OTHERS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{reportList.shippingOther.toLocaleString()}</div>
+    </div>
+</div>
+<div className="row align-items-left mb-3">
+    <div className="col-1">
+        <label className="col-form-label">Selisih:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{(reportList.totalSPk - reportList.totalShipping).toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">BOX:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{(reportList.spkBox - reportList.shippingBox).toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">PCS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{(reportList.spkPcs - reportList.shippingPcs).toLocaleString()}</div>
+    </div>
+    <div className="col-1">
+        <label className="col-form-label">OTHERS:</label>
+    </div>
+    <div className="col-1 mt-2">
+        <div>{(reportList.spkOther - reportList.shippingOther).toLocaleString()}</div>
+    </div>
+</div>
+
                         </>
                     )}
                 </div>

@@ -228,6 +228,9 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       details[index]["palletId"] = e.id;
 
       setFormData({ ...formData, receivingDetails: details });
+    }
+    else if (name === "productionNo") {
+          setFormData({ ...formData,[name]: e.voucherNo});
 
     } else {
       setFormData({ ...formData, [name]: e.id });
@@ -395,10 +398,10 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
             <div className="col-sm-3">
               <Select2
                 options={productionList}
-                optionValue={(option) => option.id.toString()}
+                optionValue={(option) => option.voucherNo}
                 optionLabel={(option) => option.voucherNo}
                 placeholder={"Pick Production order"}
-                value={productionList === null ? null : productionList.filter((option) => option.id === parseInt(productionNo))}
+                value={productionList === null ? null : productionList.filter((option) => option.voucherNo === productionNo)}
                 handleChange={(e) => onSelectChange(e, "productionNo")} />
             </div>
             <label className="col-sm-2 col-form-label">
@@ -438,7 +441,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
           </div>
 
           <div className="row align-items-center mb-3">
-            <label className="col-sm-2 col-form-label">Batch No</label>
+            <label className="col-sm-2 col-form-label">Batch No<span className="required-star">*</span></label>
             <div className="col-sm-3">
               <input
                 name="batchNo"
@@ -448,6 +451,7 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
                 onKeyDown={(e) => handleBatchNoKeyDown(e)}
                 className="form-control text-left"
                 placeholder="Search..."
+                required
               />
             </div>
             <div className="col-sm-2 text-left col-form-label">

@@ -9,7 +9,7 @@ import FormWrapper from "../../../components/Wrapper/FormWrapper";
 import Select2 from "../../../components/Select2";
 import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaUser } from "react-icons/fa";
 import "../master.css"
-
+import moment from "moment";
 const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();
     const navigate = useNavigate();
@@ -954,13 +954,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">Tanggal SP-PKP</label>
                                 <div className="col-sm-3">
-                                    <input
-                                        className="form-control text-left"
-                                        name="tanggalSPPKP"
-                                        value={tanggalSppkp}
-                                        type="text"
-                                        placeholder=""
-                                        onChange={(e) => onChange(e)} />
+                                <input className="form-control text-left" name="tanggalSppkp" value={tanggalSppkp === null ? "" : moment(tanggalSppkp).format("YYYY-MM-DD")} onChange={(e) => onChange(e)} type="date" placeholder="" />
                                 </div>
                                 <label className="col-sm-1 text-left col-form-label">NIB/SIUP/TDP</label>
                                 <div className="col-sm-3">

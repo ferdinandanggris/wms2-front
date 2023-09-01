@@ -531,7 +531,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                     </div>
 
                     <div className="row align-items-center mb-3">
-                        <label className="col-sm-2 col-form-label">Batch No</label>
+                        <label className="col-sm-2 col-form-label">Batch No<span className="text-danger">*</span></label>
                         <div className="col-sm-3">
                          <input
                          name="batchNo"
@@ -541,7 +541,8 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                        onKeyDown={(e) => handleBatchNoKeyDown(e)}
                        className="form-control text-left"
                              placeholder="Search..."
-/>
+                             required
+                            />                       
                         </div>
                         <div className="col-sm-2 text-left col-form-label">
                             <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
