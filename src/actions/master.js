@@ -399,7 +399,7 @@ export const loadCountry = () => async (dispatch) => {
 //Load District
 export const loadDistrict = () => async (dispatch) => {
   try {
-    const res = await axios.get(`/District?limit=10&page=0`);
+    const res = await axios.get(`/District`);
     dispatch({
       type: LOAD_DISTRICT,
       payload: res.data,

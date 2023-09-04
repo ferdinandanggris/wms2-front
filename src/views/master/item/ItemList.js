@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 
 import ListWrapper from "../../../components/Wrapper/ListWrapper";
 import { refreshData, deleteData, exportData } from "../../../actions/data";
-import { loadUom,loadPacking, loadproduction } from "../../../actions/master";
+import { loadUom, loadPacking, loadproduction } from "../../../actions/master";
 
-const ItemList = ({ user, data, refreshData, deleteData, exportData, loadUom, master,loadPacking }) => {
+const ItemList = ({ user, data, refreshData, deleteData, exportData, loadUom, master, loadPacking }) => {
   const title = "Item List";
   const img = <FaBoxes className="module-img" />;
   const path = "/master/item";
@@ -36,7 +36,7 @@ const ItemList = ({ user, data, refreshData, deleteData, exportData, loadUom, ma
     }
     loadUom();
     loadPacking();
-  }, [user, refreshData, loadUom,loadPacking]);
+  }, [user, refreshData, loadUom, loadPacking]);
 
   const customRenderValue = (col, value, item) => {
     if (col.key == "isActive") {
@@ -45,25 +45,18 @@ const ItemList = ({ user, data, refreshData, deleteData, exportData, loadUom, ma
       else
         return (<h6 className="pb-1 pt-1 m-0 text-center"><div className="badge badge-pill badge-success">Active</div></h6 >);
     } else if (col.key === "uom") {
-      if (master.uom !== null && master.uom !== undefined) {
-        console.log(value)
-        if (value) {
-          const tempUom = master.uom.find((obj) => obj.id === value.id);
-          console.log(tempUom)
-          return tempUom.name;
-        } else {
-          return "";
-        }
+      if (item.uom != null) {
+        return item.uom.name;
       }
-    }else if (col.key === "packingId") {
-      if (master.packing !== null && master.packing !== undefined) {
-        if(value) {
-          const tempPacking = master.packing.find((obj) => obj.id === value);
-          console.log(tempPacking)
-          return tempPacking.name;
-        } else {
-          return "";
-        }
+      else {
+        return "";
+      }
+    } else if (col.key === "packingId") {
+      if (item.packing != null) {
+        return item.packing.name;
+      }
+      else {
+        return "";
       }
     };
   };
@@ -78,7 +71,7 @@ ItemList.propTypes = {
   refreshData: PropTypes.func,
   deleteData: PropTypes.func,
   loadUom: PropTypes.func,
-  loadPacking:PropTypes.func,
+  loadPacking: PropTypes.func,
   master: PropTypes.object,
   exportData: PropTypes.func,
 };
@@ -89,4 +82,4 @@ const mapStateToProps = (state) => ({
   master: state.master,
 });
 
-export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadUom,loadPacking })(ItemList);
+export default connect(mapStateToProps, { refreshData, deleteData, exportData, loadUom, loadPacking })(ItemList);

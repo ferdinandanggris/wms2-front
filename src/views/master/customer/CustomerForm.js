@@ -11,6 +11,7 @@ import { FaCar, FaFileAlt, FaFolderOpen, FaIdCard, FaUserFriends, FaUser } from 
 
 import { loadData, addData, editData } from "../../../actions/data";
 import { loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment } from "../../../actions/master";
+import { es } from "date-fns/locale";
 
 const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCountry, loadDistrict, loadProvince, loadCity, loadSeller, loadTermOfPayment }) => {
     let { id } = useParams();
@@ -32,12 +33,13 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         id: 0,
         code: "",
         name: "",
-        country: 0,
+        countryId: 0,
         pic: "",
         mobile1: "",
         mobile2: "",
         email: "",
         web: "",
+        paymentTermId: 0,
         paymentTerm: "",
         customerType: "",
         nik: "",
@@ -52,9 +54,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         billingPostalCode: "",
         billingPhone: "",
         billingFax: "",
-        billingProvince: "",
-        billingCity: "",
-        billingDistrict: "",
+        billingProvinceId: "",
+        billingCityId: "",
+        billingDistrictId: "",
         billingName: "",
         billingEmail: "",
         billingStreet: "",
@@ -62,9 +64,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         deliveryPostalCode: "",
         deliveryPhone: "",
         deliveryFax: "",
-        deliveryProvince: "",
-        deliveryCity: "",
-        deliveryDistrict: "",
+        deliveryProvinceId: "",
+        deliveryCityId: "",
+        deliveryDistrictId: "",
         deliveryName: "",
         deliveryEmail: "",
         deliveryStreet: "",
@@ -74,9 +76,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
         fotoKTP: "",
         fotoNPWP: "",
         fotoSPPKP: "",
-        SPPKP: "",
-        tanggalSPPKP: "",
-        NIBSIUPTDP: "",
+        Sppkp: "",
+        SppkpDate: "",
+        Nib: "",
 
     });
 
@@ -92,7 +94,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
     const [sellerList, setSeller] = useState([]);
     const [termOfPaymentList, setTermOfPayment] = useState([]);
 
-    const { name, type, isActive, code, businessEntity, businessEntityName, deliveryTitleName, tempo, customerType, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitleName, billingName, billingPhone, billingPostalCode, billingFax, billingEmail, billingStreet, billingAddress, deliveryPhone, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, SPPKP, tanggalSPPKP, NIBSIUPTDP, sellerId, termOfPaymentId } = formData;
+    const { name, type, isActive, code, businessEntity, businessEntityName, deliveryTitle, tempo, customerType, country, pic, mobile1, mobile2, email, web, virtualAccount, billingTitle, billingName, billingPhone, billingPostalCode, billingFax, billingEmail, billingStreet, billingAddress, deliveryPhone, deliveryPostalCode, deliveryFax, deliveryEmail, deliveryStreet, deliveryAddress, fotoKTP, fotoNPWP, nik, npwp, taxType, tax1, tax2, fotoSPPKP, Sppkp, SppkpDate, Nib, salesId, paymentTermId, paymentTerm, deliveryName } = formData;
 
     useEffect(() => {
         loadCountry();
@@ -191,22 +193,34 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     id: id === undefined ? 0 : parseInt(id),
                     code: data.data.code,
                     name: data.data.name,
+                    tempo: data.data.tempo,
+                    businessEntity: data.data.businessEntity,
+                    businessEntityName: data.data.businessEntityName,
                     seller: data.data.seller,
                     city: data.data.city,
+                    deliveryTitle: data.data.deliveryTitle,
                     deliveryAddress: data.data.deliveryAddress,
                     deliveryPostalCode: data.data.deliveryPostalCode,
                     deliveryPhone: data.data.deliveryPhone,
                     deliveryFax: data.data.deliveryFax,
+                    deliveryName: data.data.deliveryName,
+                    deliveryStreet: data.data.deliveryStreet,
+                    deliveryEmail: data.data.deliveryEmail,
+                    billingTitle: data.data.billingTitle,
                     billingAddress: data.data.billingAddress,
                     billingPostalCode: data.data.billingPostalCode,
                     billingPhone: data.data.billingPhone,
                     billingFax: data.data.billingFax,
+                    billingName: data.data.billingName,
+                    billingStreet: data.data.billingStreet,
+                    billingEmail: data.data.billingEmail,
                     pic: data.data.pic,
                     mobile1: data.data.mobile1,
                     mobile2: data.data.mobile2,
                     email: data.data.email,
                     web: data.data.web,
                     paymentTerm: data.data.paymentTerm,
+                    paymentTermId: data.data.paymentTermId,
                     currency: data.data.currency,
                     customerType: data.data.customerType,
                     nik: data.data.nik,
@@ -216,20 +230,24 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     tax2: data.data.tax2,
                     virtualAccount: data.data.virtualAccount,
                     seller: data.data.seller,
-                    deliveryCity: data.data.deliveryCity,
-                    deliveryDistrict: data.data.deliveryDistrict,
-                    deliveryProvince: data.data.deliveryProvince,
+                    salesId: data.data.salesId,
+                    deliveryCityId: data.data.deliveryCityId,
+                    deliveryDistrictId: data.data.deliveryDistrictId,
+                    deliveryProvinceId: data.data.deliveryProvinceId,
                     country: data.data.country,
-                    billingProvince: data.data.billingProvince,
-                    billingDistrict: data.data.billingDistrict,
-                    billingCity: data.data.billingCity,
+                    billingProvinceId: data.data.billingProvinceId,
+                    billingDistrictId: data.data.billingDistrictId,
+                    billingCityId: data.data.billingCityId,
                     isActive: data.data.isActive,
                     countryId: data.data.countryId,
                     districtId: data.data.districtId,
                     provinceId: data.data.provinceId,
                     cityId: data.data.cityId,
-                    sellerId: data.data.sellerId,
+                    salesId: data.data.salesId,
                     termOfPaymentId: data.data.termOfPaymentId,
+                    Sppkp: data.data.sppkp,
+                    SppkpDate: data.data.sppkpDate,
+                    Nib: data.data.nib,
                 });
             }
         }
@@ -243,21 +261,43 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
     const onSelectChange = (e, name) => {
         let updatedValue;
 
-        if (["billingDistrict", "deliveryDistrict", "deliveryProvince", "billingProvince", "billingCity", "deliveryCity"].includes(name)) {
-            updatedValue = e.name;
-        } else {
-            updatedValue = e.id;
+        // if (["billingDistrict", "deliveryDistrict", "deliveryProvince", "billingProvince", "billingCity", "deliveryCity"].includes(name)) {
+        //     updatedValue = e.name;
+        // } else {
+        //     updatedValue = e.id;
+        // }
+        if (name == "billingProvinceId") {
+            formData.billingCityId = 0;
+            formData.billingDistrictId = 0;
+            setFormData({ ...formData, [name]: e.id });
         }
-
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            [name]: updatedValue
-        }));
+        else if (name == "billingCityId") {
+            formData.billingDistrictId = 0;
+            setFormData({ ...formData, [name]: e.id });
+        }
+        else if (name == "deliveryProvinceId") {
+            formData.deliveryProvinceId = 0;
+            formData.deliveryDistrictId = 0;
+            setFormData({ ...formData, [name]: e.id });
+        }
+        else if (name == "deliveryCityId") {
+            formData.deliveryDistrictId = 0;
+            setFormData({ ...formData, [name]: e.id });
+        }
+        else if (name == "paymentTermId") {
+            setFormData({ ...formData, [name]: updatedValue, paymentTerm: e.name });
+        }
+        else if (name == "salesId") {
+            setFormData({ ...formData, [name]: updatedValue, seller: e.name });
+        }
+        else {
+            setFormData({ ...formData, [name]: e.id });
+        }
     };
+
 
     const handleSave = (e) => {
         e.preventDefault();
-
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
                 navigate(`${path}`);
@@ -288,6 +328,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 value={code}
                                 type="text"
                                 onChange={(e) => onChange(e)}
+
                                 className="form-control text-left"
                                 placeholder=""
                                 required
@@ -313,7 +354,9 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">Business Entity</label>
                         <div className="col-sm-4">
-                            <select className="form-control" type="text" name="businessEntity" value={businessEntity} onChange={(e) => onChange(e)}>
+                            <select className="form-control" type="text" name="businessEntity"
+                                value={businessEntity}
+                                onChange={(e) => onChange(e)}>
                                 <option value="">Select Business Entity</option>
                                 <option value="individu">Individu</option>
                                 <option value="pt">PT</option>
@@ -343,8 +386,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 options={termOfPaymentList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Term Of Payment"}
-                                value={termOfPaymentList === null ? null : termOfPaymentList.filter((option) => option.id === parseInt(termOfPaymentId))}
-                                handleChange={(e) => onSelectChange(e, "termOfPaymentId")} required />
+                                value={termOfPaymentList === null ? null : termOfPaymentList.filter((option) => option.id === parseInt(paymentTermId))}
+                                handleChange={(e) => onSelectChange(e, "paymentTermId")} required />
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Tempo</label>
                         <div className="col">
@@ -373,8 +416,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 options={sellerList}
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Seller"}
-                                value={sellerList === null ? null : sellerList.filter((option) => option.id === parseInt(sellerId))}
-                                handleChange={(e) => onSelectChange(e, "sellerId")} required />
+                                value={sellerList === null ? null : sellerList.filter((option) => option.id === parseInt(salesId))}
+                                handleChange={(e) => onSelectChange(e, "salesId")} required />
                         </div>
                     </div>
 
@@ -417,11 +460,11 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 <div className="col-sm-3">
                                     <Select2
                                         options={countryList}
-                                        optionValue={(option) => option.name}
+                                        optionValue={(option) => option.id.toString()}
                                         optionLabel={(option) => option.name}
                                         placeholder={"Pick Country"}
-                                        value={country ? countryList.find(option => option.name === country) : null}
-                                        handleChange={(e) => onSelectChange(e, "country")}
+                                        value={countryList === null ? null : countryList.filter((option) => option.id === formData.countryId)}
+                                        handleChange={(e) => onSelectChange(e, "countryId")}
                                     />
                                 </div>
                             </div>
@@ -504,7 +547,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     Title Name<span className="required-star">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" name="billingTitleName" value={billingTitleName} onChange={(e) => onChange(e)} type="text" placeholder="">
+                                    <select className="form-control" name="billingTitle" value={billingTitle}
+                                        onChange={(e) => onChange(e)} type="text" placeholder="">
                                         <option value="">Select Title</option>
                                         <option value="bapak">Bapak</option>
                                         <option value="ibu">Ibu</option>
@@ -532,8 +576,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                         optionValue={(option) => option.id.toString()}
                                         optionLabel={(option) => option.name}
                                         placeholder={"Pick Province"}
-                                        value={billingProvinceList === null ? null : billingProvinceList.filter((option) => option.name === formData.billingProvince)}
-                                        handleChange={(e) => onSelectChange(e, "billingProvince")}
+                                        value={billingProvinceList === null ? null : billingProvinceList.filter((option) => option.id === formData.billingProvinceId)}
+                                        handleChange={(e) => onSelectChange(e, "billingProvinceId")}
                                     />
                                 </div>
 
@@ -553,12 +597,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={billingCityList}
+                                        options={billingCityList.filter((option) => option.provinceId == formData.billingProvinceId)}
                                         optionValue={(option) => option.id.toString()}
                                         optionLabel={(option) => option.name}
                                         placeholder={"Pick City"}
-                                        value={billingCityList === null ? null : billingCityList.filter((option) => option.name === formData.billingCity)}
-                                        handleChange={(e) => onSelectChange(e, "billingCity")}
+                                        value={billingCityList === null ? null : billingCityList.filter((option) => option.id === formData.billingCityId)}
+                                        handleChange={(e) => onSelectChange(e, "billingCityId")}
                                     />
                                 </div>
 
@@ -579,12 +623,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={billingDistrictList}
+                                        options={billingDistrictList.filter((option) => option.regencyId == formData.billingCityId)}
                                         optionValue={(option) => option.id.toString()}
                                         optionLabel={(option) => option.name}
                                         placeholder={"Pick District"}
-                                        value={billingDistrictList === null ? null : billingDistrictList.filter((option) => option.name === formData.billingDistrict)}
-                                        handleChange={(e) => onSelectChange(e, "billingDistrict")}
+                                        value={billingDistrictList === null ? null : billingDistrictList.filter((option) => option.id === formData.billingDistrictId)}
+                                        handleChange={(e) => onSelectChange(e, "billingDistrictId")}
                                     />
                                 </div>
 
@@ -645,7 +689,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     Title Name<span className="required-star">*</span>
                                 </label>
                                 <div className="col-sm-3">
-                                    <select className="form-control" type="text" name="deliveryTitleName" value={deliveryTitleName} onChange={(e) => onChange(e)}>
+                                    <select className="form-control" type="text" name="deliveryTitle" value={deliveryTitle} onChange={(e) => onChange(e)}>
                                         <option value="">Select Title</option>
                                         <option value="bapak">Bapak</option>
                                         <option value="ibu">Ibu</option>
@@ -657,7 +701,7 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                     Name
                                 </label>
                                 <div className="col-sm-3">
-                                    <input className="form-control text-left" name="deliveryName" value={name} type="text" onChange={(e) => onChange(e)} />
+                                    <input className="form-control text-left" name="deliveryName" value={deliveryName} type="text" onChange={(e) => onChange(e)} />
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
@@ -666,7 +710,10 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={deliveryProvinceList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick Province"} value={deliveryProvinceList === null ? null : deliveryProvinceList.filter((option) => option.name === formData.deliveryProvince)} handleChange={(e) => onSelectChange(e, "deliveryProvince")}
+                                        options={deliveryProvinceList} optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name}
+                                        placeholder={"Pick Province"} value={deliveryProvinceList === null ? null : deliveryProvinceList.filter((option) => option.id === formData.deliveryProvinceId)}
+                                        handleChange={(e) => onSelectChange(e, "deliveryProvinceId")}
                                     />
                                 </div>
 
@@ -683,7 +730,10 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={deliveryCityList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick City"} value={deliveryCityList === null ? null : deliveryCityList.filter((option) => option.name === formData.deliveryCity)} handleChange={(e) => onSelectChange(e, "deliveryCity")}
+                                        options={deliveryCityList.filter((option) => option.provinceId == formData.deliveryProvinceId)}
+                                        optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name} placeholder={"Pick City"}
+                                        value={deliveryCityList === null ? null : deliveryCityList.filter((option) => option.id === formData.deliveryCityId)} handleChange={(e) => onSelectChange(e, "deliveryCityId")}
                                     />
                                 </div>
                                 <label className="col-sm-1 text-left col-form-label">
@@ -704,7 +754,12 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
-                                        options={deliveryDistrictList} optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name} placeholder={"Pick District"} value={deliveryDistrictList === null ? null : deliveryDistrictList.filter((option) => option.name === formData.deliveryDistrict)} handleChange={(e) => onSelectChange(e, "deliveryDistrict")}
+                                        options={deliveryDistrictList.filter((option) => option.regencyId == formData.deliveryCityId)}
+                                        optionValue={(option) => option.id.toString()}
+                                        optionLabel={(option) => option.name}
+                                        placeholder={"Pick District"}
+                                        value={deliveryDistrictList === null ? null : deliveryDistrictList.filter((option) => option.id === formData.deliveryDistrictId)}
+                                        handleChange={(e) => onSelectChange(e, "deliveryDistrictId")}
                                     />
                                 </div>
 
@@ -862,8 +917,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 <div className="col-sm-3">
                                     <input
                                         className="form-control text-left"
-                                        name="SPPKP"
-                                        value={SPPKP}
+                                        name="Sppkp"
+                                        value={Sppkp}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />
@@ -874,8 +929,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 <div className="col-sm-3">
                                     <input
                                         className="form-control text-left"
-                                        name="tanggalSPPKP"
-                                        value={tanggalSPPKP}
+                                        name="SppkpDate"
+                                        value={SppkpDate}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />
@@ -884,8 +939,8 @@ const CustomerForm = ({ user, data, loadData, addData, editData, master, loadCou
                                 <div className="col-sm-3">
                                     <input
                                         className="form-control text-left"
-                                        name="NIBSIUPTDP"
-                                        value={NIBSIUPTDP}
+                                        name="Nib"
+                                        value={Nib}
                                         type="text"
                                         placeholder=""
                                         onChange={(e) => onChange(e)} />
