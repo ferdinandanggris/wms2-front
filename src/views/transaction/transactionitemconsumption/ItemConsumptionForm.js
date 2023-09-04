@@ -17,6 +17,7 @@ import { NumericFormat } from "react-number-format";
 import { te } from "date-fns/locale";
 import { setAlert } from "../../../actions/alert";
 import axios from "axios";
+import { AiOutlineSearch } from 'react-icons/ai';
 
 const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadVendor, loadPallet, loadLocation }) => {
     let { id } = useParams();
@@ -200,6 +201,14 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
             });
         }
     };
+    const handleSearch = async () => {
+        // Fungsi untuk mencari detail data dan menambahkannya jika ditemukan
+        const data = await getDetail();
+    
+        if (data !== null) {
+          handleAddBatch(data.data);
+        }
+      };
     const onDetailChange = (e, index) => {
         e.preventDefault();
 
@@ -545,8 +554,10 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
                             />                       
                         </div>
                         <div className="col-sm-2 text-left col-form-label">
-                            <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
-                        </div>
+                        <Button variant="primary" onClick={handleSearch}>
+          <AiOutlineSearch /> Search
+        </Button>
+              </div>
                         <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
                             <label style={{ marginLeft: "5px" }}>
                                 <input type="checkbox" /> New Item

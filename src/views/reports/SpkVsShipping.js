@@ -9,6 +9,7 @@ import { loadWarehouse, loadItem } from "../../actions/master";
 import { AiOutlineSearch } from "react-icons/ai"
 import { Table } from "react-bootstrap";
 import moment from "moment";
+import * as XLSX from 'xlsx';
 
 const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
     let { id } = useParams()
@@ -45,7 +46,7 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
     const [reportList, setReportList] = useState(null)
 
     const [searchClicked, setSearchClicked] = useState(false);
-
+    const [exportData, setExportData] = useState([]);
     useEffect(() => {
         loadWarehouse();
         loadItem();
@@ -82,6 +83,79 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
+   const XLSX = require('xlsx');
+
+// Fungsi untuk menyiapkan dan mengatur data yang akan diekspor
+const prepareDataForExport = () => {
+  // Inisialisasi data yang akan diekspor
+  const dataToExport = [];
+
+  // Pastikan data dari reportList tersedia dan memiliki panjang yang lebih dari nol
+  if (
+    reportList !== undefined &&
+    reportList !== null &&
+    reportList.listSpkvsShippingDetail.data.length > 0
+  ) {
+    reportList.listSpkvsShippingDetail.data.forEach((item, index) => {
+      dataToExport.push({
+        NO: index + 1,
+        "NO SPK": item.voucherNo,
+        SUBMIT: item.transDate,
+        PIC: item.createdBy,
+        CUSTOMER: item.customerName,
+        QTY: item.qty,
+        SHIPPING: item.shipping,
+        SELISIH: item.qty - item.shipping,
+        STATUS: item.status,
+        NOTE: "",
+      });
+    });
+  }
+
+  // Tambahkan data dari elementData jika ada
+  if (reportList !== undefined && reportList !== null && reportList.listSpkvsShippingDetail.data.length > 0) {
+    dataToExport.push({
+     "Total SPK": reportList.totalSPk.toLocaleString(),
+     "BOX SPK": reportList.spkBox.toLocaleString(),
+     "PCS SPK":reportList.spkPcs.toLocaleString(),
+     "Other SPK":reportList.spkOther.toLocaleString(),
+    "Total Shipping": reportList.totalShipping.toLocaleString(),
+     "BOX Shipping": reportList.shippingBox.toLocaleString(),
+     "PCS Shipping":reportList.shippingPcs.toLocaleString(),
+     "Other Shipping":reportList.shippingOther.toLocaleString(),
+     " Selisih": (reportList.totalSPk - reportList.totalShipping).toLocaleString(),
+     "BOX Selisih": (reportList.spkBox - reportList.shippingBox).toLocaleString(),
+     "PCS Selisih":(reportList.spkPcs - reportList.shippingPcs).toLocaleString(),
+     "Other Selisih":(reportList.spkOther - reportList.shippingOther).toLocaleString(),
+      NO: "", 
+      "NO SPK": "", 
+      SUBMIT: "", 
+      PIC: "", 
+      CUSTOMER: "",
+      QTY: "", 
+      SHIPPING: "",
+      SELISIH: "", 
+      STATUS: "",
+      NOTE: "", 
+    });
+  }
+
+  return dataToExport;
+};
+
+// Fungsi untuk mengkonversi dan mengekspor data ke Excel
+const exportToExcel = () => {
+  const dataToExport = prepareDataForExport();
+
+  if (dataToExport.length > 0) {
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "data.xlsx");
+  } else {
+    console.log("Tidak ada data untuk diekspor.");
+  }
+};
 
     // Function ubah select value
     const onSelectChange = (e, name) => {
@@ -200,14 +274,14 @@ const SpkVsShipping = ({ loadWarehouse, loadItem, data, master }) => {
                             <div className="row align-items-center my-3">
                            <div className="col-sm-2 col-form-label"></div>
                           <div className="col-sm-3">
-                             <button
-                       type="button"
-                        className="d-flex align-items-center btn btn-success"
-                         onClick={e => handleSearch(e)}
-                        style={{ backgroundColor: '#FF9F43' }}
-                          >
-                   <i className="fa fa-upload mr-2"></i> Export Data
-                      </button>
+                          <button
+                           type="button"
+                         className="d-flex align-items-center btn btn-success"
+                         onClick={exportToExcel}
+                         style={{ backgroundColor: '#FF9F43' }}
+                         >
+                         <i className="fa fa-upload mr-2"></i> Export Data
+                         </button>
                            </div>
                       </div>
 

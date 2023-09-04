@@ -17,6 +17,7 @@ import { NumericFormat } from "react-number-format";
 import axios from "axios";
 import { setAlert } from "../../../actions/alert";
 import PagingComponent from "../../../components/Paging/PagingComponent";
+import { AiOutlineSearch } from 'react-icons/ai';
 
 const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWarehouse, loadproduction, loadVendor, loadCategory, loadPallet, loadLocation }) => {
   let { id } = useParams();
@@ -319,6 +320,14 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
       }
     }
   };
+  const handleSearch = async () => {
+    // Fungsi untuk mencari detail data dan menambahkannya jika ditemukan
+    const data = await getDetail();
+
+    if (data !== null) {
+      handleAddBatch(data.data);
+    }
+  };
 
   const handleAddBatch = (selectedBatch) => {
     let details = [...receivingDetails];
@@ -455,8 +464,10 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
               />
             </div>
             <div className="col-sm-2 text-left col-form-label">
-              <Button variant="primary" className="fa fa-search"> Search</Button>{' '}
-            </div>
+            <Button variant="primary" onClick={handleSearch}>
+          <AiOutlineSearch /> Search
+        </Button>
+              </div>
             <div className="col-sm-2 text-left col-form-label" style={{ marginLeft: "30px" }}>
               <label style={{ marginLeft: "5px" }}>
                 <input type="checkbox" /> New Item
