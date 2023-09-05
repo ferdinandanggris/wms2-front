@@ -35,6 +35,12 @@ const FormWrapper = (props) => {
     }
   }, [role, roles]);
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
+
   const renderModule = () => {
     return (
       <div className="module d-flex justify-content-between">
@@ -82,7 +88,7 @@ const FormWrapper = (props) => {
   if ((type === "create" && !isCreate) || (type === "edit" && !isUpdate)) return <Navigate to="/access-control" />;
 
   return (
-    <form method="post" onSubmit={(e) => handleSave(e)}>
+    <form method="post" onSubmit={(e) => handleSave(e)} onKeyDown={handleKeyDown}>
       {title !== undefined && renderModule()}
       <div className="content">
         <Alert />
