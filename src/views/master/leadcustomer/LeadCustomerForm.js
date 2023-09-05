@@ -41,49 +41,49 @@ const LeadCustomerForm = ({ user, data, loadData, addData, editData, master, loa
         provincePengirimanId: 0,
         cityPengirimanId: 0,
         districtPengirimanId: 0,
-        kodeposPengiriman: 0,
+        kodeposPengiriman: "",
         alamatPengiriman: "",
         namaBilling: "",
         judulBilling:  "",
         emailBilling: "",
-        phoneBilling: 0,
+        phoneBilling: "",
         provinceBillingId: 0,
         cityBillingId:0,
         jalanBilling:"",
         districtBillingId: 0,
-        kodeposBilling: 0,
+        kodeposBilling: "",
         alamatBilling: "",
         namaBank: "",
         namaCabang:  "",
-        currency: 0,
-        noRekening: 0,
+        currency: "",
+        noRekening: "",
         namaRekening:  "",
         imgNpwp: "",
         npwp: "",
         imgSppkp: "",
-        sppkp: 0,
-        tanggalSppkp: 0,
-        nib: 0,
+        sppkp: "",
+        tanggalSppkp: null,
+        nib: "",
         imgKtp: "",
-        ktp: 0,
-        tanggalKtp: 0,
-        lastSync: 0,
+        ktp: "",
+        tanggalKtp: null,
+        lastSync: null,
         badanUsaha: "",
         status: 1,
         name: "",
         seller:  "",
         paymentTerm:  "",
         email: "",
-        mobile1: 0,
-        mobile2: 0,
+        mobile1: "",
+        mobile2: "",
         pic:  "",
         country:  "",
         code: null,
         leadResellerId: 0,
         salesId: 0,
         paymentTermId: 0,
-        dateIn: 0,
-        dateUp: 0,
+        dateIn: null,
+        dateUp: null,
         userIn:  "",
         userUp:  "",
         taxType: "",
@@ -316,17 +316,15 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
 
     const handleSave = (e) => {
         e.preventDefault();
-
         if (id === undefined) {
-            addData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          navigate(`${path}`);
         } else {
-            editData({ url, body: formData }).then(() => {
-                navigate(`${path}`);
-            });
+          editData({ url, body: formData }).then(() => {
+            navigate(`${path}`);
+          });
         }
-    };
+      };
+      
 
     const tabIconStyle = {
         marginRight: '5px',
@@ -339,7 +337,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mt-4 mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Code <span className="required-star">*</span>
+                            Code 
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -349,13 +347,13 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder=""
-                                required
+                              
                             />
                         </div>
                     </div>
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">
-                            Name <span className="required-star">*</span>
+                            Name 
                         </label>
                         <div className="col-sm-4">
                             <input
@@ -365,7 +363,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                                 onChange={(e) => onChange(e)}
                                 className="form-control text-left"
                                 placeholder=""
-                                required
+                               
                             />
                         </div>
                     </div>
@@ -403,7 +401,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Term Of Payment"}
                                 value={termOfPaymentList === null ? null : termOfPaymentList.filter((option) => option.id === parseInt(termOfPaymentId))}
-                                handleChange={(e) => onSelectChange(e, "termOfPaymentId")} required />
+                                handleChange={(e) => onSelectChange(e, "termOfPaymentId")}  />
                             
                         </div>
                         <label className="col-sm-1 text-left col-form-label">Tempo</label>
@@ -435,7 +433,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                                 optionValue={(option) => option.id.toString()} optionLabel={(option) => option.name}
                                 placeholder={"Pick Seller"}
                                 value={sellerList === null ? null : sellerList.filter((option) => option.id === parseInt(resellerId))}
-                                handleChange={(e) => onSelectChange(e, "resellerId")} required />
+                                handleChange={(e) => onSelectChange(e, "resellerId")} />
                         </div>
                     </div>
 
@@ -564,7 +562,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
 </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Title Name<span className="required-star">*</span>
+                                    Title Name
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" name="name" value={name} onChange={(e) => onChange(e)} type="text" placeholder="">
@@ -577,17 +575,27 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
 
                                 <label className="col-sm-1 text-left col-form-label">Name</label>
                                 <div className="col-sm-3">
-                                    <input
+                                    {/* <input
                                         className="form-control text-left"
                                         name="billingName"
                                         value={namaBilling}
                                         type="text"
-                                        onChange={(e) => onChange(e)} />
+                                        onChange={(e) => onChange(e)} /> */}
+                                         <input
+                                name="namaBilling"
+                                value={namaBilling}
+                                type="text"
+                                onChange={(e) => onChange(e)}
+                                className="form-control text-left"
+                                placeholder=""
+                               
+                            />
+                                        
                                 </div>
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Province<span className="required-star">*</span>
+                                    Province
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
@@ -614,7 +622,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    City<span className="required-star">*</span>
+                                    City
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
@@ -641,7 +649,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    District<span className="required-star">*</span>
+                                    District
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
@@ -700,6 +708,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                                         placeholder="Enter delivery address here..."
                                         onChange={(e) => onChange(e)}
                                         style={{ width: "500px", minHeight: "150px" }}
+                                        readOnly
                                     />
                                 </div>
                             </div>
@@ -709,7 +718,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                         <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Title Name<span className="required-star">*</span>
+                                    Title Name
                                 </label>
                                 <div className="col-sm-3">
                                     <select className="form-control" type="text" name="tipeCustomer" value={tipeCustomer} onChange={(e) => onChange(e)}>
@@ -729,7 +738,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    Province<span className="required-star">*</span>
+                                    Province
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2
@@ -746,7 +755,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    City<span className="required-star">*</span>
+                                    City
                                 </label>
                                 <div className="col-sm-3">
                                     { <Select2
@@ -767,7 +776,7 @@ email, mobile1, mobile2,pic,tax2,tax1,taxType,faxPengiriman,faxBilling,jalanPeng
                             </div>
                             <div className="row align-items-center mb-3">
                                 <label className="col-sm-2 col-form-label">
-                                    District<span className="required-star">*</span>
+                                    District
                                 </label>
                                 <div className="col-sm-3">
                                     <Select2

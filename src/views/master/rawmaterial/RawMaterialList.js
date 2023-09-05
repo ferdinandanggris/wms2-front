@@ -25,7 +25,7 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, load
     { label: "INCOMING", key: "incoming", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "OUTGOING", key: "outgoing", width: 80, type: "number", align: "right", cardSubTitle: true },
     { label: "BALANCE", key: "balance", width: 80, type: "number", align: "right", cardSubTitle: true },
-    { label: "STATUS", key: "isActive", width: 80, type: "custom", align: "right", cardSubTitle: true },
+    // { label: "STATUS", key: "isActive", width: 80, type: "custom", align: "right", cardSubTitle: true },
   ];
 
   const exportFilename = "item-type.csv";
@@ -68,7 +68,7 @@ const RawMaterialList = ({ user, data, refreshData, deleteData, exportData, load
     };
   };
 
-  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue} />;
+  return <ListWrapper img={img} title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} customRenderValue={customRenderValue}/>;
 };
 RawMaterialList.propTypes = {
   user: PropTypes.object,

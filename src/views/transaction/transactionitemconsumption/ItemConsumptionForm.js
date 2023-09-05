@@ -193,14 +193,15 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
 
         if (id === undefined) {
             addData({ url, body: formData }).then(() => {
-                navigate(`${path}/create?`);
+              navigate(`${path}`);
             });
-        } else {
+          } else {
             editData({ url, body: formData }).then(() => {
-                navigate(`${path}/${id}/edit?`);
+              navigate(`${path}`);
             });
-        }
-    };
+          }
+        };
+      
     const handleSearch = async () => {
         // Fungsi untuk mencari detail data dan menambahkannya jika ditemukan
         const data = await getDetail();
@@ -427,7 +428,7 @@ const ItemConsumptionForm = ({ user, data, loadData, addData, master, editData, 
     const element = () => {
         return (
             <div className="detail">
-                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Add Non Komersil</div>
+                <div className="subTitle"> <FaUserFriends style={tabIconStyle} />Non Komersil</div>
                 <div className="form-group col-md-12 col-lg-12 order-1 order-md-2 order-lg-2">
                     <div className="row align-items-center mb-3">
                         <label className="col-sm-2 col-form-label">Voucher#  <span className="text-danger">*</span></label>

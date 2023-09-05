@@ -102,7 +102,7 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
     setLocationPage(page - 1);
     dispatch(loadLocation({ limit: 10, page: page - 1, filterSearch: "itemid:" + id }));
   };
-
+console.log("formData",formData)
   useEffect(() => {
     if (data !== undefined && data !== null && id !== undefined) {
       if (data.module !== url) return;
@@ -357,9 +357,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                   </tr>
                 </thead>
                 <tbody>
-                  {dataBatches !== undefined &&
-                    dataBatches !== null &&
-                    dataBatches.map((batch, index) => {
+                  {batches !== undefined &&
+                    batches !== null &&
+                    batches.map((batch, index) => {
                       return (
                         <tr key={index}>
                           <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -394,9 +394,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {dataWarehouse !== undefined &&
-                  dataWarehouse !== null &&
-                  dataWarehouse.map((warehouse, index) => {
+                { spWarehouseDetails !== undefined &&
+                  spWarehouseDetails !== null &&
+                  spWarehouseDetails.map((warehouse, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -430,9 +430,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {dataLocation !== undefined &&
-                  dataLocation !== null &&
-                  dataLocation.map((location, index) => {
+                { spLocationDetails !== undefined &&
+                  spLocationDetails !== null &&
+                  spLocationDetails.map((location, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -465,9 +465,9 @@ const ItemForm = ({ user, data, loadData, addData, editData, master, loadItem, l
                 </tr>
               </thead>
               <tbody>
-                {dataPallet !== undefined &&
-                  dataPallet !== null &&
-                  dataPallet.map((pallet, index) => {
+                { spPalletDetails !== undefined &&
+                   spPalletDetails !== null &&
+                   spPalletDetails.map((pallet, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>

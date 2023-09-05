@@ -45,11 +45,16 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
     dateIn: null,
     dateUp:null,
     userIn: "",
-    userUp: ""
+    userUp: "",
+    itemGroupDetails: [],
+    spWarehouseDetails: [],
+    spLocationDetails: [],
+    spPalletDetails: [],
+    batches: []
   });
 
-  const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails,spLocationDetails, 
-    spPalletDetails,batches } = formData;
+  const { name, code, initial, uomId, packingId, uom, incoming, outgoing, exclusive, category, qtyPerPacking, balance,spWarehouseDetails, spLocationDetails,
+    spPalletDetails, itemGroupDetails, batches} = formData;
     const [palletPage, setPalletPage] = useState(0);
     const [locationPage, setLocationPage] = useState(0);
     const [warehousePage, setWarehousePage] = useState(0);
@@ -144,14 +149,13 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
 
   const handleSave = (e) => {
     e.preventDefault();
-
     if (id === undefined) {
       addData({ url, body: formData }).then(() => {
-        navigate(`${path}/create?`);
+        navigate(`${path}`);
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        navigate(`${path}/${id}/edit?`);
+        navigate(`${path}`);
       });
     }
   };
@@ -258,9 +262,9 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                   </tr>
                 </thead>
                 <tbody>
-                  {dataBatches !== undefined &&
-                    dataBatches !== null &&
-                    dataBatches.map((batch, index) => {
+                {batches !== undefined &&
+                    batches !== null &&
+                    batches.map((batch, index) => {
                       return (
                         <tr key={index}>
                           <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -295,9 +299,9 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-              {dataWarehouse !== undefined &&
-                    dataWarehouse !== null &&
-                    dataWarehouse.map((warehouse, index) => {
+              { spWarehouseDetails !== undefined &&
+                  spWarehouseDetails !== null &&
+                  spWarehouseDetails.map((warehouse, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -331,9 +335,9 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-              {dataLocation !== undefined &&
-                    dataLocation !== null &&
-                    dataLocation.map((location, index) => {
+              { spLocationDetails !== undefined &&
+                  spLocationDetails !== null &&
+                  spLocationDetails.map((location, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>
@@ -366,9 +370,9 @@ const RawMaterialForm = ({ user, data, loadData, addData, editData, master, load
                 </tr>
               </thead>
               <tbody>
-              {dataPallet !== undefined &&
-                    dataPallet !== null &&
-                    dataPallet.map((pallet, index) => {
+              { spPalletDetails !== undefined &&
+                   spPalletDetails !== null &&
+                   spPalletDetails.map((pallet, index) => {
                     return (
                       <tr key={index}>
                         <td style={{ textAlign: 'center' }}>{index + 1}</td>

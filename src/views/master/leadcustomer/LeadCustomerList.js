@@ -31,7 +31,7 @@ const LeadCustomerList = ({ user, data, refreshData, deleteData, exportData }) =
     return (
         <ListWrapper
             img={img}
-            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData}
+            title={title} path={path} url={url} exportFilename={exportFilename} role={role} columns={columns} data={data} refreshData={refreshData} exportData={exportData} deleteData={deleteData} allowAdd={false}
         />
     )
 };

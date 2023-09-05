@@ -192,14 +192,15 @@ const ReceivingForm = ({ user, data, loadData, addData, master, editData, loadWa
 
     if (id === undefined) {
       addData({ url, body: formData }).then(() => {
-        navigate(`${path}/create?`);
+        navigate(`${path}`);
       });
     } else {
       editData({ url, body: formData }).then(() => {
-        navigate(`${path}/${id}/edit?`);
+        navigate(`${path}`);
       });
     }
   };
+
   const onDetailChange = (e, index) => {
     e.preventDefault();
 

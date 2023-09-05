@@ -289,88 +289,42 @@ const exportToExcel = () => {
 
                     </div>
                     {reportList !== undefined && reportList !== null && reportList.listSpkvsShippingDetail.data.length > 0 && (
-                        <>
-                           <div className="row align-items-left mb-3">
-    <div className="col-1">
-        <label className="col-form-label">Total SPK:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.totalSPk.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">BOX:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.spkBox.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">PCS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.spkPcs.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">OTHERS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.spkOther.toLocaleString()}</div>
-    </div>
-</div>
-<div className="row align-items-left mb-3">
-    <div className="col-1">
-        <label className="col-form-label">Total Shipping:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.totalShipping.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">BOX:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.shippingBox.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">PCS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.shippingPcs.toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">OTHERS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{reportList.shippingOther.toLocaleString()}</div>
-    </div>
-</div>
-<div className="row align-items-left mb-3">
-    <div className="col-1">
-        <label className="col-form-label">Selisih:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{(reportList.totalSPk - reportList.totalShipping).toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">BOX:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{(reportList.spkBox - reportList.shippingBox).toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">PCS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{(reportList.spkPcs - reportList.shippingPcs).toLocaleString()}</div>
-    </div>
-    <div className="col-1">
-        <label className="col-form-label">OTHERS:</label>
-    </div>
-    <div className="col-1 mt-2">
-        <div>{(reportList.spkOther - reportList.shippingOther).toLocaleString()}</div>
-    </div>
-</div>
+  <table className="table table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Total SPK</th>
+        <th>BOX</th>
+        <th>PCS</th>
+        <th>OTHERS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SPK</td>
+        <td>{reportList.totalSPk.toLocaleString()}</td>
+        <td>{reportList.spkBox.toLocaleString()}</td>
+        <td>{reportList.spkPcs.toLocaleString()}</td>
+        <td>{reportList.spkOther.toLocaleString()}</td>
+      </tr>
+      <tr>
+        <td>Shipping</td>
+        <td>{reportList.totalShipping.toLocaleString()}</td>
+        <td>{reportList.shippingBox.toLocaleString()}</td>
+        <td>{reportList.shippingPcs.toLocaleString()}</td>
+        <td>{reportList.shippingOther.toLocaleString()}</td>
+      </tr>
+      <tr>
+        <td>Selisih</td>
+        <td>{(reportList.totalSPk - reportList.totalShipping).toLocaleString()}</td>
+        <td>{(reportList.spkBox - reportList.shippingBox).toLocaleString()}</td>
+        <td>{(reportList.spkPcs - reportList.shippingPcs).toLocaleString()}</td>
+        <td>{(reportList.spkOther - reportList.shippingOther).toLocaleString()}</td>
+      </tr>
+    </tbody>
+  </table>
+)}
 
-                        </>
-                    )}
                 </div>
                 {renderTable()}
             </div>
