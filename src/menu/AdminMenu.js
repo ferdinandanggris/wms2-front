@@ -3,7 +3,7 @@ import { FaHome, FaUserLock, FaLayerGroup, FaCog, FaThList, FaUserFriends,FaChar
 const AdminMenu = [
   {
     group: "",
-    path: "/admin",
+    path: "/home",
     icon: <FaHome className="sidebar-icon" />,
     title: "Dashboard",
   },

@@ -1,6 +1,6 @@
 import { lazy } from "react";
 
-const Admin = lazy(() => import("../../views/Home3"));
+const Admin = lazy(() => import("../../views/dashboard/SpkPendingList"));
 
 // MASTER
 const ItemList = lazy(() => import("../../views/master/item/ItemList"));
