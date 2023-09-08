@@ -4,6 +4,7 @@ import auth from './auth';
 import data from './data';
 import master from './master';
 import dashboard from './dashboard';
+import home from './home';
 
 export default combineReducers({
   alert,
@@ -11,4 +12,5 @@ export default combineReducers({
   data,
   master,
   dashboard,
+  home,
 })
