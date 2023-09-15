@@ -91,15 +91,7 @@ const Home3 = ({
   const [summaryStartDate, setSummaryStartDate] = useState("");
   const [summaryEndDate, setSummaryEndDate] = useState("");
   const [activeTab, setActiveTab] = useState(TAB_SUMMARY_KEY);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const onMenuClose = () => {
-    setIsMenuOpen(false);
-  };
-
-  const onMenuOpen = () => {
-    setIsMenuOpen(true);
-  };
+  const [selectedTime, setSelectedTime] = useState("");
 
   // Initial Data
   useEffect(() => {
@@ -120,13 +112,6 @@ const Home3 = ({
     getHomeTopItemsTotal({ page: spkPendingPage });
     getHomeSpkPendingList({ page: topItemPage });
     getHomeListItems({ search: "" });
-
-    // debug
-    console.log("spkPendingList", spkPendingList);
-    console.log("searchItem", searchItem);
-    console.log("listItems", listItems);
-    console.log("topItemsTotal", topItemsTotal);
-    console.log("warehouseCapacity", warehouseCapacity);
   }, []);
 
   useEffect(() => {
@@ -141,6 +126,8 @@ const Home3 = ({
 
   const handleDropdownDateChange = (event) => {
     const { value } = event.target;
+    setSelectedTime(() => value);
+
     if (value === "today") {
       let startdate = moment();
       startdate = startdate.format("YYYY-MM-DD");
@@ -510,6 +497,7 @@ const Home3 = ({
           aria-label="Waktu"
           className="form-control"
           onChange={handleDropdownDateChange}
+          value={selectedTime}
         >
           <option value="today">Today</option>
           <option value="thisweek">This Week</option>
@@ -554,9 +542,12 @@ const Home3 = ({
           <TabHeader />
 
           <Tab.Content className="mt-4">
-            <SummaryTab />
+            {SummaryTab()}
+            {SpkPendingTab()}
+            {TopItemTab()}
+            {/* <SummaryTab />
             <SpkPendingTab />
-            <TopItemTab />
+            <TopItemTab /> */}
           </Tab.Content>
         </Container>
       </Tab.Container>
@@ -574,8 +565,6 @@ const Home3 = ({
                 inputId="aria-example-input"
                 name="aria-live-color"
                 onChange={(opt) => setSelectedItemId(opt.value)}
-                onMenuOpen={onMenuOpen}
-                onMenuClose={onMenuClose}
                 options={listItems?.data?.map((item) => {
                   return { value: item.id, label: item.name };
                 })}
